@@ -37,12 +37,17 @@
         showLab() {
             this.answer = null;
             this.currentLab = this.lesson.labs[this.currentLabIndex];
+
             if (this.currentLab.showTypeScriptEditor) {
                 this.activeTab = 3;
             } else if (this.currentLab.showJavaScriptEditor) {
                 this.activeTab = 1;
             } else if (this.currentLab.showCSharpEditor) {
                 this.activeTab = 4;
+            } else if (this.currentLab.showHTMLEditor) {
+                this.activeTab = 0;
+            } else if (this.currentLab.showCSSEditor) {
+                this.activeTab = 2;
             }
         }
 

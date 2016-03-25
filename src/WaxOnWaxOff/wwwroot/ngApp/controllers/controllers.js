@@ -52,6 +52,12 @@ var App;
                 else if (this.currentLab.showCSharpEditor) {
                     this.activeTab = 4;
                 }
+                else if (this.currentLab.showHTMLEditor) {
+                    this.activeTab = 0;
+                }
+                else if (this.currentLab.showCSSEditor) {
+                    this.activeTab = 2;
+                }
             };
             return LessonController;
         }());

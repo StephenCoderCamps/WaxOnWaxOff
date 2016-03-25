@@ -66,9 +66,33 @@ namespace WaxOnWaxOff.Models
                                 "
 
                             },
-                                                        new Lab
+                            new Lab
                             {
-                                Title = "02 - Validate Parameters",
+                                Title = "02 - Add Two DIV Elements",
+                                Instructions = "Create a page with 2 DIV elements.",
+                                HTMLSolution =  @"
+                                    <html>
+                                    <body>
+
+                                        <div class='findMe' />
+                                        <div class='findMe' />
+                                    </body>
+                                    </html>
+                                ",
+                                JavaScriptSolution = @"",
+                                Test = @"
+                                    describe('querySelectorAll', function () {
+                                        it('should find 2 matches', function() {
+                                            var matches = document.querySelectorAll('div');
+                                            expect(matches.length).toBe(2);
+                                        });
+                                    });
+                                "
+
+                            },
+                            new Lab
+                            {
+                                Title = "03 - Validate Parameters",
                                 Instructions = "Create a function that adds two numbers and throws an exception when a argument is not a number.",
                                 HTMLSolution = "",
                                 JavaScriptSolution =  @"

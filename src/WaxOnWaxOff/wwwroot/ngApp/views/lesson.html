@@ -5,20 +5,20 @@
     {{controller.currentLab.instructions}}
 </div>
 
-<uib-tabset active="1">
+<uib-tabset active="controller.activeTab">
     <uib-tab heading="HTML" ng-show="controller.currentLab.showHTMLEditor">
         <div ui-ace="{mode:'html'}" ng-model="controller.answer.html"></div>
     </uib-tab>
     <uib-tab heading="JavaScript" ng-show="controller.currentLab.showJavaScriptEditor">
         <div ui-ace="{mode:'javascript'}" ng-model="controller.answer.javascript"></div>
     </uib-tab>
-    <uib-tab heading="CSS">
+    <uib-tab heading="CSS"  ng-show="controller.currentLab.showCSSEditor">
         <div ui-ace="{mode:'css'}"  ng-model="controller.answer.css"></div>
     </uib-tab>
-    <uib-tab heading="TypeScript">
+    <uib-tab heading="TypeScript"  ng-show="controller.currentLab.showTypeScriptEditor">
         <div ui-ace="{mode:'typescript'}"  ng-model="controller.answer.typescript"></div>
     </uib-tab>
-    <uib-tab heading="C#">
+    <uib-tab heading="C#"  ng-show="controller.currentLab.showCSharpEditor">
         <div ui-ace="{mode:'csharp'}"  ng-model="controller.answer.csharp"></div>
     </uib-tab>
 
