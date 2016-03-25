@@ -1,0 +1,24 @@
+﻿<div class="modal-body">
+
+    <div ng-show="modal.isWorking">
+        Checking your answer!
+    </div>
+    <div ng-show="!modal.isWorking">
+        <div ng-show="modal.answerResult.isCorrect">
+            <h1>Nice Job!</h1>
+        </div>
+        <div ng-show="!modal.answerResult.isCorrect">
+            <h1>Oops!</h1>
+            <ul>
+                <li ng-repeat="issue in modal.answerResult.issues">{{issue}}</li>
+            </ul>
+        </div>
+
+        <button class="btn btn-primary" ng-click="modal.ok()">Continue</button>
+    </div>
+
+
+
+
+
+</div>

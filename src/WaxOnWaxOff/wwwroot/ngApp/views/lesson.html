@@ -1,0 +1,31 @@
+﻿
+<h2>{{controller.lesson.title}}</h2>
+<h3>{{controller.currentLab.title}}</h3>
+<div>
+    {{controller.currentLab.instructions}}
+</div>
+
+<uib-tabset active="1">
+    <uib-tab heading="HTML" ng-show="controller.currentLab.showHTMLEditor">
+        <div ui-ace="{mode:'html'}" ng-model="controller.answer.html"></div>
+    </uib-tab>
+    <uib-tab heading="JavaScript" ng-show="controller.currentLab.showJavaScriptEditor">
+        <div ui-ace="{mode:'javascript'}" ng-model="controller.answer.javascript"></div>
+    </uib-tab>
+    <uib-tab heading="CSS">
+        <div ui-ace="{mode:'css'}"  ng-model="controller.answer.css"></div>
+    </uib-tab>
+    <uib-tab heading="TypeScript">
+        <div ui-ace="{mode:'typescript'}"  ng-model="controller.answer.typescript"></div>
+    </uib-tab>
+    <uib-tab heading="C#">
+        <div ui-ace="{mode:'csharp'}"  ng-model="controller.answer.csharp"></div>
+    </uib-tab>
+
+</uib-tabset>
+
+<button class="btn btn-primary" ng-click="controller.submitAnswer()">Submit Answer</button>
+
+
+
+
