@@ -1,5 +1,8 @@
 ﻿
 <h2>{{controller.lesson.title}}</h2>
+
+<uib-progressbar animate="false" value="controller.getProgress()" type="success"><b>{{controller.getProgressText()}}</b></uib-progressbar>
+
 <h3>{{controller.currentLab.title}}</h3>
 <div>
     {{controller.currentLab.instructions}}
@@ -24,7 +27,7 @@
 
 </uib-tabset>
 
-<button class="btn btn-primary" ng-click="controller.submitAnswer()">Submit Answer</button>
+<button class="btn btn-primary" ng-click="controller.submitAnswer()" ng-disabled="!controller.canSubmitAnswer()">Submit Answer</button>
 
 
 

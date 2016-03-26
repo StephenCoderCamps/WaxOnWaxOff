@@ -15,7 +15,37 @@
         public lesson;
         public currentLab;
         public currentLabIndex = 0;
-        public answer;
+        public answer: App.Models.Answer;
+
+
+        public getProgress(): number {
+            if (!this.lesson) {
+                return 0;
+            }
+            return (this.currentLabIndex) * 100 /this.lesson.labs.length;
+
+        }
+
+        public getProgressText(): string {
+            if (!this.currentLabIndex) {
+                return '';
+            }
+            return 'completed lab ' + (this.currentLabIndex) + ' of ' + this.lesson.labs.length;                 
+        }
+
+
+        public canSubmitAnswer(): boolean {
+            if (!this.currentLab) {
+                return false;
+            }
+            if (this.currentLab.showTypeScriptEditor && !this.answer.typescript) {
+                return false;
+            }
+            if (this.currentLab.showJavaScriptEditor && !this.answer.javascript) {
+                return false;
+            }
+            return true;
+        }
 
         public submitAnswer() {
             this.$uibModal.open({
@@ -29,13 +59,27 @@
             }).result.then((answerResult) => {
                 if (answerResult.isCorrect) {
                     this.currentLabIndex++;
-                    this.showLab();
+                    // check if all labs done
+                    if (this.currentLabIndex == this.lesson.labs.length) {
+                        this.$uibModal.open({
+                            templateUrl: '/ngApp/dialogs/success.html',
+                            controller: LessonSuccessDialogController,
+                            controllerAs: 'modal',
+                            resolve: {
+                                lesson: this.lesson
+                            }
+                        }).result.then(() => {
+                            this.$state.go('home');
+                        });
+                    } else {
+                        this.showLab();
+                    }
                 }
             });                
         }
 
         showLab() {
-            this.answer = null;
+            this.answer = new App.Models.Answer();
             this.currentLab = this.lesson.labs[this.currentLabIndex];
 
             if (this.currentLab.showTypeScriptEditor) {
@@ -51,7 +95,7 @@
             }
         }
 
-        constructor(private lessonService: App.Services.LessonService, private $stateParams: ng.ui.IStateParamsService, private $uibModal: angular.ui.bootstrap.IModalService) {
+        constructor(private lessonService: App.Services.LessonService, private $state: ng.ui.IStateService, private $stateParams: ng.ui.IStateParamsService, private $uibModal: angular.ui.bootstrap.IModalService) {
             lessonService.getLesson($stateParams['id']).$promise.then((result) => {
                 this.lesson = result;
                 this.showLab();
@@ -73,8 +117,17 @@
                 this.answerResult = result;
                 this.isWorking = false;
             });
-
         }
+    }
+
+
+    class LessonSuccessDialogController {
+        public ok() {
+            this.$uibModalInstance.close();
+        }
+
+        constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, public lesson) {}
+
     }
 
 }

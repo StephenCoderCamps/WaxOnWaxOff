@@ -11,9 +11,10 @@ var App;
         }());
         Controllers.HomeController = HomeController;
         var LessonController = (function () {
-            function LessonController(lessonService, $stateParams, $uibModal) {
+            function LessonController(lessonService, $state, $stateParams, $uibModal) {
                 var _this = this;
                 this.lessonService = lessonService;
+                this.$state = $state;
                 this.$stateParams = $stateParams;
                 this.$uibModal = $uibModal;
                 this.activeTab = 0;
@@ -23,6 +24,30 @@ var App;
                     _this.showLab();
                 });
             }
+            LessonController.prototype.getProgress = function () {
+                if (!this.lesson) {
+                    return 0;
+                }
+                return (this.currentLabIndex) * 100 / this.lesson.labs.length;
+            };
+            LessonController.prototype.getProgressText = function () {
+                if (!this.currentLabIndex) {
+                    return '';
+                }
+                return 'completed lab ' + (this.currentLabIndex) + ' of ' + this.lesson.labs.length;
+            };
+            LessonController.prototype.canSubmitAnswer = function () {
+                if (!this.currentLab) {
+                    return false;
+                }
+                if (this.currentLab.showTypeScriptEditor && !this.answer.typescript) {
+                    return false;
+                }
+                if (this.currentLab.showJavaScriptEditor && !this.answer.javascript) {
+                    return false;
+                }
+                return true;
+            };
             LessonController.prototype.submitAnswer = function () {
                 var _this = this;
                 this.$uibModal.open({
@@ -36,12 +61,27 @@ var App;
                 }).result.then(function (answerResult) {
                     if (answerResult.isCorrect) {
                         _this.currentLabIndex++;
-                        _this.showLab();
+                        // check if all labs done
+                        if (_this.currentLabIndex == _this.lesson.labs.length) {
+                            _this.$uibModal.open({
+                                templateUrl: '/ngApp/dialogs/success.html',
+                                controller: LessonSuccessDialogController,
+                                controllerAs: 'modal',
+                                resolve: {
+                                    lesson: _this.lesson
+                                }
+                            }).result.then(function () {
+                                _this.$state.go('home');
+                            });
+                        }
+                        else {
+                            _this.showLab();
+                        }
                     }
                 });
             };
             LessonController.prototype.showLab = function () {
-                this.answer = null;
+                this.answer = new App.Models.Answer();
                 this.currentLab = this.lesson.labs[this.currentLabIndex];
                 if (this.currentLab.showTypeScriptEditor) {
                     this.activeTab = 3;
@@ -77,6 +117,16 @@ var App;
                 this.$uibModalInstance.close(this.answerResult);
             };
             return SubmitAnswerDialogController;
+        }());
+        var LessonSuccessDialogController = (function () {
+            function LessonSuccessDialogController($uibModalInstance, lesson) {
+                this.$uibModalInstance = $uibModalInstance;
+                this.lesson = lesson;
+            }
+            LessonSuccessDialogController.prototype.ok = function () {
+                this.$uibModalInstance.close();
+            };
+            return LessonSuccessDialogController;
         }());
     })(Controllers = App.Controllers || (App.Controllers = {}));
 })(App || (App = {}));
