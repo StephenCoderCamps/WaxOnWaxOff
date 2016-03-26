@@ -52,6 +52,8 @@ namespace WaxOnWaxOff.Services
             {
                 case LabType.JavaScript:
                     return _testService.RunJavaScriptTest(lab, answer);
+                case LabType.TypeScript:
+                    return _testService.RunTypeScriptTest(lab, answer);
                 default:
                     throw new Exception("Invalid Lab Type");
             }

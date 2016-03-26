@@ -20,6 +20,66 @@ namespace WaxOnWaxOff.Services
             _appEnv = appEnv;
         }
 
+        public AnswerResult RunTypeScriptTest(Lab lab, Answer answer)
+        {
+            var combined = answer.TypeScript + ";\r\n" + lab.Test;
+            var transpiledJavaScript = String.Empty;
+            var transpileErrors = String.Empty;
+            var transpileOutput = String.Empty;
+
+            // write TypeScript to temp file
+            var filePath = Path.Combine(_appEnv.ApplicationBasePath, @"TypeScriptSource\" + Path.GetRandomFileName());
+            var filePathTS = filePath + ".ts";
+            var filePathJS = filePath + ".js";
+
+            var tscPath = Path.Combine(_appEnv.ApplicationBasePath, @"DeployThis\tsc.exe");
+
+
+            File.WriteAllText(filePathTS, combined);
+            try
+            {
+
+                var typescriptCompiler = new ProcessStartInfo
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true,
+                    FileName = tscPath,
+                    Arguments = string.Format("\"{0}\"", filePathTS)
+                };
+
+                var process = Process.Start(typescriptCompiler);
+                transpileErrors = process.StandardError.ReadToEnd();
+                transpileOutput = process.StandardOutput.ReadToEnd();
+
+                process.WaitForExit();
+
+                transpiledJavaScript = File.ReadAllText(filePathJS);
+            }
+            finally
+            {
+                // ensure temp files deleted
+                File.Delete(filePathTS);
+                File.Delete(filePathJS);
+            }
+
+
+            AnswerResult answerResult;
+            if (!String.IsNullOrWhiteSpace(transpileErrors))
+            {
+                answerResult = new AnswerResult
+                {
+                    IsCorrect = false,
+                    Issues = new List<string>
+                    {
+                        transpileErrors
+                    }
+                };
+            }
+
+            return ExecuteJavaScript(transpiledJavaScript, answer.HTML, answer.CSS);
+        }
 
         public AnswerResult RunJavaScriptTest(Lab lab, Answer answer)
         {

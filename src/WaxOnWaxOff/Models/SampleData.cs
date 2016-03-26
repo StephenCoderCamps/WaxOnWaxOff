@@ -44,7 +44,34 @@ namespace WaxOnWaxOff.Models
                         {
                             new Lab
                             {
-                                Title = "01 - Add Numbers",
+                                LabType = LabType.TypeScript,
+                                Title = "Lab 01 - TypeScript Add Numbers",
+                                Instructions = "Using TypeScript, Create a function that adds two numbers.",
+                                HTMLSolution = "",
+                                TypeScriptSolution =  @"
+                                    function addNumbers(a:number, b:number):number {
+                                        return a + b;
+                                    }
+                                    ",
+                                JavaScriptSolution = @"",
+                                Test =@"
+                                    describe('addNumbers', function () {
+                                        it('should add positive numbers', function() {
+                                            var result = addNumbers(1,3);
+                                            expect(result).toBe(4);
+                                        });
+                                        it('should add negative numbers', function() {
+                                            var result = addNumbers(-1,-3);
+                                            expect(result).toBe(-4);
+                                        });
+                                    });
+                                "
+                            },
+
+                            new Lab
+                            {
+                                LabType = LabType.JavaScript,
+                                Title = "Lab 01 - Add Numbers",
                                 Instructions = "Create a function that adds two numbers.",
                                 HTMLSolution = "",
                                 JavaScriptSolution = @"
@@ -68,7 +95,8 @@ namespace WaxOnWaxOff.Models
                             },
                             new Lab
                             {
-                                Title = "02 - Add Two DIV Elements",
+                                LabType = LabType.JavaScript,
+                                Title = "Lab 02 - Add Two DIV Elements",
                                 Instructions = "Create a page with 2 DIV elements.",
                                 HTMLSolution =  @"
                                     <html>
@@ -92,7 +120,8 @@ namespace WaxOnWaxOff.Models
                             },
                             new Lab
                             {
-                                Title = "03 - Validate Parameters",
+                                LabType = LabType.JavaScript,
+                                Title = "Lab 03 - Validate Parameters",
                                 Instructions = "Create a function that adds two numbers and throws an exception when a argument is not a number.",
                                 HTMLSolution = "",
                                 JavaScriptSolution =  @"
@@ -120,7 +149,35 @@ namespace WaxOnWaxOff.Models
                     },
                     new Lesson
                     {
-                        Title = "Lesson 02 - TypeScript Classes"
+                        Title = "Lesson 02 - TypeScript Classes",
+                        Labs = new List<Lab>
+                        {
+                                                        new Lab
+                            {
+                                LabType = LabType.TypeScript,
+                                Title = "Lab 01 - Create TypeScript Class",
+                                Instructions = "Create a function that adds two numbers and throws an exception when a argument is not a number.",
+                                HTMLSolution = "",
+                                JavaScriptSolution =  @"",
+                                TypeScriptSolution =  @"
+                                    class Product {
+                                        public doSomething() {
+                                            return 'yikes';
+                                        }
+                                    }                
+                                    ",
+                                Test =  @"
+                                    describe('Product class', function () {
+                                        it('should return yikes', function() {
+                                            let product = new Product();
+                                            expect(product.doSomething()).toBe('yikes');
+                                        });
+                                    });
+                                "
+                            }
+
+
+                        }
                     }
                 );
                 context.SaveChanges();
