@@ -6,7 +6,10 @@
     <link href="~/css/site.css" rel="stylesheet" />
     <base href="/" />
 </head>
-<body>
+<body ng-controller="AccountController as account">
+
+    <a ui-sref="admin.lessons">Admin</a>
+    {{account.getClaim('isAdmin')}}
 
     <div class="container">
         <ui-view></ui-view>
@@ -37,5 +40,9 @@
     <script src="~/ngapp/controllers/controllers.js"></script>
     <script src="~/ngapp/services/services.js"></script>
     <script src="~/ngapp/models/models.js"></script>
+
+    <!-- Security -->
+    <script src="~/ngapp/controllers/accountcontroller.js"></script>
+    <script src="~/ngapp/services/accountservice.js"></script>
 </body>
 </html>

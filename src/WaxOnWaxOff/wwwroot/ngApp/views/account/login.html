@@ -1,0 +1,22 @@
+
+<fieldset>
+    <legend>Login Locally</legend>
+    <ul>
+        <li ng-repeat="error in controller.validationMessages">
+            {{error}}
+        </li>
+    </ul>
+
+
+    <form ng-submit="controller.login()">
+        <div>
+            <label>Email:</label>
+            <input ng-model="controller.loginUser.email" />
+        </div>
+        <div>
+            <label>Password:</label>
+            <input ng-model="controller.loginUser.password" />
+        </div>
+        <input type="submit" value="Login" />
+    </form>
+</fieldset>

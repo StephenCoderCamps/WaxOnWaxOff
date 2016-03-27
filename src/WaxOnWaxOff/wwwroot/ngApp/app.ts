@@ -21,30 +21,29 @@
                 templateUrl: 'ngApp/views/lesson.html',
                 controller: App.Controllers.LessonController,
                 controllerAs: 'controller'
+            })
+            .state('login', {
+                url: '/login',
+                templateUrl: 'ngApp/views/account/login.html',
+                controller: App.Controllers.LoginController,
+                controllerAs: 'controller'
             });
 
 
         $locationProvider.html5Mode(true);
     });
 
-    //app.run(($rootScope: ng.IRootScopeService, $state: ng.ui.IStateService, accountService: App.Services.AccountService) => {
-    //    $rootScope.$on('$stateChangeStart', function (e, to) {
+    app.run(($rootScope: ng.IRootScopeService, $state: ng.ui.IStateService, accountService: App.Services.AccountService) => {
+        $rootScope.$on('$stateChangeStart', function (e, to) {
+            console.dir(to);
 
-    //        // protect admin views
-    //        if (to.data && to.data.isAdmin) {
-    //            if (!accountService.getClaim('isAdmin')) {
-    //                e.preventDefault();
-    //                $state.go('login');
-    //            }
-    //        }
-
-    //        // protect non-public views
-    //        if (!to.data || !to.data.isPublic) {
-    //            if (!accountService.isLoggedIn()) {
-    //                e.preventDefault();
-    //                $state.go('login');
-    //            }
-    //        }
-    //    });
-    //});
+            // protect non-public views
+            if (to.name !== 'login') {
+                if (!accountService.isLoggedIn()) {
+                    e.preventDefault();
+                    $state.go('login');
+                }
+            }
+        });
+    });
 }

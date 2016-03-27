@@ -16,6 +16,7 @@ using WaxOnWaxOff.ViewModels.Account;
 namespace WaxOnWaxOff.Controllers
 {
     [Authorize]
+    [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -38,22 +39,24 @@ namespace WaxOnWaxOff.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
-        //
-        // GET: /Account/Login
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+
+        private async Task<UserViewModel> GetUser(string userName)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            var user = await _userManager.FindByNameAsync(userName);
+            var claims = await _userManager.GetClaimsAsync(user);
+            var vm = new UserViewModel
+            {
+                UserName = user.UserName,
+                Claims = claims.ToDictionary(c => c.Type, c => c.Value)
+            };
+            return vm;
         }
 
         //
         // POST: /Account/Login
-        [HttpPost]
+        [HttpPost("login")]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login([FromBody]LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
@@ -64,7 +67,8 @@ namespace WaxOnWaxOff.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    var user = await GetUser(model.Email);
+                    return Ok(user);
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -73,34 +77,26 @@ namespace WaxOnWaxOff.Controllers
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning(2, "User account locked out.");
-                    return View("Lockout");
+                    this.ModelState.AddModelError("", "User account locked out.");
+                    return HttpBadRequest(this.ModelState);
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
+                    return HttpBadRequest(this.ModelState);
                 }
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return HttpBadRequest(this.ModelState);
         }
 
-        //
-        // GET: /Account/Register
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Register()
-        {
-            return View();
-        }
 
         //
         // POST: /Account/Register
-        [HttpPost]
+        [HttpPost("Register")]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -116,31 +112,43 @@ namespace WaxOnWaxOff.Controllers
                     //    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                    var userViewModel = await GetUser(user.UserName);
+                    return Ok(userViewModel);
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            // If we got this far, something failed
+            return HttpBadRequest(this.ModelState);
         }
 
         //
         // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogOff()
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return Ok();
+        }
+
+
+        // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
+        [AllowAnonymous]
+        [HttpGet("GetExternalLogins")]
+        public IEnumerable<ExternalLoginViewModel> GetExternalLogins()
+        {
+            return _signInManager.GetExternalAuthenticationSchemes().Select(a => new ExternalLoginViewModel
+            {
+                DisplayName = a.DisplayName,
+                AuthenticationScheme = a.AuthenticationScheme
+            });
         }
 
         //
         // POST: /Account/ExternalLogin
-        [HttpPost]
+        [HttpGet("ExternalLogin")]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
             // Request a redirect to the external login provider.
@@ -151,7 +159,7 @@ namespace WaxOnWaxOff.Controllers
 
         //
         // GET: /Account/ExternalLoginCallback
-        [HttpGet]
+        [HttpGet("ExternalLoginCallback")]
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null)
         {
@@ -182,20 +190,20 @@ namespace WaxOnWaxOff.Controllers
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+                return RedirectToLocal("/externalRegister");
+                //return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
             }
         }
 
         //
         // POST: /Account/ExternalLoginConfirmation
-        [HttpPost]
+        [HttpPost("ExternalLoginConfirmation")]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
+        public async Task<IActionResult> ExternalLoginConfirmation([FromBody]ExternalLoginConfirmationViewModel model, string returnUrl = null)
         {
             if (User.IsSignedIn())
             {
-                return RedirectToAction(nameof(ManageController.Index), "Manage");
+                //return RedirectToAction(nameof(ManageController.Index), "Manage");
             }
 
             if (ModelState.IsValid)
@@ -204,7 +212,9 @@ namespace WaxOnWaxOff.Controllers
                 var info = await _signInManager.GetExternalLoginInfoAsync();
                 if (info == null)
                 {
-                    return View("ExternalLoginFailure");
+                    ModelState.AddModelError("", "ExternalLoginFailure");
+                    return HttpBadRequest(this.ModelState);
+                    //return View("ExternalLoginFailure");
                 }
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
@@ -215,14 +225,15 @@ namespace WaxOnWaxOff.Controllers
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
-                        return RedirectToLocal(returnUrl);
+                        var userViewModel = await GetUser(user.UserName);
+                        return Ok(userViewModel);
                     }
                 }
                 AddErrors(result);
             }
 
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(model);
+            // ViewData["ReturnUrl"] = returnUrl;
+            return HttpBadRequest(this.ModelState);
         }
 
         // GET: /Account/ConfirmEmail

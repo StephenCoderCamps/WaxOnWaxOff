@@ -15,8 +15,26 @@ var App;
             templateUrl: 'ngApp/views/lesson.html',
             controller: App.Controllers.LessonController,
             controllerAs: 'controller'
+        })
+            .state('login', {
+            url: '/login',
+            templateUrl: 'ngApp/views/account/login.html',
+            controller: App.Controllers.LoginController,
+            controllerAs: 'controller'
         });
         $locationProvider.html5Mode(true);
+    });
+    app.run(function ($rootScope, $state, accountService) {
+        $rootScope.$on('$stateChangeStart', function (e, to) {
+            console.dir(to);
+            // protect non-public views
+            if (to.name !== 'login') {
+                if (!accountService.isLoggedIn()) {
+                    e.preventDefault();
+                    $state.go('login');
+                }
+            }
+        });
     });
 })(App || (App = {}));
 //# sourceMappingURL=app.js.map
