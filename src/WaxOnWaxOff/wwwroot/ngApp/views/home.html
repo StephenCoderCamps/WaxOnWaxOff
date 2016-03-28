@@ -2,6 +2,7 @@
 <ul>
     <li ng-repeat="lesson in controller.lessons">
         <a ui-sref="lesson({id:lesson.id})">{{lesson.title}}</a>
+        <img src="/images/passed.gif" ng-show="lesson.passed" />
     </li>
 
 </ul>

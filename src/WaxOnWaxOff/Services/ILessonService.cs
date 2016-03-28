@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using WaxOnWaxOff.Models;
 using WaxOnWaxOff.ViewModels;
 
@@ -6,8 +7,8 @@ namespace WaxOnWaxOff.Services
 {
     public interface ILessonService
     {
-        List<LessonDTO> ListLessons();
+        List<LessonDTO> ListLessons(ClaimsPrincipal user);
         LessonDTO GetLesson(int id);
-        AnswerResult SubmitAnswer(int labId, Answer anwwer);
+        AnswerResult SubmitAnswer(ClaimsPrincipal user, int labId, Answer anwwer);
     }
 }

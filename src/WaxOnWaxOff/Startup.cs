@@ -121,7 +121,7 @@ namespace WaxOnWaxOff
             });
 
 
-            SampleData.Initialize(app.ApplicationServices).Wait();
+            SampleData.Initialize(Configuration, app.ApplicationServices).Wait();
         }
 
         // Entry point for the application.

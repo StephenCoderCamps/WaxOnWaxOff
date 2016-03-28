@@ -8,9 +8,10 @@ using WaxOnWaxOff.Models;
 namespace WaxOnWaxOff.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160328033443_AddScore")]
+    partial class AddScore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
@@ -163,7 +164,7 @@ namespace WaxOnWaxOff.Migrations
 
                     b.Property<int>("LabType");
 
-                    b.Property<int>("LessonId");
+                    b.Property<int?>("LessonId");
 
                     b.Property<string>("Test");
 
@@ -174,44 +175,12 @@ namespace WaxOnWaxOff.Migrations
                     b.HasKey("Id");
                 });
 
-            modelBuilder.Entity("WaxOnWaxOff.Models.LabScore", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("DatePassed");
-
-                    b.Property<int>("LabId");
-
-                    b.Property<bool>("Passed");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-                });
-
             modelBuilder.Entity("WaxOnWaxOff.Models.Lesson", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Title");
-
-                    b.HasKey("Id");
-                });
-
-            modelBuilder.Entity("WaxOnWaxOff.Models.LessonScore", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("DatePassed");
-
-                    b.Property<int>("LessonId");
-
-                    b.Property<bool>("Passed");
-
-                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
                 });
@@ -253,28 +222,6 @@ namespace WaxOnWaxOff.Migrations
                     b.HasOne("WaxOnWaxOff.Models.Lesson")
                         .WithMany()
                         .HasForeignKey("LessonId");
-                });
-
-            modelBuilder.Entity("WaxOnWaxOff.Models.LabScore", b =>
-                {
-                    b.HasOne("WaxOnWaxOff.Models.Lab")
-                        .WithMany()
-                        .HasForeignKey("LabId");
-
-                    b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("WaxOnWaxOff.Models.LessonScore", b =>
-                {
-                    b.HasOne("WaxOnWaxOff.Models.Lesson")
-                        .WithMany()
-                        .HasForeignKey("LessonId");
-
-                    b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
         }
     }

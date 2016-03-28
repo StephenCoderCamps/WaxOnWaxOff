@@ -6,32 +6,46 @@ using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+
 
 namespace WaxOnWaxOff.Models
 {
     public class SampleData
     {
-        public async static Task Initialize(IServiceProvider serviceProvider)
+
+
+        public async static Task AddAdmins(IConfiguration config, UserManager<ApplicationUser> userManager)
+        {
+            var admins = config["admins"].Split(',');
+            foreach (var email in admins)
+            {
+                var user = await userManager.FindByNameAsync(email);
+                if (user == null)
+                {
+                    // create user
+                    user = new ApplicationUser
+                    {
+                        UserName = email,
+                        Email = email
+                    };
+                    var result = await userManager.CreateAsync(user, config["adminPassword"]);
+
+                    // add claims
+                    await userManager.AddClaimAsync(user, new Claim("IsAdmin", "true"));
+                }
+            }
+        }
+
+        public async static Task Initialize(IConfiguration config, IServiceProvider serviceProvider)
         {
             var context = serviceProvider.GetService<ApplicationDbContext>();
             var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
             context.Database.Migrate();
 
-            // Ensure Stephen
-            var user = await userManager.FindByNameAsync("Stephen.Walther@CoderCamps.com");
-            if (user == null)
-            {
-                // create user
-                user = new ApplicationUser
-                {
-                    UserName = "Stephen.Walther@CoderCamps.com",
-                    Email = "Stephen.Walther@CoderCamps.com"
-                };
-                await userManager.CreateAsync(user, "Secret123!");
+            // add admins
+            await AddAdmins(config, userManager);
 
-                // add claims
-                await userManager.AddClaimAsync(user, new Claim("IsAdmin", "true"));
-            }
 
             // add sample lessons
             if (!context.Lessons.Any())
