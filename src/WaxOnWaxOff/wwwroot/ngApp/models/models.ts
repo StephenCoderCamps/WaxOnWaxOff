@@ -9,7 +9,19 @@
     }
 
     export class Lab {
-        labType: number = 0;
+        public lessonId: number;
+        public labType: number = 0;
+        public test = 
+`describe('addNumbers', function () {
+    it('should add positive numbers', function() {
+        var result = addNumbers(1,3);
+        expect(result).toBe(4);
+    });
+    it('should add negative numbers', function() {
+        var result = addNumbers(-1,-3);
+        expect(result).toBe(-4);
+    });
+});`;
 
     }
 

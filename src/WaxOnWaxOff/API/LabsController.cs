@@ -20,6 +20,13 @@ namespace WaxOnWaxOff.API
             this._labService = labService;
         }
 
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            return Ok(_labService.GetLab(id));
+        }
+
+
         // GET: api/values
         [HttpGet("List/{lessonId}")]
         public IEnumerable<Lab> List(int lessonId)
@@ -38,20 +45,33 @@ namespace WaxOnWaxOff.API
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]Lab lab)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return HttpBadRequest(this.ModelState);
+            }
+
+            if (lab.Id == 0)
+            {
+                _labService.AddLab(lab);
+
+            }
+            else {
+                _labService.EditLab(lab);
+            }
+            return Ok(lab);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+   
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _labService.DeleteLab(id);
+            return Ok();
         }
     }
 }

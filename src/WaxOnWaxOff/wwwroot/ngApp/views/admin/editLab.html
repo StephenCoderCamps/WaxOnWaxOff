@@ -10,7 +10,7 @@
     </ul>
 
 
-    <form ng-submit="controller.edit()">
+    <form ng-submit="controller.saveLab()">
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" class="form-control" id="title" placeholder="Title" ng-model="controller.lab.title" />
@@ -57,7 +57,7 @@
 
         <button type="button" class="btn btn-primary" ng-click="controller.testTest()">Test</button>
 
-        <button type="submit" class="btn btn-primary">Save</button>
+        <input type="submit" class="btn btn-primary" value="Save" />
     </form>
 
 </fieldset>

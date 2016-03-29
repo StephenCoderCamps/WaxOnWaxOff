@@ -73,16 +73,47 @@
 
 
     export class LabsController {
+        public lessonId;
         public labs;
 
-        constructor(private $stateParams: ng.ui.IStateParamsService, private labService: App.Admin.Services.LabService) {
-            this.labs = labService.list($stateParams['lessonId']);
+        public removeLab(labId: number) {
+            this.$uibModal.open({
+                templateUrl: '/ngApp/dialogs/admin/deleteLab.html',
+                controller: DeleteLabController,
+                controllerAs: 'modal',
+                resolve: {
+                    labId: labId
+                }
+            }).result.then(() => {
+                this.labs = this.labService.list(this.lessonId);
+            });
+        }
+
+        constructor(private $stateParams: ng.ui.IStateParamsService, private labService: App.Admin.Services.LabService, private $uibModal: ng.ui.bootstrap.IModalService) {
+            this.lessonId = $stateParams['lessonId'];
+            this.labs = labService.list(this.lessonId);
         }
     }
 
 
+    class DeleteLabController {
+        public lab;
+
+        public save() {
+            this.labService.remove(this.lab.id).then(() => {
+                this.$uibModalInstance.close();
+            });;
+        }
+
+        constructor(private labId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private labService: App.Admin.Services.LabService) {
+            if (labId) {
+                this.lab = labService.getLab(labId);
+            }
+        }
+    }
 
     export class LabEditController {
+        public lessonId: number;
         public lab: App.Models.Lab;
         public aceOptions: any = {};
 
@@ -91,15 +122,54 @@
         }
 
 
-        public testTest() {
-            this.labService.testTest(this.lab);
+        public saveLab() {
+            this.lab.lessonId = this.lessonId;
+            this.labService.save(this.lab).then(() => {
+                this.$state.go('admin.labs', {lessonId:this.lessonId});
+            });
         }
 
-        constructor(private labService: App.Admin.Services.LabService) {
-            this.lab = new App.Models.Lab();
+        public testTest() {
+            this.$uibModal.open({
+                templateUrl: '/ngApp/dialogs/submitAnswer.html',
+                controller: SubmitTestDialogController,
+                controllerAs: 'modal',
+                resolve: {
+                    lab: this.lab
+                }
+            })
+        }
+
+        constructor(
+            private labService: App.Admin.Services.LabService,
+            private $uibModal: ng.ui.bootstrap.IModalService,
+            private $state: ng.ui.IStateService,
+            private $stateParams: ng.ui.IStateParamsService
+        ) {
+            this.lessonId = this.$stateParams['lessonId'];
+            let labId = this.$stateParams['labId'];
+            if (labId) {
+                this.lab = this.labService.getLab(labId);
+            } else {
+                this.lab = new App.Models.Lab();
+            }
         }
     }
 
+    class SubmitTestDialogController {
+        public answerResult;
+        public isWorking = true;
 
+        public ok() {
+            this.$uibModalInstance.close(this.answerResult);
+        }
+
+        constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private labService: App.Admin.Services.LabService, lab) {
+            this.labService.testTest(lab).then((result) => {
+                this.answerResult = result;
+                this.isWorking = false;
+            });
+        }
+    }
 
 }

@@ -44,7 +44,7 @@
                 controller: App.Admin.Controllers.LabsController,
                 controllerAs: 'controller'
             }).state('admin.editLab', {
-                url: '/lab/:labId',
+                url: '/lab/:lessonId/:labId',
                 templateUrl: '/ngApp/views/admin/editLab.html',
                 controller: App.Admin.Controllers.LabEditController,
                 controllerAs: 'controller'

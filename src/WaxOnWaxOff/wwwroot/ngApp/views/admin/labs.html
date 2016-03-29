@@ -5,11 +5,11 @@
     <li class="list-group-item" ng-repeat="lab in controller.labs">
         {{lab.title}}
         <div class="pull-right">
-            <button ng-click="controller.edit(lab.id)" class="btn btn-default btn-xs">edit</button>
-            <button ng-click="controller.remove(lab.id)" class="btn btn-default btn-xs">delete</button>
+            <a ui-sref="admin.editLab({lessonId:lab.lessonId, labId:lab.id})" class="btn btn-default btn-xs">edit</a>
+            <button ng-click="controller.removeLab(lab.id)" class="btn btn-default btn-xs">delete</button>
         </div>
     </li>
 
 </ul>
 
-<button class="btn btn-primary" ui-sref="admin.editLab()">Add Lab</button>
+<button class="btn btn-primary" ui-sref="admin.editLab({lessonId:controller.lessonId})">Add Lab</button>
