@@ -7,6 +7,6 @@ namespace WaxOnWaxOff.Models
 {
     public enum LabType
     {
-        JavaScript, TypeScript, CSharp
+        JavaScript=0, TypeScript=1, CSharp=2
     }
 }

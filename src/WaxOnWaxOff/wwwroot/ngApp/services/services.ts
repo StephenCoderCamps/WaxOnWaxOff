@@ -17,6 +17,16 @@
             return this.lessonResource.get({id:id});
         }
 
+
+        public editLesson(lesson) {
+            return this.lessonResource.save(lesson).$promise;
+        }
+
+        public deleteLesson(id: number) {
+            return this.lessonResource.delete({ id: id }).$promise;
+        }
+
+
         constructor($resource: ng.resource.IResourceService) {
             this.lessonResource = $resource('/api/lessons/:id', null, {
                 submitAnswer: {

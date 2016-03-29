@@ -122,6 +122,12 @@ var App;
             function LessonSuccessDialogController($uibModalInstance, lesson) {
                 this.$uibModalInstance = $uibModalInstance;
                 this.lesson = lesson;
+                var happyPictures = [
+                    '/images/success/catAndDog.jpg',
+                    '/images/success/cookie.jpg'
+                ];
+                var rnd = Math.floor(Math.random() * happyPictures.length);
+                this.happyPicture = happyPictures[rnd];
             }
             LessonSuccessDialogController.prototype.ok = function () {
                 this.$uibModalInstance.close();

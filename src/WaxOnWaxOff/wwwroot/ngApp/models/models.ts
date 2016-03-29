@@ -8,4 +8,9 @@
         public csharp: string = "";
     }
 
+    export class Lab {
+        labType: number = 0;
+
+    }
+
 }

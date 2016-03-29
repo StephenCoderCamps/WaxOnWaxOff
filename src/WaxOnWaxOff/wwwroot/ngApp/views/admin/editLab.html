@@ -1,0 +1,63 @@
+﻿
+<h2>Edit Lab</h2>
+
+<fieldset>
+    <legend>Edit Lab</legend>
+    <ul>
+        <li ng-repeat="error in controller.validationMessages">
+            {{error}}
+        </li>
+    </ul>
+
+
+    <form ng-submit="controller.edit()">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Title" ng-model="controller.lab.title" />
+        </div>
+        <div class="form-group">
+            <label for="instructions">Instructions</label>
+            <textarea class="form-control" id="instructions" placeholder="Instructions" ng-model="controller.lab.instructions"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="radio-inline">
+                <input type="radio" name="labType" value="0" ng-model="controller.lab.labType" ng-change="controller.labTypeChange()"> JavaScript
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="labType" value="1" ng-model="controller.lab.labType" ng-change="controller.labTypeChange()"> TypeScript
+            </label>
+        </div>
+
+
+        <div class="form-group">
+            <label for="Test">Test</label>
+            <div ui-ace="controller.aceOptions" ng-model="controller.lab.test"></div>
+        </div>
+
+
+
+        <uib-tabset>
+            <uib-tab heading="HTML Solution">
+                <div ui-ace="{mode:'html'}" ng-model="controller.lab.htmlSolution"></div>
+            </uib-tab>
+            <uib-tab heading="JavaScript Solution">
+                <div ui-ace="{mode:'javascript'}" ng-model="controller.lab.javascriptSolution"></div>
+            </uib-tab>
+            <uib-tab heading="CSS Solution">
+                <div ui-ace="{mode:'css'}" ng-model="controller.lab.cssSolution"></div>
+            </uib-tab>
+            <uib-tab heading="TypeScript Solution">
+                <div ui-ace="{mode:'typescript'}" ng-model="controller.lab.typescriptSolution"></div>
+            </uib-tab>
+            <uib-tab heading="C# Solution">
+                <div ui-ace="{mode:'csharp'}" ng-model="controller.lab.csharpSolution"></div>
+            </uib-tab>
+
+        </uib-tabset>
+
+        <button type="button" class="btn btn-primary" ng-click="controller.testTest()">Test</button>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+</fieldset>

@@ -26,27 +26,11 @@ namespace WaxOnWaxOff.Services
 
         public List<LessonDTO> ListLessons(ClaimsPrincipal user)
         {
-            var userId = user.GetUserId();
-            //return _db.Lessons
-            //    .OrderBy(l => l.Title)
-            //    .Include(l => l.LessonScore)
-            //    .Select(l => l.LessonScore.Where(ls => ls.UserId == user.GetUserId()))
-            //    .ProjectTo<LessonDTO>(_mapper.ConfigurationProvider)
-            //    .ToList();
             return _db.Lessons
                .OrderBy(l => l.Title)
                .Select(l => new LessonDTO {
+                    Id = l.Id,
                     Title = l.Title,
-                    Labs = l.Labs.Select(lb => new LabDTO {
-                        Id = lb.Id,
-                        Instructions = lb.Instructions,
-                        Title = lb.Title,
-                        ShowHTMLEditor = !String.IsNullOrWhiteSpace(lb.HTMLSolution),
-                        ShowCSSEditor = !String.IsNullOrWhiteSpace(lb.CSSSolution),
-                        ShowJavaScriptEditor = !String.IsNullOrWhiteSpace(lb.JavaScriptSolution),
-                        ShowTypeScriptEditor = !String.IsNullOrWhiteSpace(lb.TypeScriptSolution),
-                        ShowCSharpEditor = !String.IsNullOrWhiteSpace(lb.CSharpSolution)
-                    }).ToList(),
                     Passed = l.LessonScore.Any( ls => ls.Passed && ls.UserId == user.GetUserId())
                })
                .ToList(); 
@@ -126,6 +110,26 @@ namespace WaxOnWaxOff.Services
                 }
             }
             return answerResult;
+        }
+
+        public void AddLesson(Lesson lesson)
+        {
+            _db.Lessons.Add(lesson);
+            _db.SaveChanges();
+        }
+
+        public void DeleteLesson(int id)
+        {
+            var original = _db.Lessons.FirstOrDefault(l => l.Id == id);
+            _db.Lessons.Remove(original);
+            _db.SaveChanges();
+        }
+
+        public void EditLesson(Lesson lesson)
+        {
+            var original = _db.Lessons.FirstOrDefault(l => l.Id == lesson.Id);
+            original.Title = lesson.Title;
+            _db.SaveChanges();
         }
 
     }

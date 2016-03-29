@@ -24,10 +24,32 @@
             })
             .state('login', {
                 url: '/login',
-                templateUrl: 'ngApp/views/account/login.html',
+                templateUrl: '/ngApp/views/account/login.html',
                 controller: App.Controllers.LoginController,
                 controllerAs: 'controller'
+            })
+            .state('admin', {
+                abstract: true,
+                url: '/admin',
+                templateUrl: 'ngApp/views/admin/admin.html'
+            })
+            .state('admin.lessons', {
+                url: '/lessons',
+                templateUrl: '/ngApp/views/admin/lessons.html',
+                controller: App.Admin.Controllers.LessonsControllers,
+                controllerAs: 'controller'
+            }).state('admin.labs', {
+                url: '/labs/:lessonId',
+                templateUrl: '/ngApp/views/admin/labs.html',
+                controller: App.Admin.Controllers.LabsController,
+                controllerAs: 'controller'
+            }).state('admin.editLab', {
+                url: '/lab/:labId',
+                templateUrl: '/ngApp/views/admin/editLab.html',
+                controller: App.Admin.Controllers.LabEditController,
+                controllerAs: 'controller'
             });
+
 
 
         $locationProvider.html5Mode(true);
@@ -35,7 +57,6 @@
 
     app.run(($rootScope: ng.IRootScopeService, $state: ng.ui.IStateService, accountService: App.Services.AccountService) => {
         $rootScope.$on('$stateChangeStart', function (e, to) {
-            console.dir(to);
 
             // protect non-public views
             if (to.name !== 'login') {

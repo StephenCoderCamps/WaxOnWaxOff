@@ -18,6 +18,12 @@ var App;
             LessonService.prototype.getLesson = function (id) {
                 return this.lessonResource.get({ id: id });
             };
+            LessonService.prototype.editLesson = function (lesson) {
+                return this.lessonResource.save(lesson).$promise;
+            };
+            LessonService.prototype.deleteLesson = function (id) {
+                return this.lessonResource.delete({ id: id }).$promise;
+            };
             return LessonService;
         }());
         Services.LessonService = LessonService;

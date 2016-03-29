@@ -13,6 +13,13 @@ var App;
             return Answer;
         }());
         Models.Answer = Answer;
+        var Lab = (function () {
+            function Lab() {
+                this.labType = 0;
+            }
+            return Lab;
+        }());
+        Models.Lab = Lab;
     })(Models = App.Models || (App.Models = {}));
 })(App || (App = {}));
 //# sourceMappingURL=models.js.map

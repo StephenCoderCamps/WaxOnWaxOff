@@ -1,0 +1,15 @@
+﻿<h2>Edit Lessons</h2>
+
+
+<ul class="list-group" >
+    <li class="list-group-item" ng-repeat="lesson in controller.lessons">
+        <a ui-sref="admin.labs({lessonId:lesson.id})">{{lesson.title}}</a>
+        <div class="pull-right">
+            <button ng-click="controller.edit(lesson.id)" class="btn btn-default btn-xs">edit</button>
+            <button ng-click="controller.remove(lesson.id)" class="btn btn-default btn-xs">delete</button>
+        </div>
+    </li>
+
+</ul>
+
+<button class="btn btn-primary" ng-click="controller.edit()">Add Lesson</button>

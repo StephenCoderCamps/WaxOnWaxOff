@@ -47,5 +47,32 @@ namespace WaxOnWaxOff.API
         }
 
 
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _lessonService.DeleteLesson(id);
+            return Ok();
+        }
+
+
+        [HttpPost]
+        public IActionResult Post([FromBody]Lesson lesson)
+        {
+            if (!ModelState.IsValid)
+            {
+                return HttpBadRequest(this.ModelState);
+            }
+
+            if (lesson.Id == 0)
+            {
+                _lessonService.AddLesson(lesson);
+
+            } else {
+                _lessonService.EditLesson(lesson);
+            }
+            return Ok(lesson);
+        }
+
+
     }
 }

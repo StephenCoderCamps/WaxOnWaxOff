@@ -1,14 +1,14 @@
 ﻿<div class="modal-body">
 
     <div ng-show="modal.isWorking">
-        Checking your answer!
+        <h1><img src="/images//gears.gif" /> Checking your answer...</h1>
     </div>
     <div ng-show="!modal.isWorking">
         <div ng-show="modal.answerResult.isCorrect">
-            <h1>Nice Job!</h1>
+            <h1><img src="/images/smile.png" /> Correct!</h1>
         </div>
         <div ng-show="!modal.answerResult.isCorrect">
-            <h1>Oops!</h1>
+            <h1><img src="/images/frown.png" /> Wrong!</h1>
             <ul>
                 <li ng-repeat="issue in modal.answerResult.issues">{{issue}}</li>
             </ul>

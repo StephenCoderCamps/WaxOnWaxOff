@@ -10,5 +10,8 @@ namespace WaxOnWaxOff.Services
         List<LessonDTO> ListLessons(ClaimsPrincipal user);
         LessonDTO GetLesson(int id);
         AnswerResult SubmitAnswer(ClaimsPrincipal user, int labId, Answer anwwer);
+        void AddLesson(Lesson lesson);
+        void EditLesson(Lesson lesson);
+        void DeleteLesson(int id);
     }
 }

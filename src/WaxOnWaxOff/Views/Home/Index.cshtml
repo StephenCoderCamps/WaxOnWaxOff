@@ -1,15 +1,34 @@
 ﻿<html xmlns="http://www.w3.org/1999/xhtml" ng-app="App">
 <head>
     <title></title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" />
+
+    <link href="~/css/bootstrap.united.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
     <base href="/" />
 </head>
 <body ng-controller="AccountController as account">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navLinks">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="home.html">Wax On</a>
+            </div>
+            <div id="navLinks" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a ui-sref="admin.lessons" ng-show="account.getClaim('isAdmin')">Admin</a></li>
+                    <li><a ng-click="account.logout()" ng-show="account.isLoggedIn()">logout {{account.getUserName()}}</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <a ui-sref="admin.lessons">Admin</a>
-    {{account.getClaim('isAdmin')}}
+   
 
     <div class="container">
         <ui-view></ui-view>
@@ -40,6 +59,9 @@
     <script src="~/ngapp/controllers/controllers.js"></script>
     <script src="~/ngapp/services/services.js"></script>
     <script src="~/ngapp/models/models.js"></script>
+    <script src="~/ngapp/controllers/admin/admincontrollers.js"></script>
+    <script src="~/ngapp/services/admin/adminservice.js"></script>
+
 
     <!-- Security -->
     <script src="~/ngapp/controllers/accountcontroller.js"></script>

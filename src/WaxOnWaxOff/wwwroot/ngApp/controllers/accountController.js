@@ -22,7 +22,7 @@ var App;
             };
             AccountController.prototype.logout = function () {
                 this.accountService.logout();
-                this.$location.path('/');
+                this.$location.path('/login');
             };
             AccountController.prototype.getExternalLogins = function () {
                 return this.accountService.getExternalLogins();

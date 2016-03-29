@@ -17,7 +17,7 @@
 
         public logout() {
             this.accountService.logout();
-            this.$location.path('/');
+            this.$location.path('/login');
         }
 
         public getExternalLogins() {

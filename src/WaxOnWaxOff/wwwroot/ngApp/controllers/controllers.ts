@@ -122,11 +122,21 @@
 
 
     class LessonSuccessDialogController {
+        public happyPicture;
+
         public ok() {
             this.$uibModalInstance.close();
         }
 
-        constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, public lesson) {}
+        constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, public lesson) {
+            var happyPictures = [
+                '/images/success/catAndDog.jpg',
+                '/images/success/cookie.jpg'
+            ];
+            var rnd = Math.floor(Math.random() * happyPictures.length);
+            this.happyPicture = happyPictures[rnd];
+
+        }
 
     }
 

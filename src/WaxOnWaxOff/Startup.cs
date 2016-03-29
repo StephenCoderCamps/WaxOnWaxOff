@@ -71,6 +71,8 @@ namespace WaxOnWaxOff
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddScoped<ILessonService, LessonService>();
             services.AddScoped<ITestService, TestService>();
+            services.AddScoped<ILabService, LabService>();
+
 
         }
 
