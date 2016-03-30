@@ -48,6 +48,11 @@
                 templateUrl: '/ngApp/views/admin/editLab.html',
                 controller: App.Admin.Controllers.LabEditController,
                 controllerAs: 'controller'
+            }).state('admin.students', {
+                url: '/students',
+                templateUrl: '/ngApp/views/admin/students.html',
+                controller: App.Admin.Controllers.StudentsController,
+                controllerAs: 'controller'
             });
 
 

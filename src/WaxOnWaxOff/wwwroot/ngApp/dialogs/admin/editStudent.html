@@ -1,0 +1,19 @@
+﻿
+<form ng-submit="modal.save()">
+    <div class="modal-header">
+        <h2 class="modal-title">Edit Student</h2>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="userName">User Name</label>
+            <input type="text" class="form-control" id="userName" placeholder="User Name" ng-model="modal.student.userName" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="text" class="form-control" id="password" placeholder="Password" ng-model="modal.student.password" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>

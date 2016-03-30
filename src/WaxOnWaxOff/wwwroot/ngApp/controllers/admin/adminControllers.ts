@@ -172,4 +172,106 @@
         }
     }
 
+
+
+
+    export class StudentsController {
+        public students;
+
+
+        public getScores(student) {
+            this.$uibModal.open({
+                templateUrl: '/ngApp/dialogs/admin/scores.html',
+                controller: StudentScoresController,
+                controllerAs: 'modal',
+                resolve: {
+                    student: student
+                }
+            }).result.then(() => {
+                this.students = this.studentService.list();
+            });
+        }
+
+
+        public add(studentId: number) {
+            this.$uibModal.open({
+                templateUrl: '/ngApp/dialogs/admin/editStudent.html',
+                controller: StudentAddController,
+                controllerAs: 'modal',
+                resolve: {
+                    studentId: () => studentId
+                }
+            }).result.then(() => {
+                this.students = this.studentService.list();
+            });
+        }
+
+
+
+        public removeStudent(studentId: number) {
+            this.$uibModal.open({
+                templateUrl: '/ngApp/dialogs/admin/deleteStudent.html',
+                controller: StudentDeleteController,
+                controllerAs: 'modal',
+                resolve: {
+                    studentId: studentId
+                }
+            }).result.then(() => {
+                this.students = this.studentService.list();
+            });
+        }
+
+        constructor(private $stateParams: ng.ui.IStateParamsService, private studentService: App.Admin.Services.StudentService, private $uibModal: ng.ui.bootstrap.IModalService) {
+            this.students = studentService.list();
+        }
+    }
+
+    class StudentDeleteController {
+        public student;
+
+        public save() {
+            this.studentService.remove(this.student.id).then(() => {
+                this.$uibModalInstance.close();
+            });;
+        }
+
+        constructor(private studentId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private studentService: App.Admin.Services.StudentService) {
+            if (studentId) {
+                this.student = studentService.getStudent(studentId);
+            }
+        }
+    }
+
+    class StudentAddController {
+        public student;
+
+        public save() {
+            this.studentService.save(this.student).then(() => {
+                this.$uibModalInstance.close();
+            });;
+        }
+
+        constructor(private studentId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private studentService: App.Admin.Services.StudentService) {
+            if (studentId) {
+                this.student = studentService.getStudent(studentId);
+            }
+        }
+    }
+
+
+
+    class StudentScoresController {
+        public scores;
+
+        public ok() {
+            this.$uibModalInstance.close();
+        }
+
+        constructor(public student, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private studentService: App.Admin.Services.StudentService) {
+            this.scores = studentService.listScores(student.id);
+        }
+    }
+
+
+
 }

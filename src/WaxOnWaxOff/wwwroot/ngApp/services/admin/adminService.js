@@ -30,6 +30,31 @@ var App;
             }());
             Services.LabService = LabService;
             angular.module('App').service('labService', LabService);
+            var StudentService = (function () {
+                function StudentService($resource) {
+                    this.StudentResource = $resource("/api/students/:id", null, {
+                        listScores: { url: '/api/students/scores/:id', method: 'GET', isArray: true }
+                    });
+                }
+                StudentService.prototype.getStudent = function (studentId) {
+                    return this.StudentResource.get({ id: studentId });
+                };
+                StudentService.prototype.list = function () {
+                    return this.StudentResource.query();
+                };
+                StudentService.prototype.listScores = function (studentId) {
+                    return this.StudentResource.listScores({ id: studentId });
+                };
+                StudentService.prototype.save = function (student) {
+                    return this.StudentResource.save(student).$promise;
+                };
+                StudentService.prototype.remove = function (studentId) {
+                    return this.StudentResource.delete({ id: studentId }).$promise;
+                };
+                return StudentService;
+            }());
+            Services.StudentService = StudentService;
+            angular.module('App').service('studentService', StudentService);
         })(Services = Admin.Services || (Admin.Services = {}));
     })(Admin = App.Admin || (App.Admin = {}));
 })(App || (App = {}));

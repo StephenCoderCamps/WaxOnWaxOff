@@ -36,4 +36,42 @@
 
     angular.module('App').service('labService', LabService);
 
+
+
+    export class StudentService {
+        private StudentResource;
+
+        public getStudent(studentId: number) {
+            return this.StudentResource.get({ id: studentId });
+        }
+
+        public list() {
+            return this.StudentResource.query();
+        }
+
+
+        public listScores(studentId) {
+            return this.StudentResource.listScores({id:studentId});
+        }
+
+        public save(student) {
+            return this.StudentResource.save(student).$promise;
+        }
+
+
+        public remove(studentId) {
+            return this.StudentResource.delete({ id: studentId }).$promise;
+        }
+
+
+        constructor($resource: ng.resource.IResourceService) {
+            this.StudentResource = $resource("/api/students/:id", null, {
+                listScores: {url:'/api/students/scores/:id', method:'GET', isArray:true}
+            });
+        }
+    }
+
+    angular.module('App').service('studentService', StudentService);
+
+
 }

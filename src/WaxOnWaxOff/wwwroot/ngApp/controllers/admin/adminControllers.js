@@ -172,6 +172,103 @@ var App;
                 };
                 return SubmitTestDialogController;
             }());
+            var StudentsController = (function () {
+                function StudentsController($stateParams, studentService, $uibModal) {
+                    this.$stateParams = $stateParams;
+                    this.studentService = studentService;
+                    this.$uibModal = $uibModal;
+                    this.students = studentService.list();
+                }
+                StudentsController.prototype.getScores = function (student) {
+                    var _this = this;
+                    this.$uibModal.open({
+                        templateUrl: '/ngApp/dialogs/admin/scores.html',
+                        controller: StudentScoresController,
+                        controllerAs: 'modal',
+                        resolve: {
+                            student: student
+                        }
+                    }).result.then(function () {
+                        _this.students = _this.studentService.list();
+                    });
+                };
+                StudentsController.prototype.add = function (studentId) {
+                    var _this = this;
+                    this.$uibModal.open({
+                        templateUrl: '/ngApp/dialogs/admin/editStudent.html',
+                        controller: StudentAddController,
+                        controllerAs: 'modal',
+                        resolve: {
+                            studentId: function () { return studentId; }
+                        }
+                    }).result.then(function () {
+                        _this.students = _this.studentService.list();
+                    });
+                };
+                StudentsController.prototype.removeStudent = function (studentId) {
+                    var _this = this;
+                    this.$uibModal.open({
+                        templateUrl: '/ngApp/dialogs/admin/deleteStudent.html',
+                        controller: StudentDeleteController,
+                        controllerAs: 'modal',
+                        resolve: {
+                            studentId: studentId
+                        }
+                    }).result.then(function () {
+                        _this.students = _this.studentService.list();
+                    });
+                };
+                return StudentsController;
+            }());
+            Controllers.StudentsController = StudentsController;
+            var StudentDeleteController = (function () {
+                function StudentDeleteController(studentId, $uibModalInstance, studentService) {
+                    this.studentId = studentId;
+                    this.$uibModalInstance = $uibModalInstance;
+                    this.studentService = studentService;
+                    if (studentId) {
+                        this.student = studentService.getStudent(studentId);
+                    }
+                }
+                StudentDeleteController.prototype.save = function () {
+                    var _this = this;
+                    this.studentService.remove(this.student.id).then(function () {
+                        _this.$uibModalInstance.close();
+                    });
+                    ;
+                };
+                return StudentDeleteController;
+            }());
+            var StudentAddController = (function () {
+                function StudentAddController(studentId, $uibModalInstance, studentService) {
+                    this.studentId = studentId;
+                    this.$uibModalInstance = $uibModalInstance;
+                    this.studentService = studentService;
+                    if (studentId) {
+                        this.student = studentService.getStudent(studentId);
+                    }
+                }
+                StudentAddController.prototype.save = function () {
+                    var _this = this;
+                    this.studentService.save(this.student).then(function () {
+                        _this.$uibModalInstance.close();
+                    });
+                    ;
+                };
+                return StudentAddController;
+            }());
+            var StudentScoresController = (function () {
+                function StudentScoresController(student, $uibModalInstance, studentService) {
+                    this.student = student;
+                    this.$uibModalInstance = $uibModalInstance;
+                    this.studentService = studentService;
+                    this.scores = studentService.listScores(student.id);
+                }
+                StudentScoresController.prototype.ok = function () {
+                    this.$uibModalInstance.close();
+                };
+                return StudentScoresController;
+            }());
         })(Controllers = Admin.Controllers || (Admin.Controllers = {}));
     })(Admin = App.Admin || (App.Admin = {}));
 })(App || (App = {}));

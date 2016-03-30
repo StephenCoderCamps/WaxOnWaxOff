@@ -1,0 +1,15 @@
+﻿<h2>Edit Students</h2>
+
+
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="student in controller.students">
+        {{student.userName}}
+        <div class="pull-right">
+            <button ng-click="controller.getScores(student)" class="btn btn-default btn-xs">scores</button>
+            <button ng-click="controller.remove(student.id)" class="btn btn-default btn-xs">delete</button>
+        </div>
+    </li>
+
+</ul>
+
+<button class="btn btn-primary" ng-click="controller.add()">Add Student</button>
