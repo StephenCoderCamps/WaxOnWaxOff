@@ -19,7 +19,7 @@
 
         }
 
-        return {
+        this.testResults =  {
             isCorrect: true
         };
     }

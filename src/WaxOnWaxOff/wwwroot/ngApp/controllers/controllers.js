@@ -55,7 +55,7 @@ var App;
                     controller: SubmitAnswerDialogController,
                     controllerAs: 'modal',
                     resolve: {
-                        labId: this.currentLab.id,
+                        lab: this.currentLab,
                         answer: this.answer
                     }
                 }).result.then(function (answerResult) {
@@ -103,12 +103,12 @@ var App;
         }());
         Controllers.LessonController = LessonController;
         var SubmitAnswerDialogController = (function () {
-            function SubmitAnswerDialogController($uibModalInstance, lessonService, labId, answer) {
+            function SubmitAnswerDialogController($uibModalInstance, lessonService, lab, answer) {
                 var _this = this;
                 this.$uibModalInstance = $uibModalInstance;
                 this.lessonService = lessonService;
                 this.isWorking = true;
-                this.lessonService.submitAnswer(labId, answer).then(function (result) {
+                this.lessonService.submitAnswer(lab, answer).then(function (result) {
                     _this.answerResult = result;
                     _this.isWorking = false;
                 });

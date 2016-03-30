@@ -11,14 +11,22 @@ var App;
                         url: '/api/lessons/submitAnswer/:id', method: 'POST', params: { id: '@id' } }
                 });
             }
-            LessonService.prototype.submitAnswer = function (labId, answer) {
+            LessonService.prototype.submitAnswer = function (lab, answer) {
                 //return this.lessonResource.submitAnswer({ id: labId }, answer).$promise;
                 var _this = this;
                 return this.$q(function (resolve, reject) {
-                    var test = "\n                describe('addNumbers', function () {\n                    it('should add positive numbers', function () {\n                        var result = addNumbers(1, 3);\n                        expect(result).toBe(4);\n                    });\n                    it('should add negative numbers', function () {\n                        var result = addNumbers(-1, -3);\n                        expect(result).toBe(-4);\n                    });\n                });\n                                ";
-                    _this.testService.runJavaScriptTest(test, answer).then(function (testResult) {
-                        resolve(testResult);
-                    });
+                    switch (lab.labType) {
+                        case 0:
+                            _this.testService.runJavaScriptTest(lab.test, answer).then(function (testResult) {
+                                resolve(testResult);
+                            });
+                            break;
+                        case 1:
+                            _this.testService.runTypeScriptTest(lab.test, answer).then(function (testResult) {
+                                resolve(testResult);
+                            });
+                            break;
+                    }
                 });
             };
             LessonService.prototype.listLessons = function () {
@@ -41,6 +49,16 @@ var App;
             function TestService($q) {
                 this.$q = $q;
             }
+            TestService.prototype.runTypeScriptTest = function (test, answer) {
+                var _this = this;
+                return this.$q(function (resolve, reject) {
+                    var combined = answer.typescript + ';\r\n' + test;
+                    var transpiled = _this.transpile(combined);
+                    _this.executeJavaScript(transpiled, answer.html, answer.css).then(function (testResult) {
+                        resolve(testResult);
+                    });
+                });
+            };
             TestService.prototype.runJavaScriptTest = function (test, answer) {
                 var _this = this;
                 return this.$q(function (resolve, reject) {
@@ -49,6 +67,10 @@ var App;
                         resolve(testResult);
                     });
                 });
+            };
+            TestService.prototype.transpile = function (script) {
+                var result = ts.transpile(script, { module: 0 /* None */, target: 1 /* ES5 */ });
+                return result;
             };
             TestService.prototype.createTestFrame = function () {
                 this.testFrame = document.createElement('iframe');
@@ -104,10 +126,21 @@ var App;
                     _this.createTestFrame();
                     _this.injectHTML(html);
                     _this.injectJasmine().then(function () {
-                        _this.eval(script);
-                        var testResult = _this.runTests();
-                        _this.destroyTestFrame();
-                        resolve(testResult);
+                        var testResult;
+                        try {
+                            _this.eval(script);
+                            testResult = _this.runTests();
+                        }
+                        catch (err) {
+                            testResult = {
+                                isCorrect: false,
+                                message: err.message
+                            };
+                        }
+                        finally {
+                            _this.destroyTestFrame();
+                            resolve(testResult);
+                        }
                     });
                 });
             };

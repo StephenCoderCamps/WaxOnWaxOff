@@ -53,7 +53,7 @@
                 controller: SubmitAnswerDialogController,
                 controllerAs: 'modal',
                 resolve: {
-                    labId: this.currentLab.id,
+                    lab: this.currentLab,
                     answer: this.answer
                 }
             }).result.then((answerResult) => {
@@ -112,8 +112,13 @@
             this.$uibModalInstance.close(this.answerResult);
         }
 
-        constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private lessonService: App.Services.LessonService,  labId: number, answer) {
-            this.lessonService.submitAnswer(labId, answer).then((result) => {
+        constructor(
+            private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
+            private lessonService: App.Services.LessonService,
+            lab: App.Models.Lab,
+            answer
+        ) {
+            this.lessonService.submitAnswer(lab, answer).then((result) => {
                 this.answerResult = result;
                 this.isWorking = false;
             });

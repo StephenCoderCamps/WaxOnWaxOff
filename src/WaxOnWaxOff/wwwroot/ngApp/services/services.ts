@@ -4,25 +4,24 @@
         private lessonResource;
 
 
-        public submitAnswer(labId:number, answer) {
+        public submitAnswer(lab: App.Models.Lab, answer) {
             //return this.lessonResource.submitAnswer({ id: labId }, answer).$promise;
 
             return this.$q((resolve, reject) => {
-                let test = `
-                describe('addNumbers', function () {
-                    it('should add positive numbers', function () {
-                        var result = addNumbers(1, 3);
-                        expect(result).toBe(4);
-                    });
-                    it('should add negative numbers', function () {
-                        var result = addNumbers(-1, -3);
-                        expect(result).toBe(-4);
-                    });
-                });
-                                `;
-                this.testService.runJavaScriptTest(test, answer).then((testResult) => {
-                    resolve(testResult);
-                });
+                
+
+                switch (lab.labType) {
+                    case 0:
+                        this.testService.runJavaScriptTest(lab.test, answer).then((testResult) => {
+                            resolve(testResult);
+                        });
+                        break;
+                    case 1:
+                        this.testService.runTypeScriptTest(lab.test, answer).then((testResult) => {
+                            resolve(testResult);
+                        });
+                        break;
+                }
             });
         }
 
@@ -59,9 +58,21 @@
 
 
 
-
     export class TestService {
         private testFrame: HTMLIFrameElement;
+
+
+
+
+        public runTypeScriptTest(test: string, answer: App.Models.Answer) {
+            return this.$q((resolve, reject) => {
+                let combined = answer.typescript + ';\r\n' + test;
+                let transpiled = this.transpile(combined);
+                this.executeJavaScript(transpiled, answer.html, answer.css).then((testResult) => {
+                    resolve(testResult);
+                });
+            });
+        }
 
         public runJavaScriptTest(test: string, answer: App.Models.Answer) {
             return this.$q((resolve, reject) => {
@@ -70,6 +81,12 @@
                     resolve(testResult);
                 });
             });
+        }
+
+
+        private transpile(script: string) {
+            var result = ts.transpile(script, { module: ts.ModuleKind.None, target: ts.ScriptTarget.ES5 });
+            return result;
         }
 
 
@@ -132,10 +149,19 @@
                 this.createTestFrame();
                 this.injectHTML(html);
                 this.injectJasmine().then(() => {
-                    this.eval(script);
-                    let testResult = this.runTests();
-                    this.destroyTestFrame();
-                    resolve(testResult);
+                    let testResult;
+                    try {
+                        this.eval(script);
+                        testResult = this.runTests();
+                    } catch (err) {
+                        testResult = {
+                            isCorrect: false,
+                            message: err.message 
+                        };
+                    } finally {
+                        this.destroyTestFrame();
+                        resolve(testResult);
+                    }
                 });
             });
         }
