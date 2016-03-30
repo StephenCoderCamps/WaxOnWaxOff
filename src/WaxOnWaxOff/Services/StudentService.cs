@@ -63,6 +63,12 @@ namespace WaxOnWaxOff.Services
                 .ToList();
         }
 
+        public async Task DeleteStudent(string studentId)
+        {
+            var user = await _userManager.FindByIdAsync(studentId);
+            await _userManager.DeleteAsync(user);
+        }
+
 
     }
 }

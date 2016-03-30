@@ -173,7 +173,9 @@ namespace WaxOnWaxOff.Services
             testResult.Specs.ForEach((spec) => {
                 spec.FailedExpectations.ForEach((message) =>
                 {
-                    results.Add(String.Format("{0}: {1}", spec.FullName, message.Message));
+                    //results.Add(String.Format("{0}: {1}", spec.FullName, message.Message));
+                    results.Add(spec.FullName);
+
                 });
             });
             return results;

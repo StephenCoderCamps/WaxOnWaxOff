@@ -3,10 +3,11 @@
 
 <ul class="list-group" >
     <li class="list-group-item" ng-repeat="lesson in controller.lessons">
-        <a ui-sref="admin.labs({lessonId:lesson.id})">{{lesson.title}}</a>
+        {{lesson.title}}
         <div class="pull-right">
+            <a ui-sref="admin.labs({lessonId:lesson.id})" class="btn btn-primary btn-xs">labs</a>
             <button ng-click="controller.edit(lesson.id)" class="btn btn-default btn-xs">edit</button>
-            <button ng-click="controller.remove(lesson.id)" class="btn btn-default btn-xs">delete</button>
+            <button ng-click="controller.remove(lesson.id)" class="btn btn-danger btn-xs">delete</button>
         </div>
     </li>
 

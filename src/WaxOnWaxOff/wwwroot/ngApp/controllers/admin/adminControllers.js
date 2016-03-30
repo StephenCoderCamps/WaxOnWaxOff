@@ -141,6 +141,13 @@ var App;
                     this.lab.lessonId = this.lessonId;
                     this.labService.save(this.lab).then(function () {
                         _this.$state.go('admin.labs', { lessonId: _this.lessonId });
+                    }).catch(function (err) {
+                        var validationErrors = [];
+                        for (var prop in err.data) {
+                            var propErrors = err.data[prop];
+                            validationErrors = validationErrors.concat(propErrors);
+                        }
+                        _this.validationErrors = validationErrors;
                     });
                 };
                 LabEditController.prototype.testTest = function () {
@@ -192,27 +199,24 @@ var App;
                         _this.students = _this.studentService.list();
                     });
                 };
-                StudentsController.prototype.add = function (studentId) {
+                StudentsController.prototype.add = function () {
                     var _this = this;
                     this.$uibModal.open({
-                        templateUrl: '/ngApp/dialogs/admin/editStudent.html',
+                        templateUrl: '/ngApp/dialogs/admin/addStudent.html',
                         controller: StudentAddController,
-                        controllerAs: 'modal',
-                        resolve: {
-                            studentId: function () { return studentId; }
-                        }
+                        controllerAs: 'modal'
                     }).result.then(function () {
                         _this.students = _this.studentService.list();
                     });
                 };
-                StudentsController.prototype.removeStudent = function (studentId) {
+                StudentsController.prototype.remove = function (student) {
                     var _this = this;
                     this.$uibModal.open({
                         templateUrl: '/ngApp/dialogs/admin/deleteStudent.html',
                         controller: StudentDeleteController,
                         controllerAs: 'modal',
                         resolve: {
-                            studentId: studentId
+                            student: student
                         }
                     }).result.then(function () {
                         _this.students = _this.studentService.list();
@@ -222,13 +226,10 @@ var App;
             }());
             Controllers.StudentsController = StudentsController;
             var StudentDeleteController = (function () {
-                function StudentDeleteController(studentId, $uibModalInstance, studentService) {
-                    this.studentId = studentId;
+                function StudentDeleteController(student, $uibModalInstance, studentService) {
+                    this.student = student;
                     this.$uibModalInstance = $uibModalInstance;
                     this.studentService = studentService;
-                    if (studentId) {
-                        this.student = studentService.getStudent(studentId);
-                    }
                 }
                 StudentDeleteController.prototype.save = function () {
                     var _this = this;
@@ -240,13 +241,9 @@ var App;
                 return StudentDeleteController;
             }());
             var StudentAddController = (function () {
-                function StudentAddController(studentId, $uibModalInstance, studentService) {
-                    this.studentId = studentId;
+                function StudentAddController($uibModalInstance, studentService) {
                     this.$uibModalInstance = $uibModalInstance;
                     this.studentService = studentService;
-                    if (studentId) {
-                        this.student = studentService.getStudent(studentId);
-                    }
                 }
                 StudentAddController.prototype.save = function () {
                     var _this = this;

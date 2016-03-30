@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using WaxOnWaxOff.Services;
 using WaxOnWaxOff.Models;
+using Microsoft.AspNet.Authorization;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WaxOnWaxOff.API
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class StudentsController : Controller
     {
         private StudentService _studentService;
@@ -62,16 +64,12 @@ namespace WaxOnWaxOff.API
             return HttpBadRequest(ModelState);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
+ 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(string id)
         {
+           await _studentService.DeleteStudent(id);
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿
-<h2>Edit Lab</h2>
+
 
 <fieldset>
     <legend>Edit Lab</legend>
-    <ul>
-        <li ng-repeat="error in controller.validationMessages">
+    <ul class="alert-danger">
+        <li ng-repeat="error in controller.validationErrors">
             {{error}}
         </li>
     </ul>

@@ -116,6 +116,7 @@
         public lessonId: number;
         public lab: App.Models.Lab;
         public aceOptions: any = {};
+        public validationErrors;
 
         public labTypeChange() {
             this.aceOptions.mode = this.lab.labType == 0 ? 'javascript' : 'typescript';
@@ -126,6 +127,13 @@
             this.lab.lessonId = this.lessonId;
             this.labService.save(this.lab).then(() => {
                 this.$state.go('admin.labs', {lessonId:this.lessonId});
+            }).catch((err) => {
+                let validationErrors = [];
+                for (let prop in err.data) {
+                    let propErrors = err.data[prop];
+                    validationErrors = validationErrors.concat(propErrors);
+                }
+                this.validationErrors = validationErrors;
             });
         }
 
@@ -193,14 +201,11 @@
         }
 
 
-        public add(studentId: number) {
+        public add() {
             this.$uibModal.open({
-                templateUrl: '/ngApp/dialogs/admin/editStudent.html',
+                templateUrl: '/ngApp/dialogs/admin/addStudent.html',
                 controller: StudentAddController,
-                controllerAs: 'modal',
-                resolve: {
-                    studentId: () => studentId
-                }
+                controllerAs: 'modal'
             }).result.then(() => {
                 this.students = this.studentService.list();
             });
@@ -208,13 +213,13 @@
 
 
 
-        public removeStudent(studentId: number) {
+        public remove(student) {
             this.$uibModal.open({
                 templateUrl: '/ngApp/dialogs/admin/deleteStudent.html',
                 controller: StudentDeleteController,
                 controllerAs: 'modal',
                 resolve: {
-                    studentId: studentId
+                    student: student
                 }
             }).result.then(() => {
                 this.students = this.studentService.list();
@@ -227,7 +232,6 @@
     }
 
     class StudentDeleteController {
-        public student;
 
         public save() {
             this.studentService.remove(this.student.id).then(() => {
@@ -235,11 +239,11 @@
             });;
         }
 
-        constructor(private studentId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private studentService: App.Admin.Services.StudentService) {
-            if (studentId) {
-                this.student = studentService.getStudent(studentId);
-            }
-        }
+        constructor(
+            public student,
+            private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
+            private studentService: App.Admin.Services.StudentService
+        ) {}
     }
 
     class StudentAddController {
@@ -251,11 +255,10 @@
             });;
         }
 
-        constructor(private studentId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private studentService: App.Admin.Services.StudentService) {
-            if (studentId) {
-                this.student = studentService.getStudent(studentId);
-            }
-        }
+        constructor(
+            private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
+            private studentService: App.Admin.Services.StudentService
+        ) {}
     }
 
 
