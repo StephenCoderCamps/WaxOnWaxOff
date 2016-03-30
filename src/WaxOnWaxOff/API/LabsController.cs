@@ -17,6 +17,7 @@ namespace WaxOnWaxOff.API
     {
         private ILabService _labService;
 
+
         public LabsController(ILabService labService)
         {
             this._labService = labService;
@@ -37,10 +38,12 @@ namespace WaxOnWaxOff.API
         }
 
 
+     
+
+
         [HttpPost("TestTest")]
         public AnswerResult TestTest([FromBody]LabTest test)
         {
-
             return _labService.TestTest(test);
         }
 

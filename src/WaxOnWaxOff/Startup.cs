@@ -83,7 +83,7 @@ namespace WaxOnWaxOff
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || 1==1)
             {
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
