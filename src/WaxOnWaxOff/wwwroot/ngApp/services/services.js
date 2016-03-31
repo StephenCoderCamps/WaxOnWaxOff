@@ -99,10 +99,12 @@ var App;
             TestService.prototype.injectJasmine = function () {
                 var _this = this;
                 return this.$q(function (resolve, reject) {
-                    _this.injectScript('/TestScripts/jasmine.js').then(function () {
-                        _this.injectScript('/TestScripts/boot.js').then(function () {
-                            _this.injectScript('/TestScripts/customReporter.js').then(function () {
-                                resolve();
+                    _this.injectScript('/testScripts/jasmine.js').then(function () {
+                        _this.injectScript('/testScripts/boot.js').then(function () {
+                            _this.injectScript('/testScripts/customReporter.js').then(function () {
+                                _this.injectScript('/testScripts/stubs.js').then(function () {
+                                    resolve();
+                                });
                             });
                         });
                     });

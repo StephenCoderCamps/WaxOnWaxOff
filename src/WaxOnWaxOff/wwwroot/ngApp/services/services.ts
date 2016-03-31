@@ -119,10 +119,12 @@
 
         private injectJasmine() {
             return this.$q((resolve, reject) => {
-                this.injectScript('/TestScripts/jasmine.js').then(() => {
-                    this.injectScript('/TestScripts/boot.js').then(() => {
-                        this.injectScript('/TestScripts/customReporter.js').then(() => {
-                            resolve();
+                this.injectScript('/testScripts/jasmine.js').then(() => {
+                    this.injectScript('/testScripts/boot.js').then(() => {
+                        this.injectScript('/testScripts/customReporter.js').then(() => {
+                            this.injectScript('/testScripts/stubs.js').then(() => {
+                                resolve();
+                            });
                         });
                     });
                 });

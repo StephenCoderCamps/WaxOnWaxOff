@@ -23,5 +23,6 @@
 /// <reference path="testscripts/boot.js" />
 /// <reference path="testscripts/customReporter.js" />
 /// <reference path="testscripts/jasmine.js" />
+/// <reference path="testscripts/stubs.js" />
 /// <reference path="testscripts/Test.js" />
 /// <reference path="testscripts/typescriptservices.js" />
