@@ -4,26 +4,6 @@
         private lessonResource;
 
 
-        public submitAnswer(lab: App.Models.Lab, answer) {
-            //return this.lessonResource.submitAnswer({ id: labId }, answer).$promise;
-
-            return this.$q((resolve, reject) => {
-                
-
-                switch (lab.labType) {
-                    case 0:
-                        this.testService.runJavaScriptTest(lab.test, answer).then((testResult) => {
-                            resolve(testResult);
-                        });
-                        break;
-                    case 1:
-                        this.testService.runTypeScriptTest(lab.test, answer).then((testResult) => {
-                            resolve(testResult);
-                        });
-                        break;
-                }
-            });
-        }
 
         public listLessons() {
             return this.lessonResource.query();
@@ -61,6 +41,23 @@
     export class TestService {
         private testFrame: HTMLIFrameElement;
 
+        public submitAnswer(lab: App.Models.Lab, answer: App.Models.Answer) {
+            return this.$q((resolve, reject) => {
+
+                switch (lab.labType.toString()) {
+                    case '0':
+                        this.runJavaScriptTest(lab.test, answer).then((testResult) => {
+                            resolve(testResult);
+                        });
+                        break;
+                    case '1':
+                        this.runTypeScriptTest(lab.test, answer).then((testResult) => {
+                            resolve(testResult);
+                        });
+                        break;
+                }
+            });
+        }
 
 
 

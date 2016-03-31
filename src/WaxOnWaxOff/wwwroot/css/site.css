@@ -7,4 +7,5 @@
 
  .instructions {
      background-color: #d9edf7;
+     white-space: pre-line;
  }

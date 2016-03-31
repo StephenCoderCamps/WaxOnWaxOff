@@ -1,5 +1,4 @@
 ﻿/// <autosync enabled="true" />
-/// <reference path="../deploythis/tsc.js" />
 /// <reference path="../gulpfile.js" />
 /// <reference path="js/site.js" />
 /// <reference path="lib/angular/angular.js" />

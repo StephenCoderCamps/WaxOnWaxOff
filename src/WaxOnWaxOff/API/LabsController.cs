@@ -15,10 +15,10 @@ namespace WaxOnWaxOff.API
     [Authorize]
     public class LabsController : Controller
     {
-        private ILabService _labService;
+        private LabService _labService;
 
 
-        public LabsController(ILabService labService)
+        public LabsController(LabService labService)
         {
             this._labService = labService;
         }
@@ -41,11 +41,6 @@ namespace WaxOnWaxOff.API
      
 
 
-        [HttpPost("TestTest")]
-        public AnswerResult TestTest([FromBody]LabTest test)
-        {
-            return _labService.TestTest(test);
-        }
 
 
         // POST api/values

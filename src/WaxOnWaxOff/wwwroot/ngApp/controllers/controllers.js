@@ -103,12 +103,12 @@ var App;
         }());
         Controllers.LessonController = LessonController;
         var SubmitAnswerDialogController = (function () {
-            function SubmitAnswerDialogController($uibModalInstance, lessonService, lab, answer) {
+            function SubmitAnswerDialogController($uibModalInstance, testService, lab, answer) {
                 var _this = this;
                 this.$uibModalInstance = $uibModalInstance;
-                this.lessonService = lessonService;
+                this.testService = testService;
                 this.isWorking = true;
-                this.lessonService.submitAnswer(lab, answer).then(function (result) {
+                this.testService.submitAnswer(lab, answer).then(function (result) {
                     _this.answerResult = result;
                     _this.isWorking = false;
                 });

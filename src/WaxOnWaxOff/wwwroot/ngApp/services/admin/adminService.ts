@@ -22,14 +22,11 @@
         }
 
 
-        public testTest(test) {
-            return this.LabResource.testTest(test).$promise;
-        }
+       
 
         constructor($resource: ng.resource.IResourceService) {
             this.LabResource = $resource("/api/labs/:id", null, {
-                list: {url:'/api/labs/list/:lessonId', method: 'GET', isArray:true},
-                testTest: {url:'/api/labs/testTest', method: 'POST'}
+                list: {url:'/api/labs/list/:lessonId', method: 'GET', isArray:true}
             });
         }
     }

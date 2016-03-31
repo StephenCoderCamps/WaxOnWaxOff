@@ -7,8 +7,7 @@ var App;
             var LabService = (function () {
                 function LabService($resource) {
                     this.LabResource = $resource("/api/labs/:id", null, {
-                        list: { url: '/api/labs/list/:lessonId', method: 'GET', isArray: true },
-                        testTest: { url: '/api/labs/testTest', method: 'POST' }
+                        list: { url: '/api/labs/list/:lessonId', method: 'GET', isArray: true }
                     });
                 }
                 LabService.prototype.getLab = function (labId) {
@@ -22,9 +21,6 @@ var App;
                 };
                 LabService.prototype.remove = function (labId) {
                     return this.LabResource.delete({ id: labId }).$promise;
-                };
-                LabService.prototype.testTest = function (test) {
-                    return this.LabResource.testTest(test).$promise;
                 };
                 return LabService;
             }());

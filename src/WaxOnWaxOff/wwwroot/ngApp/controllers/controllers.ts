@@ -114,11 +114,11 @@
 
         constructor(
             private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
-            private lessonService: App.Services.LessonService,
+            private testService: App.Services.TestService,
             lab: App.Models.Lab,
             answer
         ) {
-            this.lessonService.submitAnswer(lab, answer).then((result) => {
+            this.testService.submitAnswer(lab, answer).then((result) => {
                 this.answerResult = result;
                 this.isWorking = false;
             });

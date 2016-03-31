@@ -11,8 +11,8 @@ namespace WaxOnWaxOff.Models
     {
         protected override void Configure()
         {
-            CreateMap<Lesson, LessonDTO>();
-                //.ForMember(m => m.Passed, opt => opt.MapFrom(src => src.LessonScore.Any(ls => ls.Passed)));
+            CreateMap<Lesson, LessonDTO>()
+                .ForMember(l => l.Labs, opt => opt.MapFrom(src => src.Labs.OrderBy(x => x.Title)));
 
 
             CreateMap<Lab, LabDTO>()

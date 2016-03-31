@@ -18,9 +18,9 @@ namespace WaxOnWaxOff.API
     public class LessonsController : Controller
     {
 
-        private ILessonService _lessonService;
+        private LessonService _lessonService;
 
-        public LessonsController(ILessonService lessonService)
+        public LessonsController(LessonService lessonService)
         {
             _lessonService = lessonService;
         }
@@ -40,11 +40,7 @@ namespace WaxOnWaxOff.API
         }
 
 
-        [HttpPost("submitAnswer/{id}")]
-        public AnswerResult SubmitAnswer(int id, [FromBody]Answer answer)
-        {
-            return _lessonService.SubmitAnswer(this.User, id, answer);
-        }
+      
 
 
         [HttpDelete("{id}")]

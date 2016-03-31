@@ -7,7 +7,7 @@ using WaxOnWaxOff.Models;
 
 namespace WaxOnWaxOff.Services
 {
-    public class StudentService : IStudentService
+    public class StudentService 
     {
         private ApplicationDbContext _db;
         private UserManager<ApplicationUser> _userManager;

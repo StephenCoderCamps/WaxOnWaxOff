@@ -164,12 +164,19 @@ var App;
             }());
             Controllers.LabEditController = LabEditController;
             var SubmitTestDialogController = (function () {
-                function SubmitTestDialogController($uibModalInstance, labService, lab) {
+                function SubmitTestDialogController($uibModalInstance, testService, lab) {
                     var _this = this;
                     this.$uibModalInstance = $uibModalInstance;
-                    this.labService = labService;
+                    this.testService = testService;
                     this.isWorking = true;
-                    this.labService.testTest(lab).then(function (result) {
+                    var answer = {
+                        html: lab.htmlSolution,
+                        css: lab.cssSolution,
+                        javascript: lab.javascriptSolution,
+                        typescript: lab.typescriptSolution,
+                        csharp: lab.csharpSolution
+                    };
+                    this.testService.submitAnswer(lab, answer).then(function (result) {
                         _this.answerResult = result;
                         _this.isWorking = false;
                     });

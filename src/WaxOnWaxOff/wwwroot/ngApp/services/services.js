@@ -11,24 +11,6 @@ var App;
                         url: '/api/lessons/submitAnswer/:id', method: 'POST', params: { id: '@id' } }
                 });
             }
-            LessonService.prototype.submitAnswer = function (lab, answer) {
-                //return this.lessonResource.submitAnswer({ id: labId }, answer).$promise;
-                var _this = this;
-                return this.$q(function (resolve, reject) {
-                    switch (lab.labType) {
-                        case 0:
-                            _this.testService.runJavaScriptTest(lab.test, answer).then(function (testResult) {
-                                resolve(testResult);
-                            });
-                            break;
-                        case 1:
-                            _this.testService.runTypeScriptTest(lab.test, answer).then(function (testResult) {
-                                resolve(testResult);
-                            });
-                            break;
-                    }
-                });
-            };
             LessonService.prototype.listLessons = function () {
                 return this.lessonResource.query();
             };
@@ -49,6 +31,23 @@ var App;
             function TestService($q) {
                 this.$q = $q;
             }
+            TestService.prototype.submitAnswer = function (lab, answer) {
+                var _this = this;
+                return this.$q(function (resolve, reject) {
+                    switch (lab.labType.toString()) {
+                        case '0':
+                            _this.runJavaScriptTest(lab.test, answer).then(function (testResult) {
+                                resolve(testResult);
+                            });
+                            break;
+                        case '1':
+                            _this.runTypeScriptTest(lab.test, answer).then(function (testResult) {
+                                resolve(testResult);
+                            });
+                            break;
+                    }
+                });
+            };
             TestService.prototype.runTypeScriptTest = function (test, answer) {
                 var _this = this;
                 return this.$q(function (resolve, reject) {

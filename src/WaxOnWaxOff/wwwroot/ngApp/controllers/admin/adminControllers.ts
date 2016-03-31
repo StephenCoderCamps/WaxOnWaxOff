@@ -172,8 +172,15 @@
             this.$uibModalInstance.close(this.answerResult);
         }
 
-        constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private labService: App.Admin.Services.LabService, lab) {
-            this.labService.testTest(lab).then((result) => {
+        constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private testService: App.Services.TestService, lab) {
+            let answer = {
+                html: lab.htmlSolution,
+                css: lab.cssSolution,
+                javascript: lab.javascriptSolution,
+                typescript: lab.typescriptSolution,
+                csharp: lab.csharpSolution
+            };
+            this.testService.submitAnswer(lab, answer).then((result) => {
                 this.answerResult = result;
                 this.isWorking = false;
             });

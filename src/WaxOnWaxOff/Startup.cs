@@ -69,9 +69,8 @@ namespace WaxOnWaxOff
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddScoped<ILessonService, LessonService>();
-            services.AddScoped<ITestService, TestService>();
-            services.AddScoped<ILabService, LabService>();
+            services.AddScoped<LessonService>();
+            services.AddScoped<LabService>();
             services.AddScoped<StudentService>();
 
 
