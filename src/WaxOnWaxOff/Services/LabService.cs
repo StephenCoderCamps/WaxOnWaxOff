@@ -45,6 +45,7 @@ namespace WaxOnWaxOff.Services
             var original = _db.Labs.FirstOrDefault(l => l.Id == lab.Id);
             original.LabType = lab.LabType;
             original.Title = lab.Title;
+            original.Test = lab.Test;
             original.Instructions = lab.Instructions;
             original.HTMLSolution = lab.HTMLSolution;
             original.CSSSolution = lab.CSSSolution;

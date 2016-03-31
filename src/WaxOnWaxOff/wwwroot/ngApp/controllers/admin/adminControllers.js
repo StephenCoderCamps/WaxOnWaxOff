@@ -53,7 +53,6 @@ var App;
                     this.lessonService.editLesson(this.lesson).then(function () {
                         _this.$uibModalInstance.close();
                     });
-                    ;
                 };
                 return EditLessonController;
             }());
@@ -172,9 +171,9 @@ var App;
                     var answer = {
                         html: lab.htmlSolution,
                         css: lab.cssSolution,
-                        javascript: lab.javascriptSolution,
-                        typescript: lab.typescriptSolution,
-                        csharp: lab.csharpSolution
+                        javascript: lab.javaScriptSolution,
+                        typescript: lab.typeScriptSolution,
+                        csharp: lab.cSharpSolution
                     };
                     this.testService.submitAnswer(lab, answer).then(function (result) {
                         _this.answerResult = result;

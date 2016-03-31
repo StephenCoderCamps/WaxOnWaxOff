@@ -43,7 +43,7 @@
         public save() {
             this.lessonService.editLesson(this.lesson).then(() => {
                 this.$uibModalInstance.close();
-            });                ;
+            });                
         }
 
         constructor(private lessonId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private lessonService: App.Services.LessonService)
@@ -176,9 +176,9 @@
             let answer = {
                 html: lab.htmlSolution,
                 css: lab.cssSolution,
-                javascript: lab.javascriptSolution,
-                typescript: lab.typescriptSolution,
-                csharp: lab.csharpSolution
+                javascript: lab.javaScriptSolution,
+                typescript: lab.typeScriptSolution,
+                csharp: lab.cSharpSolution
             };
             this.testService.submitAnswer(lab, answer).then((result) => {
                 this.answerResult = result;
