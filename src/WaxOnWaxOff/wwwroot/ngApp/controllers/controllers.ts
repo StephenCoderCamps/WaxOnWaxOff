@@ -133,12 +133,20 @@
             this.$uibModalInstance.close();
         }
 
-        constructor(private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, public lesson) {
-            var happyPictures = [
+        constructor(
+            private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
+            lessonService: App.Services.LessonService,
+            public lesson
+        ) {
+            lessonService.postScore(lesson.id);
+
+            let happyPictures = [
                 '/images/success/catAndDog.jpg',
-                '/images/success/cookie.jpg'
+                '/images/success/cookie.jpg',
+                '/images/success/dog.jpg',
+                '/images/success/sundae.jpg'
             ];
-            var rnd = Math.floor(Math.random() * happyPictures.length);
+            let rnd = Math.floor(Math.random() * happyPictures.length);
             this.happyPicture = happyPictures[rnd];
 
         }

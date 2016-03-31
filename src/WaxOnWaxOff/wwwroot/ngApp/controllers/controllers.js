@@ -119,12 +119,15 @@ var App;
             return SubmitAnswerDialogController;
         }());
         var LessonSuccessDialogController = (function () {
-            function LessonSuccessDialogController($uibModalInstance, lesson) {
+            function LessonSuccessDialogController($uibModalInstance, lessonService, lesson) {
                 this.$uibModalInstance = $uibModalInstance;
                 this.lesson = lesson;
+                lessonService.postScore(lesson.id);
                 var happyPictures = [
                     '/images/success/catAndDog.jpg',
-                    '/images/success/cookie.jpg'
+                    '/images/success/cookie.jpg',
+                    '/images/success/dog.jpg',
+                    '/images/success/sundae.jpg'
                 ];
                 var rnd = Math.floor(Math.random() * happyPictures.length);
                 this.happyPicture = happyPictures[rnd];

@@ -1,6 +1,6 @@
 var App;
 (function (App) {
-    var app = angular.module("App", ['ui.ace', "ui.router", "ngResource", 'ui.bootstrap']);
+    var app = angular.module("App", ['ui.ace', "ui.router", "ngResource", 'ui.bootstrap', 'ngSanitize']);
     app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider

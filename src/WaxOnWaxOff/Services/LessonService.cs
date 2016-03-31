@@ -67,5 +67,25 @@ namespace WaxOnWaxOff.Services
             _db.SaveChanges();
         }
 
+
+        public void SaveScore(ClaimsPrincipal user, int lessonId)
+        {
+            var score = _db.LessonScores.FirstOrDefault(s => s.UserId == user.GetUserId() && s.LessonId == lessonId);
+            if (score == null)
+            {
+                _db.LessonScores.Add(new LessonScore
+                {
+                    UserId = user.GetUserId(),
+                    LessonId = lessonId,
+                    Passed =true,
+                    DatePassed = DateTime.Now
+                });
+            } else {
+                score.Passed = true;
+                score.DatePassed = DateTime.Now;
+            }
+            _db.SaveChanges();
+        }
+
     }
 }

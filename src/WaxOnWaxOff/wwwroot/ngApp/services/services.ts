@@ -23,11 +23,15 @@
             return this.lessonResource.delete({ id: id }).$promise;
         }
 
+        public postScore(id:number) {
+            return this.lessonResource.postScore({ id: id });
+        }
+
 
         constructor($resource: ng.resource.IResourceService, private $q:ng.IQService, private testService: App.Services.TestService) {
             this.lessonResource = $resource('/api/lessons/:id', null, {
-                submitAnswer: {
-                    url: '/api/lessons/submitAnswer/:id', method: 'POST', params: { id: '@id'}}
+                postScore: {
+                    url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id'}}
             });
         }
 

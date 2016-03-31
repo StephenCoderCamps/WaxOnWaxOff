@@ -29,7 +29,6 @@ namespace WaxOnWaxOff.Models
         public string CSharpSolution { get; set; }
         public string CSSSolution { get; set; }
 
-        public ICollection<LabScore> LabScore { get; set; }
 
     }
 }

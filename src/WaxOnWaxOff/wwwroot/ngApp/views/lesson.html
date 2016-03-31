@@ -4,8 +4,7 @@
 <uib-progressbar animate="false" value="controller.getProgress()" type="success"><b>{{controller.getProgressText()}}</b></uib-progressbar>
 
 <h3>{{controller.currentLab.title}}</h3>
-<div class="well well-lg instructions">
-    {{controller.currentLab.instructions}}
+<div class="well well-lg instructions" ng-bind-html="controller.currentLab.instructions">
 </div>
 
 <uib-tabset active="controller.activeTab">

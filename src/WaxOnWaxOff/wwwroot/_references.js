@@ -5,6 +5,7 @@
 /// <reference path="lib/angular-animate/angular-animate.js" />
 /// <reference path="lib/angular-bootstrap/ui-bootstrap-tpls.js" />
 /// <reference path="lib/angular-resource/angular-resource.js" />
+/// <reference path="lib/angular-sanitize/angular-sanitize.js" />
 /// <reference path="lib/angular-ui-ace/ui-ace.js" />
 /// <reference path="lib/angular-ui-router/release/angular-ui-router.js" />
 /// <reference path="lib/bootstrap/dist/js/bootstrap.js" />

@@ -70,5 +70,13 @@ namespace WaxOnWaxOff.API
         }
 
 
+        [HttpPost("postScore/{lessonId}")]
+        public IActionResult PostScore(int lessonId)
+        {
+            _lessonService.SaveScore(this.User, lessonId);
+            return Ok();
+        }
+
+
     }
 }

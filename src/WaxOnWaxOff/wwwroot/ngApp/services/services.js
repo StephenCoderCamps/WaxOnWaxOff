@@ -7,8 +7,8 @@ var App;
                 this.$q = $q;
                 this.testService = testService;
                 this.lessonResource = $resource('/api/lessons/:id', null, {
-                    submitAnswer: {
-                        url: '/api/lessons/submitAnswer/:id', method: 'POST', params: { id: '@id' } }
+                    postScore: {
+                        url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id' } }
                 });
             }
             LessonService.prototype.listLessons = function () {
@@ -22,6 +22,9 @@ var App;
             };
             LessonService.prototype.deleteLesson = function (id) {
                 return this.lessonResource.delete({ id: id }).$promise;
+            };
+            LessonService.prototype.postScore = function (id) {
+                return this.lessonResource.postScore({ id: id });
             };
             return LessonService;
         }());

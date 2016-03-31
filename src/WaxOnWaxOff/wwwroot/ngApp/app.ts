@@ -1,6 +1,6 @@
 ﻿namespace App {
 
-    let app = angular.module("App", ['ui.ace', "ui.router", "ngResource", 'ui.bootstrap']);
+    let app = angular.module("App", ['ui.ace', "ui.router", "ngResource", 'ui.bootstrap', 'ngSanitize']);
 
     app.config((
         $stateProvider: angular.ui.IStateProvider,
