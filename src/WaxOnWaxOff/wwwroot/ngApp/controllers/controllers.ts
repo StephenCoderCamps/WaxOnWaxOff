@@ -79,8 +79,14 @@
         }
 
         showLab() {
-            this.answer = new App.Models.Answer();
             this.currentLab = this.lesson.labs[this.currentLabIndex];
+            this.answer = new App.Models.Answer();
+            this.answer.html = this.currentLab.preHTMLSolution;
+            this.answer.css = this.currentLab.preCSSSolution;
+            this.answer.javascript = this.currentLab.preJavaScriptSolution;
+            this.answer.typescript = this.currentLab.preTypeScriptSolution;
+            this.answer.csharp = this.currentLab.preCSharpSolution;
+
 
             if (this.currentLab.showTypeScriptEditor) {
                 this.activeTab = 3;

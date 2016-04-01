@@ -35,27 +35,61 @@
         </div>
 
 
+        <fieldset>
+            <legend>Solutions (required)</legend>
 
-        <uib-tabset>
-            <uib-tab heading="HTML Solution">
-                <div ui-ace="{mode:'html'}" ng-model="controller.lab.htmlSolution"></div>
-            </uib-tab>
-            <uib-tab heading="JavaScript Solution">
-                <div ui-ace="{mode:'javascript'}" ng-model="controller.lab.javaScriptSolution"></div>
-            </uib-tab>
-            <uib-tab heading="CSS Solution">
-                <div ui-ace="{mode:'css'}" ng-model="controller.lab.cssSolution"></div>
-            </uib-tab>
-            <uib-tab heading="TypeScript Solution">
-                <div ui-ace="{mode:'typescript'}" ng-model="controller.lab.typeScriptSolution"></div>
-            </uib-tab>
-            <uib-tab heading="C# Solution">
-                <div ui-ace="{mode:'csharp'}" ng-model="controller.lab.cSharpSolution"></div>
-            </uib-tab>
 
-        </uib-tabset>
+            <uib-tabset>
+                <uib-tab heading="HTML Solution">
+                    <div ui-ace="{mode:'html'}" ng-model="controller.lab.htmlSolution"></div>
+                </uib-tab>
+                <uib-tab heading="JavaScript Solution">
+                    <div ui-ace="{mode:'javascript'}" ng-model="controller.lab.javaScriptSolution"></div>
+                </uib-tab>
+                <uib-tab heading="CSS Solution">
+                    <div ui-ace="{mode:'css'}" ng-model="controller.lab.cssSolution"></div>
+                </uib-tab>
+                <uib-tab heading="TypeScript Solution">
+                    <div ui-ace="{mode:'typescript'}" ng-model="controller.lab.typeScriptSolution"></div>
+                </uib-tab>
+                <uib-tab heading="C# Solution">
+                    <div ui-ace="{mode:'csharp'}" ng-model="controller.lab.cSharpSolution"></div>
+                </uib-tab>
+
+            </uib-tabset>
+
+
+        </fieldset>
+
+
 
         <button type="button" class="btn btn-primary" ng-click="controller.testTest()">Test</button>
+
+
+        <fieldset>
+            <legend>Prefilled Solutions (optional)</legend>
+
+            <uib-tabset>
+                <uib-tab heading="Pre HTML Solution">
+                    <div ui-ace="{mode:'html'}" ng-model="controller.lab.preHTMLSolution"></div>
+                </uib-tab>
+                <uib-tab heading="Pre JavaScript Solution">
+                    <div ui-ace="{mode:'javascript'}" ng-model="controller.lab.preJavaScriptSolution"></div>
+                </uib-tab>
+                <uib-tab heading="Pre CSS Solution">
+                    <div ui-ace="{mode:'css'}" ng-model="controller.lab.preCSSSolution"></div>
+                </uib-tab>
+                <uib-tab heading="Pre TypeScript Solution">
+                    <div ui-ace="{mode:'typescript'}" ng-model="controller.lab.preTypeScriptSolution"></div>
+                </uib-tab>
+                <uib-tab heading="Pre C# Solution">
+                    <div ui-ace="{mode:'csharp'}" ng-model="controller.lab.preCSharpSolution"></div>
+                </uib-tab>
+
+            </uib-tabset>
+        </fieldset>
+
+
 
         <input type="submit" class="btn btn-primary" value="Save" />
     </form>

@@ -47,11 +47,19 @@ namespace WaxOnWaxOff.Services
             original.Title = lab.Title;
             original.Test = lab.Test;
             original.Instructions = lab.Instructions;
+
             original.HTMLSolution = lab.HTMLSolution;
             original.CSSSolution = lab.CSSSolution;
             original.JavaScriptSolution = lab.JavaScriptSolution;
             original.TypeScriptSolution = lab.TypeScriptSolution;
             original.CSharpSolution = lab.CSharpSolution;
+
+            original.PreHTMLSolution = lab.PreHTMLSolution;
+            original.PreCSSSolution = lab.PreCSSSolution;
+            original.PreJavaScriptSolution = lab.PreJavaScriptSolution;
+            original.PreTypeScriptSolution = lab.PreTypeScriptSolution;
+            original.PreCSharpSolution = lab.PreCSharpSolution;
+
             _db.SaveChanges();
         }
 
