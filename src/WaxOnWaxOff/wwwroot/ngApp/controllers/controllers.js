@@ -19,6 +19,8 @@ var App;
                 this.$uibModal = $uibModal;
                 this.activeTab = 0;
                 this.currentLabIndex = 0;
+                this.answer = new App.Models.Answer();
+                this.tabs = [];
                 lessonService.getLesson($stateParams['id']).$promise.then(function (result) {
                     _this.lesson = result;
                     _this.showLab();
@@ -36,20 +38,27 @@ var App;
                 }
                 return 'completed lab ' + (this.currentLabIndex) + ' of ' + this.lesson.labs.length;
             };
-            LessonController.prototype.canSubmitAnswer = function () {
-                if (!this.currentLab) {
-                    return false;
-                }
-                if (this.currentLab.showTypeScriptEditor && !this.answer.typescript) {
-                    return false;
-                }
-                if (this.currentLab.showJavaScriptEditor && !this.answer.javascript) {
-                    return false;
-                }
-                return true;
-            };
             LessonController.prototype.submitAnswer = function () {
                 var _this = this;
+                this.tabs.forEach(function (tab) {
+                    switch (tab.title) {
+                        case 'HTML':
+                            _this.answer.html = tab.text;
+                            break;
+                        case 'JavaScript':
+                            _this.answer.javascript = tab.text;
+                            break;
+                        case 'CSS':
+                            _this.answer.css = tab.text;
+                            break;
+                        case 'TypeScript':
+                            _this.answer.typescript = tab.text;
+                            break;
+                        case 'C#':
+                            _this.answer.csharp = tab.text;
+                            break;
+                    }
+                });
                 this.$uibModal.open({
                     templateUrl: '/ngApp/dialogs/submitAnswer.html',
                     controller: SubmitAnswerDialogController,
@@ -82,26 +91,36 @@ var App;
             };
             LessonController.prototype.showLab = function () {
                 this.currentLab = this.lesson.labs[this.currentLabIndex];
-                this.answer = new App.Models.Answer();
-                this.answer.html = this.currentLab.preHTMLSolution;
-                this.answer.css = this.currentLab.preCSSSolution;
-                this.answer.javascript = this.currentLab.preJavaScriptSolution;
-                this.answer.typescript = this.currentLab.preTypeScriptSolution;
-                this.answer.csharp = this.currentLab.preCSharpSolution;
+                this.tabs.length = 0;
+                if (this.currentLab.showHTMLEditor) {
+                    this.tabs.push({
+                        title: 'HTML',
+                        text: this.currentLab.preHTMLSolution
+                    });
+                }
+                if (this.currentLab.showJavaScriptEditor) {
+                    this.tabs.push({
+                        title: 'JavaScript',
+                        text: this.currentLab.preJavaScriptSolution
+                    });
+                }
+                if (this.currentLab.showCSSScriptEditor) {
+                    this.tabs.push({
+                        title: 'CSS',
+                        text: this.currentLab.preCSSSolution
+                    });
+                }
                 if (this.currentLab.showTypeScriptEditor) {
-                    this.activeTab = 3;
+                    this.tabs.push({
+                        title: 'TypeScript',
+                        text: this.currentLab.preTypeScriptSolution
+                    });
                 }
-                else if (this.currentLab.showJavaScriptEditor) {
-                    this.activeTab = 1;
-                }
-                else if (this.currentLab.showCSharpEditor) {
-                    this.activeTab = 4;
-                }
-                else if (this.currentLab.showHTMLEditor) {
-                    this.activeTab = 0;
-                }
-                else if (this.currentLab.showCSSEditor) {
-                    this.activeTab = 2;
+                if (this.currentLab.showCSharpEditor) {
+                    this.tabs.push({
+                        title: 'C#',
+                        text: this.currentLab.preCSharpSolution
+                    });
                 }
             };
             return LessonController;

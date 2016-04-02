@@ -42,3 +42,40 @@ var AngularJSTestHelpers = {
         return matcher.test(document.documentElement.innerHTML);
     }
 }
+
+
+var angular = {
+    _modules:[],
+    module: function (moduleName, dependencies) {
+        if (dependencies) {
+            this._modules.push({
+                _controllers: [],
+                _services: [],
+                moduleName: moduleName,
+                dependencies: dependencies,
+                controller: function (controllerName, controllerClass) {
+                    this._controllers.push({
+                        controllerName: controllerName,
+                        controllerClass: controllerClass
+                    });
+                },
+                service: function (serviceName, serviceClass) {
+                    this._services.push({
+                        serviceName: serviceName,
+                        serviceClass: serviceClass
+                    });
+                }
+            })
+        } else {
+            let match = this._modules.filter(function (module) {
+                return module.moduleName == moduleName;
+            });
+            if (match.length) {
+                return match[0];
+            }
+        }
+    }
+
+};
+
+angular.module('MyApp', []);

@@ -15,7 +15,8 @@
         public lesson;
         public currentLab;
         public currentLabIndex = 0;
-        public answer: App.Models.Answer;
+        public answer = new Models.Answer();
+        public tabs = [];
 
 
         public getProgress(): number {
@@ -34,20 +35,31 @@
         }
 
 
-        public canSubmitAnswer(): boolean {
-            if (!this.currentLab) {
-                return false;
-            }
-            if (this.currentLab.showTypeScriptEditor && !this.answer.typescript) {
-                return false;
-            }
-            if (this.currentLab.showJavaScriptEditor && !this.answer.javascript) {
-                return false;
-            }
-            return true;
-        }
+       
 
         public submitAnswer() {
+            this.tabs.forEach((tab) => {
+                switch (tab.title) {
+                    case 'HTML':
+                        this.answer.html = tab.text;
+                        break;
+                    case 'JavaScript':
+                        this.answer.javascript = tab.text;
+                        break;
+                    case 'CSS':
+                        this.answer.css = tab.text;
+                        break;
+                    case 'TypeScript':
+                        this.answer.typescript = tab.text;
+                        break;
+                    case 'C#':
+                        this.answer.csharp = tab.text;
+                        break;
+
+                }
+            });
+
+
             this.$uibModal.open({
                 templateUrl: '/ngApp/dialogs/submitAnswer.html',
                 controller: SubmitAnswerDialogController,
@@ -80,28 +92,40 @@
 
         showLab() {
             this.currentLab = this.lesson.labs[this.currentLabIndex];
-            this.answer = new App.Models.Answer();
-            this.answer.html = this.currentLab.preHTMLSolution;
-            this.answer.css = this.currentLab.preCSSSolution;
-            this.answer.javascript = this.currentLab.preJavaScriptSolution;
-            this.answer.typescript = this.currentLab.preTypeScriptSolution;
-            this.answer.csharp = this.currentLab.preCSharpSolution;
-
-
+            this.tabs.length = 0;
+            if (this.currentLab.showHTMLEditor) {
+                this.tabs.push({
+                    title: 'HTML',
+                    text: this.currentLab.preHTMLSolution
+                });
+            }
+            if (this.currentLab.showJavaScriptEditor) {
+                this.tabs.push({
+                    title: 'JavaScript',
+                    text: this.currentLab.preJavaScriptSolution
+                });
+            }
+            if (this.currentLab.showCSSScriptEditor) {
+                this.tabs.push({
+                    title: 'CSS',
+                    text: this.currentLab.preCSSSolution
+                });
+            }
             if (this.currentLab.showTypeScriptEditor) {
-                this.activeTab = 3;
-            } else if (this.currentLab.showJavaScriptEditor) {
-                this.activeTab = 1;
-            } else if (this.currentLab.showCSharpEditor) {
-                this.activeTab = 4;
-            } else if (this.currentLab.showHTMLEditor) {
-                this.activeTab = 0;
-            } else if (this.currentLab.showCSSEditor) {
-                this.activeTab = 2;
+                this.tabs.push({
+                    title: 'TypeScript',
+                    text: this.currentLab.preTypeScriptSolution
+                });
+            }
+            if (this.currentLab.showCSharpEditor) {
+                this.tabs.push({
+                    title: 'C#',
+                    text: this.currentLab.preCSharpSolution
+                });
             }
         }
 
-        constructor(private lessonService: App.Services.LessonService, private $state: ng.ui.IStateService, private $stateParams: ng.ui.IStateParamsService, private $uibModal: angular.ui.bootstrap.IModalService) {
+        constructor( private lessonService: App.Services.LessonService, private $state: ng.ui.IStateService, private $stateParams: ng.ui.IStateParamsService, private $uibModal: angular.ui.bootstrap.IModalService) {
             lessonService.getLesson($stateParams['id']).$promise.then((result) => {
                 this.lesson = result;
                 this.showLab();
