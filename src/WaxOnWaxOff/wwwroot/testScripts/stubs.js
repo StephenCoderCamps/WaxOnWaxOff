@@ -40,6 +40,17 @@ var AngularJSTestHelpers = {
         }
         // check for mustache
         return matcher.test(document.documentElement.innerHTML);
+    },
+
+    STRIP_COMMENTS: /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg,
+    ARGUMENT_NAMES: /([^\s,]+)/g,
+
+    getParamNames:function(func) {
+        var fnStr = func.toString().replace(this.STRIP_COMMENTS, '');
+        var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(this.ARGUMENT_NAMES);
+        if(result === null)
+            result = [];
+        return result;
     }
 }
 
@@ -64,18 +75,76 @@ var angular = {
                         serviceName: serviceName,
                         serviceClass: serviceClass
                     });
+                },
+                config: function (func) {
+                    this._configureFunc = func;
                 }
             })
-        } else {
-            let match = this._modules.filter(function (module) {
-                return module.moduleName == moduleName;
-            });
-            if (match.length) {
-                return match[0];
-            }
+        } 
+        let match = this._modules.filter(function (module) {
+            return module.moduleName == moduleName;
+        });
+        if (match.length) {
+            return match[0];
         }
+        
     }
 
 };
 
 angular.module('MyApp', []);
+
+
+let mockStateProvider = {
+    _states: {},
+    state: function (stateName, stateOptions) {
+        this._states[stateName] = stateOptions;
+        return mockStateProvider;
+    },
+
+    getState:function(stateName) {
+        return this._states[stateName] || null;
+    }
+};
+
+
+let mockUrlRouterProvider = {
+
+    otherwise: function (otherwise) {
+        this._otherwise = otherwise;
+    }
+
+};
+
+
+let mockLocationProvider = {
+    html5Mode: function (enable) {
+        this._enable = enable;
+    }
+};
+
+
+let mockPromise = {
+    then: function (thenFunc) {
+        this._thenFunc = thenFunc;
+    }
+};
+mockPromise['catch'] = function (catchFunc) {
+    this._catchFunc = catchFunc;
+};
+
+
+
+let mockHttp = {
+    get: function (url) {
+        this._getUrl = url;
+        return mockPromise;
+    },
+
+    post: function (url, data) {
+        this._postUrl = url;
+        this._postData = data;
+        return mockPromise;
+    }
+};
+
