@@ -1,5 +1,7 @@
 ﻿namespace App.Services {
 
+    declare var loopProtect;
+
     export class LessonService {
         private lessonResource;
 
@@ -148,8 +150,18 @@
 
 
         private executeJavaScript(script: string, html: string = '', css: string = '', additionalScripts: string[] = []) {
+            this.createTestFrame();
+
+            // escape infinite loops
+            loopProtect.alias = 'protect';
+            script = loopProtect(script);
+            this.testFrame.contentWindow['protect'] = loopProtect;
+            loopProtect.hit = function (line) {
+                console.error('Potential infinite loop found on line ' + line);
+            };
+
+
             return this.$q((resolve, reject) => {
-                this.createTestFrame();
                 this.injectHTML(html);
                 this.injectJasmine().then(() => {
                     let testResult;

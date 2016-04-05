@@ -14,9 +14,17 @@
         public activeTab = 0;
         public lesson;
         public currentLab;
-        public currentLabIndex = 0;
         public answer = new Models.Answer();
         public tabs = [];
+        private lessonId;
+
+        private get currentLabIndex():number {
+            return parseInt(window.sessionStorage['lesson_' + this.lessonId]) || 0;
+        }
+
+        private set currentLabIndex(value) {
+            window.sessionStorage['lesson_' + this.lessonId] = value.toString();
+        }
 
 
         public getProgress(): number {
@@ -28,7 +36,7 @@
         }
 
         public getProgressText(): string {
-            if (!this.currentLabIndex) {
+            if (!this.lesson) {
                 return '';
             }
             return 'completed lab ' + (this.currentLabIndex) + ' of ' + this.lesson.labs.length;                 
@@ -73,6 +81,7 @@
                     this.currentLabIndex++;
                     // check if all labs done
                     if (this.currentLabIndex == this.lesson.labs.length) {
+                        this.currentLabIndex = 0;
                         this.$uibModal.open({
                             templateUrl: '/ngApp/dialogs/success.html',
                             controller: LessonSuccessDialogController,
@@ -125,8 +134,9 @@
             }
         }
 
-        constructor( private lessonService: App.Services.LessonService, private $state: ng.ui.IStateService, private $stateParams: ng.ui.IStateParamsService, private $uibModal: angular.ui.bootstrap.IModalService) {
-            lessonService.getLesson($stateParams['id']).$promise.then((result) => {
+        constructor(private $window: ng.IWindowService, private lessonService: App.Services.LessonService, private $state: ng.ui.IStateService, private $stateParams: ng.ui.IStateParamsService, private $uibModal: angular.ui.bootstrap.IModalService) {
+            this.lessonId = $stateParams['id'];
+            lessonService.getLesson(this.lessonId).$promise.then((result) => {
                 this.lesson = result;
                 this.showLab();
             });

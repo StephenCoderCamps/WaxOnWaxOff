@@ -126,8 +126,15 @@ var App;
                 if (html === void 0) { html = ''; }
                 if (css === void 0) { css = ''; }
                 if (additionalScripts === void 0) { additionalScripts = []; }
+                this.createTestFrame();
+                // escape infinite loops
+                loopProtect.alias = 'protect';
+                script = loopProtect(script);
+                this.testFrame.contentWindow['protect'] = loopProtect;
+                loopProtect.hit = function (line) {
+                    console.error('Potential infinite loop found on line ' + line);
+                };
                 return this.$q(function (resolve, reject) {
-                    _this.createTestFrame();
                     _this.injectHTML(html);
                     _this.injectJasmine().then(function () {
                         var testResult;

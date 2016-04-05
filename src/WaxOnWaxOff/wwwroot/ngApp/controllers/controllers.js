@@ -11,21 +11,32 @@ var App;
         }());
         Controllers.HomeController = HomeController;
         var LessonController = (function () {
-            function LessonController(lessonService, $state, $stateParams, $uibModal) {
+            function LessonController($window, lessonService, $state, $stateParams, $uibModal) {
                 var _this = this;
+                this.$window = $window;
                 this.lessonService = lessonService;
                 this.$state = $state;
                 this.$stateParams = $stateParams;
                 this.$uibModal = $uibModal;
                 this.activeTab = 0;
-                this.currentLabIndex = 0;
                 this.answer = new App.Models.Answer();
                 this.tabs = [];
-                lessonService.getLesson($stateParams['id']).$promise.then(function (result) {
+                this.lessonId = $stateParams['id'];
+                lessonService.getLesson(this.lessonId).$promise.then(function (result) {
                     _this.lesson = result;
                     _this.showLab();
                 });
             }
+            Object.defineProperty(LessonController.prototype, "currentLabIndex", {
+                get: function () {
+                    return parseInt(window.sessionStorage['lesson_' + this.lessonId]) || 0;
+                },
+                set: function (value) {
+                    window.sessionStorage['lesson_' + this.lessonId] = value.toString();
+                },
+                enumerable: true,
+                configurable: true
+            });
             LessonController.prototype.getProgress = function () {
                 if (!this.lesson) {
                     return 0;
@@ -33,7 +44,7 @@ var App;
                 return (this.currentLabIndex) * 100 / this.lesson.labs.length;
             };
             LessonController.prototype.getProgressText = function () {
-                if (!this.currentLabIndex) {
+                if (!this.lesson) {
                     return '';
                 }
                 return 'completed lab ' + (this.currentLabIndex) + ' of ' + this.lesson.labs.length;
@@ -72,6 +83,7 @@ var App;
                         _this.currentLabIndex++;
                         // check if all labs done
                         if (_this.currentLabIndex == _this.lesson.labs.length) {
+                            _this.currentLabIndex = 0;
                             _this.$uibModal.open({
                                 templateUrl: '/ngApp/dialogs/success.html',
                                 controller: LessonSuccessDialogController,

@@ -148,3 +148,37 @@ let mockHttp = {
     }
 };
 
+
+let mockResource = {
+    query: function() {
+        this._queryCalled = true;
+        return 'RESOURCE_QUERY';
+    },
+    get: function (parameters) {
+        this._getCalled = true;
+        this._getParameters = parameters;
+        return 'RESOURCE_GET';
+    },
+
+    save: function (data) {
+        this._saveCalled = true;
+        return 'RESOURCE_SAVE';
+    },
+
+    remove: function (parameters) {
+        this._deleteCalled;
+        return 'RESOURCE_REMOVE';
+    }
+};
+
+mockResource['delete'] = function (parameters) {
+    this._deleteCalled = true;
+    return 'RESOURCE_REMOVE';
+}
+
+
+function mockResourceFactory(url) {
+    mockResourceFactory._url = url;
+    return mockResource;
+}
+
