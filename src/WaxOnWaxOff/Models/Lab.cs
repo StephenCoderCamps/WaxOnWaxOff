@@ -23,6 +23,9 @@ namespace WaxOnWaxOff.Models
         [Required(ErrorMessage ="A lab must include instructions.")]
         public string Instructions { get; set; }
 
+
+        public string SetupScript { get; set; }
+
         public string HTMLSolution { get; set; }
         public string JavaScriptSolution { get; set; }
         public string TypeScriptSolution { get; set; }

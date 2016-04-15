@@ -14,6 +14,8 @@ namespace WaxOnWaxOff.ViewModels
         public string Instructions { get; set; }
         public string Test { get; set; }
 
+        public string SetupScript { get; set; }
+
         public bool ShowHTMLEditor { get; set; }
         public bool ShowJavaScriptEditor { get; set; }
         public bool ShowCSSEditor { get; set; }

@@ -90,8 +90,15 @@
         </fieldset>
 
 
+        <fieldset>
+            <legend>Test Setup (optional)</legend>
+            <div class="form-group">
+                <label for="setupScript">Setup Script</label>
+                <div ui-ace="controller.aceOptions" ng-model="controller.lab.setupScript"></div>
+            </div>
+        </fieldset>
 
         <input type="submit" class="btn btn-primary" value="Save" />
-    </form>
+</form>
 
 </fieldset>

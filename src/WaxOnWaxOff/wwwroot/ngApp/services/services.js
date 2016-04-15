@@ -39,32 +39,32 @@ var App;
                 return this.$q(function (resolve, reject) {
                     switch (lab.labType.toString()) {
                         case '0':
-                            _this.runJavaScriptTest(lab.test, answer).then(function (testResult) {
+                            _this.runJavaScriptTest(lab, answer).then(function (testResult) {
                                 resolve(testResult);
                             });
                             break;
                         case '1':
-                            _this.runTypeScriptTest(lab.test, answer).then(function (testResult) {
+                            _this.runTypeScriptTest(lab, answer).then(function (testResult) {
                                 resolve(testResult);
                             });
                             break;
                     }
                 });
             };
-            TestService.prototype.runTypeScriptTest = function (test, answer) {
+            TestService.prototype.runTypeScriptTest = function (lab, answer) {
                 var _this = this;
                 return this.$q(function (resolve, reject) {
-                    var combined = answer.typescript + ';\r\n' + test;
+                    var combined = lab.setupScript + ';\r\n' + answer.typescript + ';\r\n' + lab.test;
                     var transpiled = _this.transpile(combined);
                     _this.executeJavaScript(transpiled, answer.html, answer.css).then(function (testResult) {
                         resolve(testResult);
                     });
                 });
             };
-            TestService.prototype.runJavaScriptTest = function (test, answer) {
+            TestService.prototype.runJavaScriptTest = function (lab, answer) {
                 var _this = this;
                 return this.$q(function (resolve, reject) {
-                    var combined = answer.javascript + ';\r\n' + test;
+                    var combined = lab.setupScript + ';\r\n' + answer.javascript + ';\r\n' + lab.test;
                     _this.executeJavaScript(combined, answer.html, answer.css).then(function (testResult) {
                         resolve(testResult);
                     });

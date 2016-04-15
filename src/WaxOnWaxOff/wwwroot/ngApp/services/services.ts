@@ -52,12 +52,12 @@
 
                 switch (lab.labType.toString()) {
                     case '0':
-                        this.runJavaScriptTest(lab.test, answer).then((testResult) => {
+                        this.runJavaScriptTest(lab, answer).then((testResult) => {
                             resolve(testResult);
                         });
                         break;
                     case '1':
-                        this.runTypeScriptTest(lab.test, answer).then((testResult) => {
+                        this.runTypeScriptTest(lab, answer).then((testResult) => {
                             resolve(testResult);
                         });
                         break;
@@ -67,9 +67,9 @@
 
 
 
-        public runTypeScriptTest(test: string, answer: App.Models.Answer) {
+        public runTypeScriptTest(lab: App.Models.Lab, answer: App.Models.Answer) {
             return this.$q((resolve, reject) => {
-                let combined = answer.typescript + ';\r\n' + test;
+                let combined = lab.setupScript + ';\r\n' + answer.typescript + ';\r\n' + lab.test;
                 let transpiled = this.transpile(combined);
                 this.executeJavaScript(transpiled, answer.html, answer.css).then((testResult) => {
                     resolve(testResult);
@@ -77,9 +77,9 @@
             });
         }
 
-        public runJavaScriptTest(test: string, answer: App.Models.Answer) {
+        public runJavaScriptTest(lab: App.Models.Lab, answer: App.Models.Answer) {
             return this.$q((resolve, reject) => {
-                let combined = answer.javascript + ';\r\n' + test;
+                let combined = lab.setupScript + ';\r\n' + answer.javascript + ';\r\n' + lab.test;
                 this.executeJavaScript(combined, answer.html, answer.css).then((testResult) => {
                     resolve(testResult);
                 });

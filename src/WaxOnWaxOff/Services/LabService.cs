@@ -48,6 +48,8 @@ namespace WaxOnWaxOff.Services
             original.Test = lab.Test;
             original.Instructions = lab.Instructions;
 
+            original.SetupScript = lab.SetupScript;
+
             original.HTMLSolution = lab.HTMLSolution;
             original.CSSSolution = lab.CSSSolution;
             original.JavaScriptSolution = lab.JavaScriptSolution;

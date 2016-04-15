@@ -16,7 +16,7 @@ var App;
         var Lab = (function () {
             function Lab() {
                 this.labType = 0;
-                this.test = "describe('addNumbers', function () {\n    it('should add positive numbers', function() {\n        var result = addNumbers(1,3);\n        expect(result).toBe(4);\n    });\n    it('should add negative numbers', function() {\n        var result = addNumbers(-1,-3);\n        expect(result).toBe(-4);\n    });\n});";
+                this.test = "describe('doSomething', function () {\n    it('doSomething() function should exist.', function() {\n        expect(doSomething).not.toBeNull();\n    });\n    it('doSomething() function should return \"Do Something!\"', function() {\n        var result = doSomething();\n        expect(result).toBe(\"Do Something!\");\n    });\n});";
             }
             return Lab;
         }());
