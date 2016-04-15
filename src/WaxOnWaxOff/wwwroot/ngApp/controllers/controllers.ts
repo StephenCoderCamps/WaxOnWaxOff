@@ -57,7 +57,7 @@
                     case 'CSS':
                         this.answer.css = tab.text;
                         break;
-                    case 'TypeScript':
+                    case 'ECMAScript':
                         this.answer.typescript = tab.text;
                         break;
                     case 'C#':
@@ -122,7 +122,7 @@
             }
             if (this.currentLab.showTypeScriptEditor) {
                 this.tabs.push({
-                    title: 'TypeScript',
+                    title: 'ECMAScript',
                     text: this.currentLab.preTypeScriptSolution
                 });
             }
