@@ -106,6 +106,11 @@
             return this.testFrame.contentWindow['eval'](script);
         }
 
+        private addVariable(varName, varValue) {
+            let script = 'var ' + varName + '=\"' + varValue + '\"';
+            this.eval(script);
+        }
+
 
         private injectScript(url: string) {
             return this.$q((resolve, reject) => {
@@ -166,6 +171,9 @@
                 this.injectJasmine().then(() => {
                     let testResult;
                     try {
+                        this.addVariable('_htmlSource', html);
+                        this.addVariable('_cssSource', css);
+
                         this.eval(script);
                         testResult = this.runTests();
                     } catch (err) {

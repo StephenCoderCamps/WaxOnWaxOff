@@ -85,6 +85,10 @@ var App;
             TestService.prototype.eval = function (script) {
                 return this.testFrame.contentWindow['eval'](script);
             };
+            TestService.prototype.addVariable = function (varName, varValue) {
+                var script = 'var ' + varName + '=\"' + varValue + '\"';
+                this.eval(script);
+            };
             TestService.prototype.injectScript = function (url) {
                 var _this = this;
                 return this.$q(function (resolve, reject) {
@@ -139,6 +143,8 @@ var App;
                     _this.injectJasmine().then(function () {
                         var testResult;
                         try {
+                            _this.addVariable('_htmlSource', html);
+                            _this.addVariable('_cssSource', css);
                             _this.eval(script);
                             testResult = _this.runTests();
                         }
