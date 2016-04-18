@@ -105,30 +105,35 @@
             if (this.currentLab.showHTMLEditor) {
                 this.tabs.push({
                     title: 'HTML',
+                    mode: 'html',
                     text: this.currentLab.preHTMLSolution
                 });
             }
             if (this.currentLab.showJavaScriptEditor) {
                 this.tabs.push({
                     title: 'JavaScript',
+                    mode: 'javascript',
                     text: this.currentLab.preJavaScriptSolution
                 });
             }
             if (this.currentLab.showCSSScriptEditor) {
                 this.tabs.push({
                     title: 'CSS',
+                    mode: 'css',
                     text: this.currentLab.preCSSSolution
                 });
             }
             if (this.currentLab.showTypeScriptEditor) {
                 this.tabs.push({
                     title: 'ECMAScript',
+                    mode: 'typescript',
                     text: this.currentLab.preTypeScriptSolution
                 });
             }
             if (this.currentLab.showCSharpEditor) {
                 this.tabs.push({
                     title: 'C#',
+                    mode: 'csharp',
                     text: this.currentLab.preCSharpSolution
                 });
             }
