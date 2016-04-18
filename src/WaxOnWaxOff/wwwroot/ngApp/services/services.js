@@ -86,7 +86,7 @@ var App;
                 return this.testFrame.contentWindow['eval'](script);
             };
             TestService.prototype.addVariable = function (varName, varValue) {
-                var script = 'var ' + varName + '=\"' + varValue + '\"';
+                var script = 'var ' + varName + '=`' + varValue + '`';
                 this.eval(script);
             };
             TestService.prototype.injectScript = function (url) {

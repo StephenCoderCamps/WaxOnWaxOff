@@ -107,7 +107,7 @@
         }
 
         private addVariable(varName, varValue) {
-            let script = 'var ' + varName + '=\"' + varValue + '\"';
+            let script = 'var ' + varName + '=`' + varValue + '`';
             this.eval(script);
         }
 
