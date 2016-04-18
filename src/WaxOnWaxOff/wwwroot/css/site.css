@@ -5,6 +5,11 @@
  .ace_editor { height: 200px; }
 
 
+ #editLab-test {
+     height:400px;
+ }
+
+
  .instructions {
      background-color: #d9edf7;
      white-space: pre-line;
