@@ -20,6 +20,7 @@ namespace WaxOnWaxOff.Models
                 .ForMember(m => m.ShowJavaScriptEditor, opt => opt.MapFrom(src => !String.IsNullOrWhiteSpace(src.JavaScriptSolution)))
                 .ForMember(m => m.ShowCSSEditor, opt => opt.MapFrom(src => !String.IsNullOrWhiteSpace(src.CSSSolution)))
                 .ForMember(m => m.ShowTypeScriptEditor, opt => opt.MapFrom(src => !String.IsNullOrWhiteSpace(src.TypeScriptSolution)))
+                .ForMember(m => m.ShowPlainEditor, opt => opt.MapFrom(src => !String.IsNullOrWhiteSpace(src.PlainSolution)))
                 .ForMember(m => m.ShowCSharpEditor, opt => opt.MapFrom(src => !String.IsNullOrWhiteSpace(src.CSharpSolution))
             );
         }

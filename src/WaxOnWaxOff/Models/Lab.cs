@@ -29,12 +29,14 @@ namespace WaxOnWaxOff.Models
         public string HTMLSolution { get; set; }
         public string JavaScriptSolution { get; set; }
         public string TypeScriptSolution { get; set; }
+        public string PlainSolution { get; set; }
         public string CSharpSolution { get; set; }
         public string CSSSolution { get; set; }
 
         public string PreHTMLSolution { get; set; }
         public string PreJavaScriptSolution { get; set; }
         public string PreTypeScriptSolution { get; set; }
+        public string PrePlainSolution { get; set; }
         public string PreCSharpSolution { get; set; }
         public string PreCSSSolution { get; set; }
 

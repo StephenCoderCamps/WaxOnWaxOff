@@ -56,7 +56,7 @@ var App;
                 return this.$q(function (resolve, reject) {
                     var combined = lab.setupScript + ';\r\n' + answer.typescript + ';\r\n' + lab.test;
                     var transpiled = _this.transpile(combined);
-                    _this.executeJavaScript(transpiled, answer.html, answer.css).then(function (testResult) {
+                    _this.executeJavaScript(answer, transpiled).then(function (testResult) {
                         resolve(testResult);
                     });
                 });
@@ -65,7 +65,7 @@ var App;
                 var _this = this;
                 return this.$q(function (resolve, reject) {
                     var combined = lab.setupScript + ';\r\n' + answer.javascript + ';\r\n' + lab.test;
-                    _this.executeJavaScript(combined, answer.html, answer.css).then(function (testResult) {
+                    _this.executeJavaScript(answer, combined).then(function (testResult) {
                         resolve(testResult);
                     });
                 });
@@ -86,8 +86,7 @@ var App;
                 return this.testFrame.contentWindow['eval'](script);
             };
             TestService.prototype.addVariable = function (varName, varValue) {
-                var script = 'var ' + varName + '=`' + varValue + '`';
-                this.eval(script);
+                this.testFrame.contentWindow[varName] = varValue;
             };
             TestService.prototype.injectScript = function (url) {
                 var _this = this;
@@ -125,10 +124,8 @@ var App;
             TestService.prototype.destroyTestFrame = function () {
                 document.body.removeChild(this.testFrame);
             };
-            TestService.prototype.executeJavaScript = function (script, html, css, additionalScripts) {
+            TestService.prototype.executeJavaScript = function (answer, script, additionalScripts) {
                 var _this = this;
-                if (html === void 0) { html = ''; }
-                if (css === void 0) { css = ''; }
                 if (additionalScripts === void 0) { additionalScripts = []; }
                 this.createTestFrame();
                 // escape infinite loops
@@ -139,13 +136,19 @@ var App;
                     console.error('Potential infinite loop found on line ' + line);
                 };
                 return this.$q(function (resolve, reject) {
-                    _this.injectHTML(html);
+                    _this.injectHTML(answer.html);
                     _this.injectJasmine().then(function () {
                         var testResult;
                         try {
-                            _this.addVariable('_htmlSource', html);
-                            _this.addVariable('_cssSource', css);
+                            // expose source code to unit tests
+                            _this.addVariable('_javaScriptSource', answer.javascript);
+                            _this.addVariable('_typeScriptSource', answer.typescript);
+                            _this.addVariable('_htmlSource', answer.html);
+                            _this.addVariable('_cssSource', answer.css);
+                            _this.addVariable('_plainSource', answer.plain);
+                            // execute the scripts
                             _this.eval(script);
+                            // execute the unit tests
                             testResult = _this.runTests();
                         }
                         catch (err) {

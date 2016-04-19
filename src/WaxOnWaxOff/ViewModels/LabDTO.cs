@@ -20,6 +20,7 @@ namespace WaxOnWaxOff.ViewModels
         public bool ShowJavaScriptEditor { get; set; }
         public bool ShowCSSEditor { get; set; }
         public bool ShowTypeScriptEditor { get; set; }
+        public bool ShowPlainEditor { get; set; }
         public bool ShowCSharpEditor { get; set; }
 
 
@@ -27,6 +28,7 @@ namespace WaxOnWaxOff.ViewModels
         public string PreJavaScriptSolution { get; set; }
         public string PreTypeScriptSolution { get; set; }
         public string PreCSharpSolution { get; set; }
+        public string PrePlainSolution { get; set; }
         public string PreCSSSolution { get; set; }
 
     }

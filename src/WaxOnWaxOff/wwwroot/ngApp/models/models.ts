@@ -6,6 +6,7 @@
         public html: string = "";
         public css: string = "";
         public csharp: string = "";
+        public plain: string = "";
     }
 
     export class Lab {

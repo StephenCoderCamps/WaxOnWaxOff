@@ -65,6 +65,9 @@ var App;
                         case 'ECMAScript':
                             _this.answer.typescript = tab.text;
                             break;
+                        case 'Answer':
+                            _this.answer.plain = tab.text;
+                            break;
                         case 'C#':
                             _this.answer.csharp = tab.text;
                             break;
@@ -130,6 +133,13 @@ var App;
                         title: 'ECMAScript',
                         mode: 'typescript',
                         text: this.currentLab.preTypeScriptSolution
+                    });
+                }
+                if (this.currentLab.showPlainEditor) {
+                    this.tabs.push({
+                        title: 'Answer',
+                        mode: null,
+                        text: this.currentLab.prePlainSolution
                     });
                 }
                 if (this.currentLab.showCSharpEditor) {

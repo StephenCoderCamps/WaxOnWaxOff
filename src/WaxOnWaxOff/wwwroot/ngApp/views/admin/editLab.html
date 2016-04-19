@@ -33,7 +33,9 @@
             <label for="Test">Test</label>
             <div id="editLab-test" ui-ace="controller.aceOptions" ng-model="controller.lab.test"></div>
         </div>
-
+        <div>
+            <em>Use _javaScriptSource, _typeScriptSource, _htmlSource, _cssSource, _plainSource. </em>
+        </div>
 
         <fieldset>
             <legend>Solutions (required)</legend>
@@ -51,6 +53,9 @@
                 </uib-tab>
                 <uib-tab heading="TypeScript Solution">
                     <div ui-ace="{mode:'typescript'}" ng-model="controller.lab.typeScriptSolution"></div>
+                </uib-tab>
+                <uib-tab heading="Plain Solution">
+                    <div ui-ace ng-model="controller.lab.plainSolution"></div>
                 </uib-tab>
                 <uib-tab heading="C# Solution">
                     <div ui-ace="{mode:'csharp'}" ng-model="controller.lab.cSharpSolution"></div>
@@ -81,6 +86,9 @@
                 </uib-tab>
                 <uib-tab heading="Pre TypeScript Solution">
                     <div ui-ace="{mode:'typescript'}" ng-model="controller.lab.preTypeScriptSolution"></div>
+                </uib-tab>
+                <uib-tab heading="Pre Plain Solution">
+                    <div ui-ace ng-model="controller.lab.prePlainSolution"></div>
                 </uib-tab>
                 <uib-tab heading="Pre C# Solution">
                     <div ui-ace="{mode:'csharp'}" ng-model="controller.lab.preCSharpSolution"></div>

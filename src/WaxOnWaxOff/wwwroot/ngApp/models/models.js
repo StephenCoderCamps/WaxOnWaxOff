@@ -9,6 +9,7 @@ var App;
                 this.html = "";
                 this.css = "";
                 this.csharp = "";
+                this.plain = "";
             }
             return Answer;
         }());

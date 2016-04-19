@@ -71,7 +71,7 @@
             return this.$q((resolve, reject) => {
                 let combined = lab.setupScript + ';\r\n' + answer.typescript + ';\r\n' + lab.test;
                 let transpiled = this.transpile(combined);
-                this.executeJavaScript(transpiled, answer.html, answer.css).then((testResult) => {
+                this.executeJavaScript(answer, transpiled).then((testResult) => {
                     resolve(testResult);
                 });
             });
@@ -80,7 +80,7 @@
         public runJavaScriptTest(lab: App.Models.Lab, answer: App.Models.Answer) {
             return this.$q((resolve, reject) => {
                 let combined = lab.setupScript + ';\r\n' + answer.javascript + ';\r\n' + lab.test;
-                this.executeJavaScript(combined, answer.html, answer.css).then((testResult) => {
+                this.executeJavaScript(answer, combined).then((testResult) => {
                     resolve(testResult);
                 });
             });
@@ -107,8 +107,7 @@
         }
 
         private addVariable(varName, varValue) {
-            let script = 'var ' + varName + '=`' + varValue + '`';
-            this.eval(script);
+            this.testFrame.contentWindow[varName] = varValue;
         }
 
 
@@ -154,7 +153,7 @@
         }
 
 
-        private executeJavaScript(script: string, html: string = '', css: string = '', additionalScripts: string[] = []) {
+        private executeJavaScript(answer: App.Models.Answer, script: string, additionalScripts: string[] = []) {
             this.createTestFrame();
 
             // escape infinite loops
@@ -167,14 +166,22 @@
 
 
             return this.$q((resolve, reject) => {
-                this.injectHTML(html);
+                this.injectHTML(answer.html);
                 this.injectJasmine().then(() => {
                     let testResult;
                     try {
-                        this.addVariable('_htmlSource', html);
-                        this.addVariable('_cssSource', css);
+                        // expose source code to unit tests
+                        this.addVariable('_javaScriptSource', answer.javascript);
+                        this.addVariable('_typeScriptSource', answer.typescript);
+                        this.addVariable('_htmlSource', answer.html);
+                        this.addVariable('_cssSource', answer.css);
+                        this.addVariable('_plainSource', answer.plain);
 
+
+                        // execute the scripts
                         this.eval(script);
+
+                        // execute the unit tests
                         testResult = this.runTests();
                     } catch (err) {
                         testResult = {

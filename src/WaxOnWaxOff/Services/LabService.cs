@@ -54,12 +54,14 @@ namespace WaxOnWaxOff.Services
             original.CSSSolution = lab.CSSSolution;
             original.JavaScriptSolution = lab.JavaScriptSolution;
             original.TypeScriptSolution = lab.TypeScriptSolution;
+            original.PlainSolution = lab.PlainSolution;
             original.CSharpSolution = lab.CSharpSolution;
 
             original.PreHTMLSolution = lab.PreHTMLSolution;
             original.PreCSSSolution = lab.PreCSSSolution;
             original.PreJavaScriptSolution = lab.PreJavaScriptSolution;
             original.PreTypeScriptSolution = lab.PreTypeScriptSolution;
+            original.PlainSolution = lab.PlainSolution;
             original.PreCSharpSolution = lab.PreCSharpSolution;
 
             _db.SaveChanges();

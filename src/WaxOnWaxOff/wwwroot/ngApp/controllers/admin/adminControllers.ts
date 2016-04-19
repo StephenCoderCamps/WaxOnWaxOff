@@ -178,7 +178,8 @@
                 css: lab.cssSolution,
                 javascript: lab.javaScriptSolution,
                 typescript: lab.typeScriptSolution,
-                csharp: lab.cSharpSolution
+                csharp: lab.cSharpSolution,
+                plain: lab.plainSolution
             };
             this.testService.submitAnswer(lab, answer).then((result) => {
                 this.answerResult = result;

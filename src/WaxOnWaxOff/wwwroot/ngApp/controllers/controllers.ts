@@ -60,6 +60,9 @@
                     case 'ECMAScript':
                         this.answer.typescript = tab.text;
                         break;
+                    case 'Answer':
+                        this.answer.plain = tab.text;
+                        break;
                     case 'C#':
                         this.answer.csharp = tab.text;
                         break;
@@ -128,6 +131,13 @@
                     title: 'ECMAScript',
                     mode: 'typescript',
                     text: this.currentLab.preTypeScriptSolution
+                });
+            }
+            if (this.currentLab.showPlainEditor) {
+                this.tabs.push({
+                    title: 'Answer',
+                    mode: null,
+                    text: this.currentLab.prePlainSolution
                 });
             }
             if (this.currentLab.showCSharpEditor) {
