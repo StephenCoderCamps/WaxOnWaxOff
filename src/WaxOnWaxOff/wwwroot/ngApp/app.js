@@ -22,6 +22,12 @@ var App;
             controller: App.Controllers.LoginController,
             controllerAs: 'controller'
         })
+            .state('register', {
+            url: '/register',
+            templateUrl: '/ngApp/views/account/register.html',
+            controller: App.Controllers.RegisterController,
+            controllerAs: 'controller'
+        })
             .state('admin', {
             abstract: true,
             url: '/admin',
@@ -53,7 +59,7 @@ var App;
     app.run(function ($rootScope, $state, accountService) {
         $rootScope.$on('$stateChangeStart', function (e, to) {
             // protect non-public views
-            if (to.name !== 'login') {
+            if (to.name !== 'login' && to.name !== 'register') {
                 if (!accountService.isLoggedIn()) {
                     e.preventDefault();
                     $state.go('login');
