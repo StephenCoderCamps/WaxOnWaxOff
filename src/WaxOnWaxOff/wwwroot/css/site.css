@@ -12,8 +12,11 @@
 
 
  .instructions {
-     background-color: #d9edf7;
-     white-space: pre-line;
+     /*background-color: #d9edf7;*/
+    background-color:#eee;
+    border: 1px solid red;
+    white-space: pre-line;
+    border-radius:0;
  }
 
  .isAdmin {
@@ -66,4 +69,22 @@ h2 {
     font-size:30px;
     color:#666;
     font-family:inherit;
+}
+
+h3 {
+    color:#666;
+    font-family:inherit;
+}
+
+button {
+    background-color:red;
+    color:white;
+}
+
+#submitBtn {
+    margin-top:4px;
+}
+
+.alert {
+    background-color:#FFE1E1;
 }
