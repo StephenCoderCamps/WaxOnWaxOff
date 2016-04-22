@@ -7,19 +7,20 @@
     <base href="/" />
 </head>
 <body ng-controller="AccountController as account">
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <header>
+        <div class="container">
+            <img id="mainLogo" ng-src="https://students.codercamps.com/Images/codercamps-logo-01.svg" />
+        </div>
+    </header>
+
+    <nav id="mainNav" class="navbar">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" ng-click="isCollapsed = !isCollapsed">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="home.html">Wax On</a>
+                <a id="waxOnTitle" class="navbar-brand" href="home.html">Wax On</a>
             </div>
             <div id="navLinks" class="collapse navbar-collapse"  uib-collapse="isCollapsed">
                
-                <ul class="nav navbar-nav navbar-right">
+                <ul id="navList" class="nav navbar-nav navbar-right">
                     <li><a ui-sref="admin.lessons" ng-show="account.getClaim('isAdmin')">Admin</a></li>
                     <li><a ng-click="account.logout()" ng-show="account.isLoggedIn()">logout {{account.getUserName()}}</a></li>
                 </ul>
@@ -33,6 +34,10 @@
         <ui-view></ui-view>
     </div>
 
+    <hr />
+    <footer>
+        <p>Copyright © <a href="https://students.codercamps.com">Coder Camps</a></p>
+    </footer>
 
     <!-- Misc -->
     <script src="~/js/site.js"></script>
