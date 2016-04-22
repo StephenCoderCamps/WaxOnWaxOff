@@ -32,14 +32,21 @@ var App;
         Controllers.AccountController = AccountController;
         angular.module('App').controller('AccountController', AccountController);
         var LoginController = (function () {
-            function LoginController(accountService, $location) {
+            function LoginController($window, accountService, $location) {
+                this.$window = $window;
                 this.accountService = accountService;
                 this.$location = $location;
             }
             LoginController.prototype.login = function () {
                 var _this = this;
                 this.accountService.login(this.loginUser).then(function () {
-                    _this.$location.path('/');
+                    var originalUrl = _this.$window.sessionStorage.getItem('originalUrl');
+                    if (originalUrl) {
+                        _this.$location.path(originalUrl);
+                    }
+                    else {
+                        _this.$location.path('/');
+                    }
                 }).catch(function (results) {
                     _this.validationMessages = results;
                 });
@@ -48,14 +55,21 @@ var App;
         }());
         Controllers.LoginController = LoginController;
         var RegisterController = (function () {
-            function RegisterController(accountService, $location) {
+            function RegisterController($window, accountService, $location) {
+                this.$window = $window;
                 this.accountService = accountService;
                 this.$location = $location;
             }
             RegisterController.prototype.register = function () {
                 var _this = this;
                 this.accountService.register(this.registerUser).then(function () {
-                    _this.$location.path('/');
+                    var originalUrl = _this.$window.sessionStorage.getItem('originalUrl');
+                    if (originalUrl) {
+                        _this.$location.path(originalUrl);
+                    }
+                    else {
+                        _this.$location.path('/');
+                    }
                 }).catch(function (results) {
                     _this.validationMessages = results;
                 });

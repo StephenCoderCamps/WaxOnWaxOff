@@ -40,13 +40,18 @@
 
         public login() {
             this.accountService.login(this.loginUser).then(() => {
-                this.$location.path('/');
+                let originalUrl = this.$window.sessionStorage.getItem('originalUrl');
+                if (originalUrl) {
+                    this.$location.path(originalUrl);
+                } else {
+                    this.$location.path('/');
+                }
             }).catch((results) => {
                 this.validationMessages = results;
             });
         }
 
-        constructor(private accountService: App.Services.AccountService, private $location: ng.ILocationService) { }
+        constructor(private $window: ng.IWindowService, private accountService: App.Services.AccountService, private $location: ng.ILocationService) { }
     }
 
 
@@ -56,13 +61,18 @@
 
         public register() {
             this.accountService.register(this.registerUser).then(() => {
-                this.$location.path('/');
+                let originalUrl = this.$window.sessionStorage.getItem('originalUrl');
+                if (originalUrl) {
+                    this.$location.path(originalUrl);
+                } else {
+                    this.$location.path('/');
+                }
             }).catch((results) => {
                 this.validationMessages = results;
             });
         }
 
-        constructor(private accountService: App.Services.AccountService, private $location: ng.ILocationService) { }
+        constructor(private $window: ng.IWindowService, private accountService: App.Services.AccountService, private $location: ng.ILocationService) { }
     }
 
 

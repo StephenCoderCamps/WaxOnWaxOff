@@ -56,12 +56,13 @@ var App;
         });
         $locationProvider.html5Mode(true);
     });
-    app.run(function ($rootScope, $state, accountService) {
+    app.run(function ($window, $rootScope, $state, accountService) {
         $rootScope.$on('$stateChangeStart', function (e, to) {
             // protect non-public views
             if (to.name !== 'login' && to.name !== 'register') {
                 if (!accountService.isLoggedIn()) {
                     e.preventDefault();
+                    $window.sessionStorage.setItem('originalUrl', $window.location.pathname);
                     $state.go('login');
                 }
             }

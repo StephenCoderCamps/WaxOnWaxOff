@@ -66,13 +66,14 @@
         $locationProvider.html5Mode(true);
     });
 
-    app.run(($rootScope: ng.IRootScopeService, $state: ng.ui.IStateService, accountService: App.Services.AccountService) => {
+    app.run(($window: ng.IWindowService, $rootScope: ng.IRootScopeService, $state: ng.ui.IStateService, accountService: App.Services.AccountService) => {
         $rootScope.$on('$stateChangeStart', function (e, to) {
 
             // protect non-public views
             if (to.name !== 'login' && to.name !== 'register') {
                 if (!accountService.isLoggedIn()) {
                     e.preventDefault();
+                    $window.sessionStorage.setItem('originalUrl', $window.location.pathname);
                     $state.go('login');
                 }
             }
