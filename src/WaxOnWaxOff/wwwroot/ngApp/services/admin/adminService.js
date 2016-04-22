@@ -29,20 +29,25 @@ var App;
             var StudentService = (function () {
                 function StudentService($resource) {
                     this.StudentResource = $resource("/api/students/:id", null, {
-                        listScores: { url: '/api/students/scores/:id', method: 'GET', isArray: true }
+                        listScores: { url: '/api/students/scores/:id', method: 'GET', isArray: true },
+                        toggleAdmin: { url: '/api/students/toggleAdmin/:id', method: 'POST' }
                     });
                 }
                 StudentService.prototype.getStudent = function (studentId) {
                     return this.StudentResource.get({ id: studentId });
                 };
-                StudentService.prototype.list = function () {
-                    return this.StudentResource.query();
+                StudentService.prototype.list = function (match) {
+                    if (match === void 0) { match = ''; }
+                    return this.StudentResource.query({ match: match });
                 };
                 StudentService.prototype.listScores = function (studentId) {
                     return this.StudentResource.listScores({ id: studentId });
                 };
                 StudentService.prototype.save = function (student) {
                     return this.StudentResource.save(student).$promise;
+                };
+                StudentService.prototype.toggleAdmin = function (studentId) {
+                    return this.StudentResource.toggleAdmin({ id: studentId }, {}).$promise;
                 };
                 StudentService.prototype.remove = function (studentId) {
                     return this.StudentResource.delete({ id: studentId }).$promise;

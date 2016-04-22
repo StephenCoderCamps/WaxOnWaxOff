@@ -6,13 +6,14 @@ using Microsoft.AspNet.Mvc;
 using WaxOnWaxOff.Services;
 using WaxOnWaxOff.Models;
 using Microsoft.AspNet.Authorization;
+using WaxOnWaxOff.ViewModels;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WaxOnWaxOff.API
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Policy ="AdminOnly")]
     public class StudentsController : Controller
     {
         private StudentService _studentService;
@@ -24,15 +25,15 @@ namespace WaxOnWaxOff.API
 
         // GET: api/values
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string match="")
         {
-            var students = _studentService.List();
+            var students = _studentService.List(match);
             return Ok(students);
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> GetStudent(string id)
         {
             var student = await _studentService.GetStudent(id); 
             return Ok(student);
@@ -52,8 +53,9 @@ namespace WaxOnWaxOff.API
 
         // POST api/values
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]StudentViewModel student)
+        public async Task<IActionResult> Post([FromBody]StudentDTO student)
         {
+
             var result = await _studentService.AddStudent(student);
             if (result.Succeeded)
             {
@@ -71,5 +73,16 @@ namespace WaxOnWaxOff.API
         {
            await _studentService.DeleteStudent(id);
         }
+
+
+
+        // ToggleAdmin api/values/5
+        [HttpPost("toggleAdmin/{id}")]
+        public async Task ToggleAdmin(string id)
+        {
+            
+            await _studentService.ToggleAdmin(id);
+        }
+
     }
 }

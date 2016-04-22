@@ -1,0 +1,25 @@
+﻿
+<form name="studentForm" ng-submit="modal.save()" novalidate>
+    <div class="modal-header">
+        <h2 class="modal-title">Edit Student</h2>
+    </div>
+    <div class="modal-body">
+
+        <ul>
+            <li ng-repeat="message in modal.validationMessages">
+                {{message}}
+            </li>
+        </ul>
+
+
+        <h2>{{modal.student.userName}}</h2>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="modal.isAdmin" > Is Admin
+            </label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>

@@ -40,6 +40,11 @@ namespace WaxOnWaxOff
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // add security policies
+            services.AddAuthorization(options => {
+                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("IsAdmin"));
+            });
+
             // Add framework services.
             services.AddEntityFramework()
                 .AddSqlServer()

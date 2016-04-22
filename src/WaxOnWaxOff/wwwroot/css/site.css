@@ -14,3 +14,11 @@
      background-color: #d9edf7;
      white-space: pre-line;
  }
+
+ .isAdmin {
+     color: orangered;
+ }
+
+ .ng-invalid.ng-touched {
+    background-color: #FA787E;
+ }

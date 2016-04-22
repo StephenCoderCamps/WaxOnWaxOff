@@ -38,12 +38,12 @@
     export class StudentService {
         private StudentResource;
 
-        public getStudent(studentId: number) {
+        public getStudent(studentId: string) {
             return this.StudentResource.get({ id: studentId });
         }
 
-        public list() {
-            return this.StudentResource.query();
+        public list(match:string = '') {
+            return this.StudentResource.query({ match: match });
         }
 
 
@@ -55,6 +55,10 @@
             return this.StudentResource.save(student).$promise;
         }
 
+        public toggleAdmin(studentId: string) {
+            return this.StudentResource.toggleAdmin({ id: studentId }, {}).$promise;
+        }
+
 
         public remove(studentId) {
             return this.StudentResource.delete({ id: studentId }).$promise;
@@ -63,7 +67,8 @@
 
         constructor($resource: ng.resource.IResourceService) {
             this.StudentResource = $resource("/api/students/:id", null, {
-                listScores: {url:'/api/students/scores/:id', method:'GET', isArray:true}
+                listScores: { url: '/api/students/scores/:id', method: 'GET', isArray: true },
+                toggleAdmin: { url: '/api/students/toggleAdmin/:id', method: 'POST'}
             });
         }
     }

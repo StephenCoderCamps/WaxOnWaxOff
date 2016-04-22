@@ -1,19 +1,37 @@
 ﻿
-<form ng-submit="modal.save()">
+<form name="studentForm" ng-submit="modal.save()" novalidate>
     <div class="modal-header">
-        <h2 class="modal-title">Edit Student</h2>
+        <h2 class="modal-title">Add Student</h2>
     </div>
     <div class="modal-body">
+
+        <ul>
+            <li ng-repeat="message in modal.validationMessages">
+                {{message}}
+            </li>
+        </ul>
+
+
         <div class="form-group">
-            <label for="userName">User Name</label>
-            <input type="text" class="form-control" id="userName" placeholder="User Name" ng-model="modal.student.userName" />
+            <label for="userName">Email</label>
+            <input type="email"
+                   class="form-control"
+                   id="userName"
+                   placeholder="Email"
+                   ng-model="modal.student.userName"
+                   ng-required="true" />
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="text" class="form-control" id="password" placeholder="Password" ng-model="modal.student.password" />
+            <input type="text"
+                   class="form-control"
+                   id="password"
+                   placeholder="Password"
+                   ng-model="modal.student.password"
+                   ng-required="true" />
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="studentForm.$invalid">Save</button>
     </div>
 </form>

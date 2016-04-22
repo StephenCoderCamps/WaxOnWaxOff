@@ -3,6 +3,9 @@
 </div>
 <div class="modal-body">
 
+    <div ng-show="modal.scores.length==0">
+        This student has not completed any lessons.
+    </div>
 
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="score in modal.scores">

@@ -65,6 +65,13 @@ var App;
                     $state.go('login');
                 }
             }
+            // protect admin views
+            if (to.name.startsWith('admin.')) {
+                if (!accountService.getClaim('isAdmin')) {
+                    e.preventDefault();
+                    $state.go('login');
+                }
+            }
         });
     });
 })(App || (App = {}));

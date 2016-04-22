@@ -202,4 +202,19 @@
 
     angular.module('App').service('testService', TestService);
 
+
+    export class ValidationService {
+
+        public flattenValidation(modelState) {
+            let messages = [];
+            for (let prop in modelState) {
+                messages = messages.concat(modelState[prop]);
+            }
+            return messages;
+        }
+    }
+
+    angular.module('App').service('validationService', ValidationService);
+
+
 }

@@ -193,7 +193,7 @@
 
     export class StudentsController {
         public students;
-
+        public match: string;
 
         public getScores(student) {
             this.$uibModal.open({
@@ -220,6 +220,19 @@
         }
 
 
+        public edit(student) {
+            this.$uibModal.open({
+                templateUrl: '/ngApp/dialogs/admin/editStudent.html',
+                controller: StudentEditController,
+                controllerAs: 'modal',
+                resolve: {
+                    student: student
+                }
+            }).result.then(() => {
+                this.students = this.studentService.list();
+            });
+        }
+
 
         public remove(student) {
             this.$uibModal.open({
@@ -232,6 +245,10 @@
             }).result.then(() => {
                 this.students = this.studentService.list();
             });
+        }
+
+        public filter() {
+            this.students = this.studentService.list(this.match);
         }
 
         constructor(private $stateParams: ng.ui.IStateParamsService, private studentService: App.Admin.Services.StudentService, private $uibModal: ng.ui.bootstrap.IModalService) {
@@ -256,19 +273,41 @@
 
     class StudentAddController {
         public student;
+        public validationMessages;
 
         public save() {
             this.studentService.save(this.student).then(() => {
                 this.$uibModalInstance.close();
-            });;
+            }).catch((result) => {
+                this.validationMessages = this.validationService.flattenValidation(result.data);
+            });
         }
 
         constructor(
+            private validationService: App.Services.ValidationService,
             private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
             private studentService: App.Admin.Services.StudentService
         ) {}
     }
 
+
+    class StudentEditController {
+        public isAdmin: boolean;
+
+        public save() {
+            this.studentService.toggleAdmin(this.student.id).then(() => {
+                this.$uibModalInstance.close();
+            });;
+        }
+
+        constructor(
+            public student,
+            private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
+            private studentService: App.Admin.Services.StudentService
+        ) {
+            this.isAdmin = student.isAdmin;
+        }
+    }
 
 
     class StudentScoresController {

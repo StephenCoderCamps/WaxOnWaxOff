@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WaxOnWaxOff.Models
+namespace WaxOnWaxOff.ViewModels
 {
-    public class StudentViewModel
+    public class StudentDTO
     {
         public string Id { get; set; }
 
         public string UserName { get; set; }
 
         public string Password { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

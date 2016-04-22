@@ -168,6 +168,20 @@ var App;
         }());
         Services.TestService = TestService;
         angular.module('App').service('testService', TestService);
+        var ValidationService = (function () {
+            function ValidationService() {
+            }
+            ValidationService.prototype.flattenValidation = function (modelState) {
+                var messages = [];
+                for (var prop in modelState) {
+                    messages = messages.concat(modelState[prop]);
+                }
+                return messages;
+            };
+            return ValidationService;
+        }());
+        Services.ValidationService = ValidationService;
+        angular.module('App').service('validationService', ValidationService);
     })(Services = App.Services || (App.Services = {}));
 })(App || (App = {}));
 //# sourceMappingURL=services.js.map

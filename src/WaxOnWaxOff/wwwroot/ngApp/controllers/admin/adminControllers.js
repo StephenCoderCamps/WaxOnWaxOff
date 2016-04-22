@@ -216,6 +216,19 @@ var App;
                         _this.students = _this.studentService.list();
                     });
                 };
+                StudentsController.prototype.edit = function (student) {
+                    var _this = this;
+                    this.$uibModal.open({
+                        templateUrl: '/ngApp/dialogs/admin/editStudent.html',
+                        controller: StudentEditController,
+                        controllerAs: 'modal',
+                        resolve: {
+                            student: student
+                        }
+                    }).result.then(function () {
+                        _this.students = _this.studentService.list();
+                    });
+                };
                 StudentsController.prototype.remove = function (student) {
                     var _this = this;
                     this.$uibModal.open({
@@ -228,6 +241,9 @@ var App;
                     }).result.then(function () {
                         _this.students = _this.studentService.list();
                     });
+                };
+                StudentsController.prototype.filter = function () {
+                    this.students = this.studentService.list(this.match);
                 };
                 return StudentsController;
             }());
@@ -248,7 +264,8 @@ var App;
                 return StudentDeleteController;
             }());
             var StudentAddController = (function () {
-                function StudentAddController($uibModalInstance, studentService) {
+                function StudentAddController(validationService, $uibModalInstance, studentService) {
+                    this.validationService = validationService;
                     this.$uibModalInstance = $uibModalInstance;
                     this.studentService = studentService;
                 }
@@ -256,10 +273,27 @@ var App;
                     var _this = this;
                     this.studentService.save(this.student).then(function () {
                         _this.$uibModalInstance.close();
+                    }).catch(function (result) {
+                        _this.validationMessages = _this.validationService.flattenValidation(result.data);
+                    });
+                };
+                return StudentAddController;
+            }());
+            var StudentEditController = (function () {
+                function StudentEditController(student, $uibModalInstance, studentService) {
+                    this.student = student;
+                    this.$uibModalInstance = $uibModalInstance;
+                    this.studentService = studentService;
+                    this.isAdmin = student.isAdmin;
+                }
+                StudentEditController.prototype.save = function () {
+                    var _this = this;
+                    this.studentService.toggleAdmin(this.student.id).then(function () {
+                        _this.$uibModalInstance.close();
                     });
                     ;
                 };
-                return StudentAddController;
+                return StudentEditController;
             }());
             var StudentScoresController = (function () {
                 function StudentScoresController(student, $uibModalInstance, studentService) {
