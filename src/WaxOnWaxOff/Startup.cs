@@ -61,6 +61,7 @@ namespace WaxOnWaxOff
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
+                options.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
             });
 
             // configure auto mapper

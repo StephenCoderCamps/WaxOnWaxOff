@@ -78,11 +78,11 @@ namespace WaxOnWaxOff.Services
                     UserId = user.GetUserId(),
                     LessonId = lessonId,
                     Passed =true,
-                    DatePassed = DateTime.Now
+                    DatePassed = DateTime.UtcNow
                 });
             } else {
                 score.Passed = true;
-                score.DatePassed = DateTime.Now;
+                score.DatePassed = DateTime.UtcNow;
             }
             _db.SaveChanges();
         }
