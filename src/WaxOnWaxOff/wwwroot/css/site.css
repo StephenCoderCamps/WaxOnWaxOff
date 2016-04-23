@@ -1,5 +1,6 @@
 ﻿body {
-        padding-top:70px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
 }
 
  .ace_editor { height: 200px; }
@@ -11,8 +12,11 @@
 
 
  .instructions {
-     background-color: #d9edf7;
-     white-space: pre-line;
+     /*background-color: #d9edf7;*/
+    background-color:#eee;
+    border: 1px solid red;
+    white-space: pre-line;
+    border-radius:0;
  }
 
  .isAdmin {
@@ -22,3 +26,65 @@
  .ng-invalid.ng-touched {
     background-color: #FA787E;
  }
+
+#mainLogo {
+    margin:15px 0 15px 0;
+    height:85px;
+}
+
+header {
+    border-top: 2px solid #ff3738;
+    background-color:#fff;
+}
+
+#mainNav {
+    background-color:#fafafa;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    height:52px;
+}
+
+#waxOnTitle {
+    font-size: 2em;
+    font-weight: bold;
+    color:#333;
+}
+
+#navList a, footer a {
+    color:#666;
+    line-height:18px;
+    font-size:14px;
+}
+
+a {
+    color:#ff3738;
+    text-decoration:none;
+}
+
+footer p {
+    margin-left:8%;
+}
+
+h2 {
+    font-size:30px;
+    color:#666;
+    font-family:inherit;
+}
+
+h3 {
+    color:#666;
+    font-family:inherit;
+}
+
+button {
+    background-color:#ff3738;
+    color:white;
+}
+
+#submitBtn {
+    margin-top:4px;
+}
+
+.alert {
+    background-color:#FFE1E1;
+}
