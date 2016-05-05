@@ -54,7 +54,8 @@ var App;
             TestService.prototype.runTypeScriptTest = function (lab, answer) {
                 var _this = this;
                 return this.$q(function (resolve, reject) {
-                    var combined = lab.setupScript + ';\r\n' + answer.typescript + ';\r\n' + lab.test;
+                    var combined = (lab.setupScript || '') + ';' + answer.typescript + ';' + lab.test;
+                    //let combined = lab.setupScript + ';\r\n' + answer.typescript + ';\r\n' + lab.test;
                     var transpiled = _this.transpile(combined);
                     _this.executeJavaScript(answer, transpiled).then(function (testResult) {
                         resolve(testResult);
@@ -64,7 +65,7 @@ var App;
             TestService.prototype.runJavaScriptTest = function (lab, answer) {
                 var _this = this;
                 return this.$q(function (resolve, reject) {
-                    var combined = lab.setupScript + ';\r\n' + answer.javascript + ';\r\n' + lab.test;
+                    var combined = (lab.setupScript || '') + ';' + answer.javascript + ';' + lab.test;
                     _this.executeJavaScript(answer, combined).then(function (testResult) {
                         resolve(testResult);
                     });
@@ -74,16 +75,25 @@ var App;
                 var result = ts.transpile(script, { module: 0 /* None */, target: 1 /* ES5 */ });
                 return result;
             };
-            TestService.prototype.createTestFrame = function () {
-                this.testFrame = document.createElement('iframe');
-                this.testFrame.style.display = 'none';
-                document.body.appendChild(this.testFrame);
-                this.testFrame.addEventListener('error', function (err) {
-                    console.warn('err' + err.message);
+            TestService.prototype.createTestFrame = function (html) {
+                var self = this;
+                return self.$q(function (resolve, reject) {
+                    self.testFrame = document.createElement('iframe');
+                    self.testFrame.style.display = 'none';
+                    self.testFrame.onload = function () {
+                        self.testFrame.contentDocument.documentElement.innerHTML = html;
+                        resolve();
+                    };
+                    self.testFrame.addEventListener('error', function (err) {
+                        console.warn('err' + err.message);
+                    });
+                    document.body.appendChild(self.testFrame);
                 });
             };
             TestService.prototype.eval = function (script) {
-                return this.testFrame.contentWindow['eval'](script);
+                var scriptEl = document.createElement("script");
+                scriptEl.text = script;
+                this.testFrame.contentDocument.head.appendChild(scriptEl).parentNode.removeChild(scriptEl);
             };
             TestService.prototype.addVariable = function (varName, varValue) {
                 this.testFrame.contentWindow[varName] = varValue;
@@ -117,9 +127,9 @@ var App;
                 this.testFrame.contentDocument.documentElement.innerHTML = html;
             };
             TestService.prototype.runTests = function () {
-                var script = "(function(){jasmine.getEnv().addReporter(customReporter);jasmine.getEnv().execute();return customReporter.testResults;})()";
-                var testResult = this.eval(script);
-                return testResult;
+                var script = "(function(){jasmine.getEnv().addReporter(customReporter);jasmine.getEnv().execute();window['_testResults'] = customReporter.testResults;})()";
+                this.eval(script);
+                return this.testFrame.contentWindow['_testResults'];
             };
             TestService.prototype.destroyTestFrame = function () {
                 document.body.removeChild(this.testFrame);
@@ -127,40 +137,41 @@ var App;
             TestService.prototype.executeJavaScript = function (answer, script, additionalScripts) {
                 var _this = this;
                 if (additionalScripts === void 0) { additionalScripts = []; }
-                this.createTestFrame();
-                // escape infinite loops
-                loopProtect.alias = 'protect';
-                script = loopProtect(script);
-                this.testFrame.contentWindow['protect'] = loopProtect;
-                loopProtect.hit = function (line) {
-                    console.error('Potential infinite loop found on line ' + line);
-                };
                 return this.$q(function (resolve, reject) {
-                    _this.injectHTML(answer.html);
-                    _this.injectJasmine().then(function () {
-                        var testResult;
-                        try {
-                            // expose source code to unit tests
-                            _this.addVariable('_javaScriptSource', answer.javascript);
-                            _this.addVariable('_typeScriptSource', answer.typescript);
-                            _this.addVariable('_htmlSource', answer.html);
-                            _this.addVariable('_cssSource', answer.css);
-                            _this.addVariable('_plainSource', answer.plain);
-                            // execute the scripts
-                            _this.eval(script);
-                            // execute the unit tests
-                            testResult = _this.runTests();
-                        }
-                        catch (err) {
-                            testResult = {
-                                isCorrect: false,
-                                message: err.message
-                            };
-                        }
-                        finally {
-                            _this.destroyTestFrame();
-                            resolve(testResult);
-                        }
+                    _this.createTestFrame(answer.html).then(function () {
+                        // escape infinite loops
+                        loopProtect.alias = 'protect';
+                        script = loopProtect(script);
+                        _this.testFrame.contentWindow['protect'] = loopProtect;
+                        loopProtect.hit = function (line) {
+                            console.error('Potential infinite loop found on line ' + line);
+                        };
+                        //this.injectHTML(answer.html).then(() => {
+                        _this.injectJasmine().then(function () {
+                            var testResult;
+                            try {
+                                // expose source code to unit tests
+                                _this.addVariable('_javaScriptSource', answer.javascript);
+                                _this.addVariable('_typeScriptSource', answer.typescript);
+                                _this.addVariable('_htmlSource', answer.html);
+                                _this.addVariable('_cssSource', answer.css);
+                                _this.addVariable('_plainSource', answer.plain);
+                                // execute the scripts
+                                _this.eval(script);
+                                // execute the unit tests
+                                testResult = _this.runTests();
+                            }
+                            catch (err) {
+                                testResult = {
+                                    isCorrect: false,
+                                    message: err.message
+                                };
+                            }
+                            finally {
+                                _this.destroyTestFrame();
+                                resolve(testResult);
+                            }
+                        });
                     });
                 });
             };
