@@ -11,8 +11,9 @@ var App;
         }());
         Controllers.HomeController = HomeController;
         var LessonController = (function () {
-            function LessonController($window, lessonService, $state, $stateParams, $uibModal) {
+            function LessonController(successService, $window, lessonService, $state, $stateParams, $uibModal) {
                 var _this = this;
+                this.successService = successService;
                 this.$window = $window;
                 this.lessonService = lessonService;
                 this.$state = $state;
@@ -87,15 +88,11 @@ var App;
                         // check if all labs done
                         if (_this.currentLabIndex == _this.lesson.labs.length) {
                             _this.currentLabIndex = 0;
-                            _this.$uibModal.open({
-                                templateUrl: '/ngApp/dialogs/success.html',
-                                controller: LessonSuccessDialogController,
-                                controllerAs: 'modal',
-                                resolve: {
-                                    lesson: _this.lesson
-                                }
-                            }).result.then(function () {
-                                _this.$state.go('home');
+                            _this.lessonService.postScore(_this.lesson.id).then(function () {
+                                // go to success page
+                                _this.$window.sessionStorage.setItem('lessonTitle', _this.lesson.title);
+                                _this.$window.sessionStorage.setItem('happyPicture', _this.successService.getHappyPicture());
+                                _this.$state.go('success');
                             });
                         }
                         else {
@@ -169,25 +166,14 @@ var App;
             };
             return SubmitAnswerDialogController;
         }());
-        var LessonSuccessDialogController = (function () {
-            function LessonSuccessDialogController($uibModalInstance, lessonService, lesson) {
-                this.$uibModalInstance = $uibModalInstance;
-                this.lesson = lesson;
-                lessonService.postScore(lesson.id);
-                var happyPictures = [
-                    '/images/success/catAndDog.jpg',
-                    '/images/success/cookie.jpg',
-                    '/images/success/dog.jpg',
-                    '/images/success/sundae.jpg'
-                ];
-                var rnd = Math.floor(Math.random() * happyPictures.length);
-                this.happyPicture = happyPictures[rnd];
+        var SuccessController = (function () {
+            function SuccessController($window) {
+                this.lessonTitle = $window.sessionStorage.getItem('lessonTitle');
+                this.happyPicture = $window.sessionStorage.getItem('happyPicture');
             }
-            LessonSuccessDialogController.prototype.ok = function () {
-                this.$uibModalInstance.close();
-            };
-            return LessonSuccessDialogController;
+            return SuccessController;
         }());
+        Controllers.SuccessController = SuccessController;
     })(Controllers = App.Controllers || (App.Controllers = {}));
 })(App || (App = {}));
 //# sourceMappingURL=controllers.js.map

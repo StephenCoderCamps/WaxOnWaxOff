@@ -19,6 +19,8 @@
             <label for="instructions">Instructions</label>
             <textarea class="form-control" id="instructions" placeholder="Instructions" ng-model="controller.lab.instructions"></textarea>
         </div>
+        <div class="well well-lg instructions" ng-bind-html="controller.lab.instructions">
+        </div>
         <div class="form-group">
             <label class="radio-inline">
                 <input type="radio" name="labType" value="0" ng-model="controller.lab.labType" ng-change="controller.labTypeChange()"> JavaScript

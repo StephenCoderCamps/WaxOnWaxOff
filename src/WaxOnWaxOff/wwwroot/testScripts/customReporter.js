@@ -1,7 +1,7 @@
 ﻿var customReporter = {
     specs:[],
  
-    specDone: function(result) {
+    specDone: function (result) {
         this.specs.push(result);
     },
 

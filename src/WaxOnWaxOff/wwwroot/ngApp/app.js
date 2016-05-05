@@ -1,6 +1,6 @@
 var App;
 (function (App) {
-    var app = angular.module("App", ['ui.ace', "ui.router", "ngResource", 'ui.bootstrap', 'ngSanitize']);
+    var app = angular.module("App", ['ui.ace', "ui.router", "ngResource", 'ui.bootstrap', 'ngSanitize', 'ng.deviceDetector']);
     app.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
@@ -26,6 +26,16 @@ var App;
             url: '/register',
             templateUrl: '/ngApp/views/account/register.html',
             controller: App.Controllers.RegisterController,
+            controllerAs: 'controller'
+        })
+            .state('badBrowser', {
+            url: '/badBrowser',
+            templateUrl: '/ngApp/views/badBrowser.html'
+        })
+            .state('success', {
+            url: '/success',
+            templateUrl: '/ngApp/views/success.html',
+            controller: App.Controllers.SuccessController,
             controllerAs: 'controller'
         })
             .state('admin', {
@@ -56,10 +66,19 @@ var App;
         });
         $locationProvider.html5Mode(true);
     });
-    app.run(function ($window, $rootScope, $state, accountService) {
+    app.run(function ($window, $rootScope, $state, accountService, deviceDetector) {
+        // security
         $rootScope.$on('$stateChangeStart', function (e, to) {
+            // this app only works for chrome
+            if (to.name != 'badBrowser') {
+                var browser = deviceDetector.browser;
+                if (browser != 'chrome') {
+                    $state.go('badBrowser');
+                    e.preventDefault();
+                }
+            }
             // protect non-public views
-            if (to.name !== 'login' && to.name !== 'register') {
+            if (['login', 'register', 'badBrowser'].indexOf(to.name) == -1) {
                 if (!accountService.isLoggedIn()) {
                     e.preventDefault();
                     $window.sessionStorage.setItem('originalUrl', $window.location.pathname);
@@ -67,7 +86,7 @@ var App;
                 }
             }
             // protect admin views
-            if (to.name.startsWith('admin.')) {
+            if (to.name.substring(0, 'admin.'.length) == 'admin.') {
                 if (!accountService.getClaim('isAdmin')) {
                     e.preventDefault();
                     $state.go('login');

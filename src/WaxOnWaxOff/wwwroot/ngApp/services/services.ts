@@ -2,6 +2,30 @@
 
     declare var loopProtect;
 
+    export class SuccessService {
+        private happyPictures;
+
+        public getHappyPicture(): string {
+            let rnd = Math.floor(Math.random() * this.happyPictures.length);
+            return this.happyPictures[rnd];
+        }
+
+        constructor() {
+            this.happyPictures = [
+                '/images/success/catAndDog.jpg',
+                '/images/success/cookie.jpg',
+                '/images/success/dog.jpg',
+                '/images/success/sundae.jpg',
+                '/images/success/hamster.jpg',
+                '/images/success/tesla.jpg',
+                '/images/success/shark.jpg',
+                '/images/success/homer.png'
+            ];
+        }
+    }
+
+    angular.module('App').service('successService', SuccessService);
+
     export class LessonService {
         private lessonResource;
 
@@ -12,8 +36,8 @@
         }
 
 
-        public getLesson(id:number) {
-            return this.lessonResource.get({id:id});
+        public getLesson(id: number) {
+            return this.lessonResource.get({ id: id });
         }
 
 
@@ -25,15 +49,16 @@
             return this.lessonResource.delete({ id: id }).$promise;
         }
 
-        public postScore(id:number) {
-            return this.lessonResource.postScore({ id: id });
+        public postScore(id: number) {
+            return this.lessonResource.postScore({ id: id }).$promise;
         }
 
 
-        constructor($resource: ng.resource.IResourceService, private $q:ng.IQService, private testService: App.Services.TestService) {
+        constructor($resource: ng.resource.IResourceService, private $q: ng.IQService, private testService: App.Services.TestService) {
             this.lessonResource = $resource('/api/lessons/:id', null, {
                 postScore: {
-                    url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id'}}
+                    url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id' }
+                }
             });
         }
 
@@ -69,9 +94,7 @@
 
         public runTypeScriptTest(lab: App.Models.Lab, answer: App.Models.Answer) {
             return this.$q((resolve, reject) => {
-                let combined = (lab.setupScript||'') + ';' + answer.typescript + ';' + lab.test;
-                //let combined = lab.setupScript + ';\r\n' + answer.typescript + ';\r\n' + lab.test;
-
+                let combined = (lab.setupScript||'') + ';\r\n' + answer.typescript + ';\r\n' + lab.test;
                 let transpiled = this.transpile(combined);
                 this.executeJavaScript(answer, transpiled).then((testResult) => {
                     resolve(testResult);
@@ -81,8 +104,7 @@
 
         public runJavaScriptTest(lab: App.Models.Lab, answer: App.Models.Answer) {
             return this.$q((resolve, reject) => {
-                let combined = (lab.setupScript||'') + ';' + answer.javascript + ';' + lab.test;
-
+                let combined = (lab.setupScript || '') + ';\r\n' + answer.javascript + ';\r\n' + lab.test;
                 this.executeJavaScript(answer, combined).then((testResult) => {
                     resolve(testResult);
                 });
@@ -96,30 +118,17 @@
         }
 
 
-        private createTestFrame(html: string) {
-            let self = this;
-            return self.$q((resolve, reject) => {
-                self.testFrame = document.createElement('iframe');
-                self.testFrame.style.display = 'none';
-
-                self.testFrame.onload = function () {
-                    self.testFrame.contentDocument.documentElement.innerHTML = html;
-                    resolve();
-                };
-
-                self.testFrame.addEventListener('error', function (err) {
-                    console.warn('err' + err.message);
-                });
-
-                document.body.appendChild(self.testFrame);
+        private createTestFrame() {
+            this.testFrame = document.createElement('iframe');
+            this.testFrame.style.display = 'none';
+            document.body.appendChild(this.testFrame);
+            this.testFrame.addEventListener('error', function (err) {
+                console.warn('err' + err.message);
             });
         }
 
-        private eval(script:string) {
-            let scriptEl = document.createElement("script");
-
-            scriptEl.text = script;
-            this.testFrame.contentDocument.head.appendChild(scriptEl).parentNode.removeChild(scriptEl);
+        private evaluate(script: string) {
+            return this.testFrame.contentWindow['eval'](script);
         }
 
         private addVariable(varName, varValue) {
@@ -151,7 +160,6 @@
                     });
                 });
             });
-
         }
 
         private injectHTML(html: string) {
@@ -160,9 +168,9 @@
 
 
         private runTests() {
-            let script = `(function(){jasmine.getEnv().addReporter(customReporter);jasmine.getEnv().execute();window['_testResults'] = customReporter.testResults;})()`;
-            this.eval(script);
-            return this.testFrame.contentWindow['_testResults'];
+            let script = `(function(){jasmine.getEnv().addReporter(customReporter);jasmine.getEnv().execute();return customReporter.testResults;})()`;
+            let testResult = this.evaluate(script);
+            return testResult;
         }
 
         private destroyTestFrame() {
@@ -171,46 +179,44 @@
 
 
         private executeJavaScript(answer: App.Models.Answer, script: string, additionalScripts: string[] = []) {
+            this.createTestFrame();
+
+            // escape infinite loops
+            loopProtect.alias = 'protect';
+            script = loopProtect(script);
+            this.testFrame.contentWindow['protect'] = loopProtect;
+            loopProtect.hit = function (line) {
+                console.error('Potential infinite loop found on line ' + line);
+            };
+
+
             return this.$q((resolve, reject) => {
-
-                this.createTestFrame(answer.html).then(() => {
-
-                    // escape infinite loops
-                    loopProtect.alias = 'protect';
-                    script = loopProtect(script);
-                    this.testFrame.contentWindow['protect'] = loopProtect;
-                    loopProtect.hit = function (line) {
-                        console.error('Potential infinite loop found on line ' + line);
-                    };
-
-
-                    //this.injectHTML(answer.html).then(() => {
-                    this.injectJasmine().then(() => {
-                        let testResult;
-                        try {
-                            // expose source code to unit tests
-                            this.addVariable('_javaScriptSource', answer.javascript);
-                            this.addVariable('_typeScriptSource', answer.typescript);
-                            this.addVariable('_htmlSource', answer.html);
-                            this.addVariable('_cssSource', answer.css);
-                            this.addVariable('_plainSource', answer.plain);
+                this.injectHTML(answer.html);
+                this.injectJasmine().then(() => {
+                    let testResult;
+                    try {
+                        // expose source code to unit tests
+                        this.addVariable('_javaScriptSource', answer.javascript);
+                        this.addVariable('_typeScriptSource', answer.typescript);
+                        this.addVariable('_htmlSource', answer.html);
+                        this.addVariable('_cssSource', answer.css);
+                        this.addVariable('_plainSource', answer.plain);
 
 
-                            // execute the scripts
-                            this.eval(script);
+                        // execute the scripts
+                        this.evaluate(script);
 
-                            // execute the unit tests
-                            testResult = this.runTests();
-                        } catch (err) {
-                            testResult = {
-                                isCorrect: false,
-                                message: err.message
-                            };
-                        } finally {
-                            this.destroyTestFrame();
-                            resolve(testResult);
-                        }
-                    });
+                        // execute the unit tests
+                        testResult = this.runTests();
+                    } catch (err) {
+                        testResult = {
+                            isCorrect: false,
+                            message: err.message
+                        };
+                    } finally {
+                        this.destroyTestFrame();
+                        resolve(testResult);
+                    }
                 });
             });
         }

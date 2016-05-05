@@ -85,16 +85,23 @@
                     // check if all labs done
                     if (this.currentLabIndex == this.lesson.labs.length) {
                         this.currentLabIndex = 0;
-                        this.$uibModal.open({
-                            templateUrl: '/ngApp/dialogs/success.html',
-                            controller: LessonSuccessDialogController,
-                            controllerAs: 'modal',
-                            resolve: {
-                                lesson: this.lesson
-                            }
-                        }).result.then(() => {
-                            this.$state.go('home');
+
+                        this.lessonService.postScore(this.lesson.id).then(() => {
+                            // go to success page
+                            this.$window.sessionStorage.setItem('lessonTitle', this.lesson.title);
+                            this.$window.sessionStorage.setItem('happyPicture', this.successService.getHappyPicture());
+                            this.$state.go('success');
                         });
+                        //this.$uibModal.open({
+                        //    templateUrl: '/ngApp/dialogs/success.html',
+                        //    controller: LessonSuccessDialogController,
+                        //    controllerAs: 'modal',
+                        //    resolve: {
+                        //        lesson: this.lesson
+                        //    }
+                        //}).result.then(() => {
+                        //    this.$state.go('home');
+                        //});
                     } else {
                         this.showLab();
                     }
@@ -149,7 +156,7 @@
             }
         }
 
-        constructor(private $window: ng.IWindowService, private lessonService: App.Services.LessonService, private $state: ng.ui.IStateService, private $stateParams: ng.ui.IStateParamsService, private $uibModal: angular.ui.bootstrap.IModalService) {
+        constructor(private successService: App.Services.SuccessService,  private $window: ng.IWindowService, private lessonService: App.Services.LessonService, private $state: ng.ui.IStateService, private $stateParams: ng.ui.IStateParamsService, private $uibModal: angular.ui.bootstrap.IModalService) {
             this.lessonId = $stateParams['id'];
             lessonService.getLesson(this.lessonId).$promise.then((result) => {
                 this.lesson = result;
@@ -180,30 +187,13 @@
         }
     }
 
+    export class SuccessController {
+        public lessonTitle: string;
+        public happyPicture: string;
 
-    class LessonSuccessDialogController {
-        public happyPicture;
-
-        public ok() {
-            this.$uibModalInstance.close();
-        }
-
-        constructor(
-            private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
-            lessonService: App.Services.LessonService,
-            public lesson
-        ) {
-            lessonService.postScore(lesson.id);
-
-            let happyPictures = [
-                '/images/success/catAndDog.jpg',
-                '/images/success/cookie.jpg',
-                '/images/success/dog.jpg',
-                '/images/success/sundae.jpg'
-            ];
-            let rnd = Math.floor(Math.random() * happyPictures.length);
-            this.happyPicture = happyPictures[rnd];
-
+        constructor($window: ng.IWindowService) {
+            this.lessonTitle = $window.sessionStorage.getItem('lessonTitle');
+            this.happyPicture = $window.sessionStorage.getItem('happyPicture');
         }
 
     }
