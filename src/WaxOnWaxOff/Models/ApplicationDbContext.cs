@@ -13,6 +13,7 @@ namespace WaxOnWaxOff.Models
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Lab> Labs { get; set; }
         public DbSet<LessonScore> LessonScores { get; set; }
+        public DbSet<Unit> Units { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

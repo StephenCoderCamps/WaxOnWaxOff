@@ -27,9 +27,10 @@ namespace WaxOnWaxOff.API
 
         // GET: api/values
         [HttpGet]
-        public IEnumerable<LessonDTO> Get()
+        [HttpGet("listLessons/{unitId}")]
+        public IEnumerable<LessonDTO> ListLessons(int unitId)
         {
-            return _lessonService.ListLessons(this.User);    
+            return _lessonService.ListLessons(this.User, unitId);    
         }
 
         // GET api/values/5

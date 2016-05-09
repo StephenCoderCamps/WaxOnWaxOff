@@ -52,7 +52,7 @@
             .state('admin.lessons', {
                 url: '/lessons',
                 templateUrl: '/ngApp/views/admin/lessons.html',
-                controller: App.Admin.Controllers.LessonsControllers,
+                controller: App.Admin.Controllers.LessonsController,
                 controllerAs: 'controller'
             }).state('admin.labs', {
                 url: '/labs/:lessonId',

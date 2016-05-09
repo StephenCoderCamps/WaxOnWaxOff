@@ -2,6 +2,23 @@
 
     declare var loopProtect;
 
+
+
+    export class UnitService {
+        private UnitResource;
+
+        public listUnits() {
+            return this.UnitResource.query();
+        }
+
+        constructor($resource: ng.resource.IResourceService) {
+            this.UnitResource = $resource('api/units/:id');
+        }
+    }
+
+    angular.module('App').service('unitService', UnitService);
+
+
     export class SuccessService {
         private happyPictures;
 
@@ -31,8 +48,8 @@
 
 
 
-        public listLessons() {
-            return this.lessonResource.query();
+        public listLessons(unitId) {
+            return this.lessonResource.listLessons({ unitId: unitId });
         }
 
 
@@ -56,6 +73,9 @@
 
         constructor($resource: ng.resource.IResourceService, private $q: ng.IQService, private testService: App.Services.TestService) {
             this.lessonResource = $resource('/api/lessons/:id', null, {
+                listLessons: {
+                    url: '/api/lessons/listLessons/:unitId', method: 'GET', isArray:true, params: {unitId:'@unitId'}
+                },
                 postScore: {
                     url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id' }
                 }

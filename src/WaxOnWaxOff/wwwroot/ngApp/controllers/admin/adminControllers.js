@@ -4,13 +4,14 @@ var App;
     (function (Admin) {
         var Controllers;
         (function (Controllers) {
-            var LessonsControllers = (function () {
-                function LessonsControllers($uibModal, lessonService) {
+            var LessonsController = (function () {
+                function LessonsController($uibModal, unitService, lessonService) {
                     this.$uibModal = $uibModal;
+                    this.unitService = unitService;
                     this.lessonService = lessonService;
-                    this.lessons = lessonService.listLessons();
+                    this.units = unitService.listUnits();
                 }
-                LessonsControllers.prototype.edit = function (lessonId) {
+                LessonsController.prototype.edit = function (lessonId) {
                     var _this = this;
                     this.$uibModal.open({
                         templateUrl: '/ngApp/dialogs/admin/editLesson.html',
@@ -20,10 +21,10 @@ var App;
                             lessonId: lessonId
                         }
                     }).result.then(function () {
-                        _this.lessons = _this.lessonService.listLessons();
+                        _this.lessons = _this.lessonService.listLessons(_this.selectedUnitId);
                     });
                 };
-                LessonsControllers.prototype.remove = function (lessonId) {
+                LessonsController.prototype.remove = function (lessonId) {
                     var _this = this;
                     this.$uibModal.open({
                         templateUrl: '/ngApp/dialogs/admin/deleteLesson.html',
@@ -33,17 +34,22 @@ var App;
                             lessonId: lessonId
                         }
                     }).result.then(function () {
-                        _this.lessons = _this.lessonService.listLessons();
+                        _this.lessons = _this.lessonService.listLessons(_this.selectedUnitId);
                     });
                 };
-                return LessonsControllers;
+                LessonsController.prototype.listLessons = function () {
+                    this.lessons = this.lessonService.listLessons(this.selectedUnitId);
+                };
+                return LessonsController;
             }());
-            Controllers.LessonsControllers = LessonsControllers;
+            Controllers.LessonsController = LessonsController;
             var EditLessonController = (function () {
-                function EditLessonController(lessonId, $uibModalInstance, lessonService) {
+                function EditLessonController(lessonId, unitService, $uibModalInstance, lessonService) {
                     this.lessonId = lessonId;
+                    this.unitService = unitService;
                     this.$uibModalInstance = $uibModalInstance;
                     this.lessonService = lessonService;
+                    this.units = unitService.listUnits();
                     if (lessonId) {
                         this.lesson = lessonService.getLesson(lessonId);
                     }

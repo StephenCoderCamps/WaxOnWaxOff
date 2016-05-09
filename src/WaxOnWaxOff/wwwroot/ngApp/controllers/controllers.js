@@ -3,10 +3,14 @@ var App;
     var Controllers;
     (function (Controllers) {
         var HomeController = (function () {
-            function HomeController(lessonService) {
+            function HomeController(unitService, lessonService) {
+                this.unitService = unitService;
                 this.lessonService = lessonService;
-                this.lessons = lessonService.listLessons();
+                this.units = unitService.listUnits();
             }
+            HomeController.prototype.listLessons = function () {
+                this.lessons = this.lessonService.listLessons(this.selectedUnitId);
+            };
             return HomeController;
         }());
         Controllers.HomeController = HomeController;

@@ -1,8 +1,10 @@
 ﻿namespace App.Admin.Controllers {
 
 
-    export class LessonsControllers {
+    export class LessonsController {
+        public units;
         public lessons;
+        public selectedUnitId;
 
         public edit(lessonId: number) {
             this.$uibModal.open({
@@ -13,7 +15,7 @@
                     lessonId: lessonId
                 }
             }).result.then(() => {
-                this.lessons = this.lessonService.listLessons();
+                this.lessons = this.lessonService.listLessons(this.selectedUnitId);
             });
         }
 
@@ -26,19 +28,23 @@
                     lessonId: lessonId
                 }
             }).result.then(() => {
-                this.lessons = this.lessonService.listLessons();
+                this.lessons = this.lessonService.listLessons(this.selectedUnitId);
             });
         }
 
+        public listLessons() {
+            this.lessons = this.lessonService.listLessons(this.selectedUnitId);
+        }
 
-        constructor(private $uibModal: ng.ui.bootstrap.IModalService, private lessonService: App.Services.LessonService) {
-            this.lessons = lessonService.listLessons();
+        constructor(private $uibModal: ng.ui.bootstrap.IModalService, private unitService: App.Services.UnitService, private lessonService: App.Services.LessonService) {
+            this.units = unitService.listUnits();
         }
     }
 
 
     class EditLessonController {
         public lesson;
+        public units;
 
         public save() {
             this.lessonService.editLesson(this.lesson).then(() => {
@@ -46,8 +52,9 @@
             });                
         }
 
-        constructor(private lessonId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private lessonService: App.Services.LessonService)
+        constructor(private lessonId, private unitService:App.Services.UnitService, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private lessonService: App.Services.LessonService)
         {
+            this.units = unitService.listUnits();
             if (lessonId) {
                 this.lesson = lessonService.getLesson(lessonId);
             }

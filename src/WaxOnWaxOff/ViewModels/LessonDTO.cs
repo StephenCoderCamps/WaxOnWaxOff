@@ -13,6 +13,8 @@ namespace WaxOnWaxOff.ViewModels
         }
 
         public int Id { get; set; }
+        public int? UnitId { get; set; }
+        public string UnitName { get; set; }
         public string Title { get; set; }
         public ICollection<LabDTO> Labs { get; set; }
         public bool Passed { get; set; }

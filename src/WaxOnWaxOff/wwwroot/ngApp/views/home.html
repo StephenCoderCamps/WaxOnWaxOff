@@ -1,4 +1,10 @@
-﻿
+﻿<form>
+    <select class="form-control" ng-model="controller.selectedUnitId" ng-options="item.id as item.name for item in controller.units" ng-change="controller.listLessons()">
+        <option value="">Select Unit</option>
+    </select>
+</form>
+
+
 <ul class="list-group">
     <li class="list-group-item" ng-repeat="lesson in controller.lessons">
         <a ui-sref="lesson({id:lesson.id})">{{lesson.title}}</a>

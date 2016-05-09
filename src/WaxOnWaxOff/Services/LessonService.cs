@@ -22,12 +22,14 @@ namespace WaxOnWaxOff.Services
             _mapper = mapper;
         }
 
-        public List<LessonDTO> ListLessons(ClaimsPrincipal user)
+        public List<LessonDTO> ListLessons(ClaimsPrincipal user, int unitId)
         {
             return _db.Lessons
+               .Where(l => l.UnitId == unitId)
                .OrderBy(l => l.Title)
                .Select(l => new LessonDTO {
                     Id = l.Id,
+                    UnitId = l.UnitId,
                     Title = l.Title,
                     Passed = l.LessonScore.Any( ls => ls.Passed && ls.UserId == user.GetUserId())
                })
@@ -36,12 +38,12 @@ namespace WaxOnWaxOff.Services
 
         public LessonDTO GetLesson(int id)
         {
-            return _db.Lessons
+            var result = _db.Lessons
                 .Include(l => l.Labs)
                 .Where(l => l.Id == id)
                 .ProjectTo<LessonDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefault();
-
+            return result;
 
         }
 
@@ -64,6 +66,7 @@ namespace WaxOnWaxOff.Services
         {
             var original = _db.Lessons.FirstOrDefault(l => l.Id == lesson.Id);
             original.Title = lesson.Title;
+            original.UnitId = lesson.UnitId;
             _db.SaveChanges();
         }
 
