@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Data.Entity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNet.Identity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.AspNetCore.Identity;
+using WaxOnWaxOff.Data;
 
 namespace WaxOnWaxOff.Models
 {
@@ -41,7 +40,6 @@ namespace WaxOnWaxOff.Models
         {
             var context = serviceProvider.GetService<ApplicationDbContext>();
             var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
-            context.Database.Migrate();
 
             // add admins
             await AddAdmins(config, userManager);

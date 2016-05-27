@@ -1,10 +1,10 @@
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.Entity.Migrations;
 
-namespace WaxOnWaxOff.Migrations
+namespace WaxOnWaxOff.Data.Migrations
 {
-    public partial class ensure : Migration
+    public partial class setupScript : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,6 +15,10 @@ namespace WaxOnWaxOff.Migrations
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_ApplicationUser_UserId", table: "AspNetUserRoles");
             migrationBuilder.DropForeignKey(name: "FK_Lab_Lesson_LessonId", table: "Lab");
             migrationBuilder.DropForeignKey(name: "FK_LessonScore_Lesson_LessonId", table: "LessonScore");
+            migrationBuilder.AddColumn<string>(
+                name: "SetupScript",
+                table: "Lab",
+                nullable: true);
             migrationBuilder.AddForeignKey(
                 name: "FK_IdentityRoleClaim<string>_IdentityRole_RoleId",
                 table: "AspNetRoleClaims",
@@ -75,6 +79,7 @@ namespace WaxOnWaxOff.Migrations
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_ApplicationUser_UserId", table: "AspNetUserRoles");
             migrationBuilder.DropForeignKey(name: "FK_Lab_Lesson_LessonId", table: "Lab");
             migrationBuilder.DropForeignKey(name: "FK_LessonScore_Lesson_LessonId", table: "LessonScore");
+            migrationBuilder.DropColumn(name: "SetupScript", table: "Lab");
             migrationBuilder.AddForeignKey(
                 name: "FK_IdentityRoleClaim<string>_IdentityRole_RoleId",
                 table: "AspNetRoleClaims",

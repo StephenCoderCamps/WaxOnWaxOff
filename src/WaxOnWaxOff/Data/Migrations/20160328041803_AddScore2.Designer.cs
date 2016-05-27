@@ -1,20 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Migrations;
+using WaxOnWaxOff.Data;
 using WaxOnWaxOff.Models;
 
-namespace WaxOnWaxOff.Migrations
+namespace WaxOnWaxOff.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160405162803_ensure")]
-    partial class ensure
+    [Migration("20160328041803_AddScore2")]
+    partial class AddScore2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("ProductVersion", "1.0.0-rc2")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>
@@ -158,8 +159,7 @@ namespace WaxOnWaxOff.Migrations
 
                     b.Property<string>("HTMLSolution");
 
-                    b.Property<string>("Instructions")
-                        .IsRequired();
+                    b.Property<string>("Instructions");
 
                     b.Property<string>("JavaScriptSolution");
 
@@ -167,23 +167,27 @@ namespace WaxOnWaxOff.Migrations
 
                     b.Property<int>("LessonId");
 
-                    b.Property<string>("PreCSSSolution");
+                    b.Property<string>("Test");
 
-                    b.Property<string>("PreCSharpSolution");
-
-                    b.Property<string>("PreHTMLSolution");
-
-                    b.Property<string>("PreJavaScriptSolution");
-
-                    b.Property<string>("PreTypeScriptSolution");
-
-                    b.Property<string>("Test")
-                        .IsRequired();
-
-                    b.Property<string>("Title")
-                        .IsRequired();
+                    b.Property<string>("Title");
 
                     b.Property<string>("TypeScriptSolution");
+
+                    b.HasKey("Id");
+                });
+
+            modelBuilder.Entity("WaxOnWaxOff.Models.LabScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DatePassed");
+
+                    b.Property<int>("LabId");
+
+                    b.Property<bool>("Passed");
+
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
                 });
@@ -193,8 +197,7 @@ namespace WaxOnWaxOff.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Title")
-                        .IsRequired();
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
                 });
@@ -252,6 +255,17 @@ namespace WaxOnWaxOff.Migrations
                     b.HasOne("WaxOnWaxOff.Models.Lesson")
                         .WithMany()
                         .HasForeignKey("LessonId");
+                });
+
+            modelBuilder.Entity("WaxOnWaxOff.Models.LabScore", b =>
+                {
+                    b.HasOne("WaxOnWaxOff.Models.Lab")
+                        .WithMany()
+                        .HasForeignKey("LabId");
+
+                    b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.LessonScore", b =>

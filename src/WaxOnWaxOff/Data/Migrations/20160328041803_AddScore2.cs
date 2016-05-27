@@ -1,11 +1,10 @@
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.Entity.Migrations;
-using Microsoft.Data.Entity.Metadata;
 
-namespace WaxOnWaxOff.Migrations
+namespace WaxOnWaxOff.Data.Migrations
 {
-    public partial class LabScroe : Migration
+    public partial class AddScore2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,60 +13,13 @@ namespace WaxOnWaxOff.Migrations
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserLogin<string>_ApplicationUser_UserId", table: "AspNetUserLogins");
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_IdentityRole_RoleId", table: "AspNetUserRoles");
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_ApplicationUser_UserId", table: "AspNetUserRoles");
-            migrationBuilder.CreateTable(
-                name: "LabScore",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DatePassed = table.Column<DateTime>(nullable: false),
-                    LabId = table.Column<int>(nullable: false),
-                    Passed = table.Column<bool>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LabScore", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LabScore_Lab_LabId",
-                        column: x => x.LabId,
-                        principalTable: "Lab",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LabScore_ApplicationUser_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-            migrationBuilder.CreateTable(
-                name: "LessonScore",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DatePassed = table.Column<DateTime>(nullable: false),
-                    LessonId = table.Column<int>(nullable: false),
-                    Passed = table.Column<bool>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LessonScore", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LessonScore_Lesson_LessonId",
-                        column: x => x.LessonId,
-                        principalTable: "Lesson",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LessonScore_ApplicationUser_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
+            migrationBuilder.DropForeignKey(name: "FK_Lab_Lesson_LessonId", table: "Lab");
+            migrationBuilder.DropForeignKey(name: "FK_LabScore_Lab_LabId", table: "LabScore");
+            migrationBuilder.DropForeignKey(name: "FK_LessonScore_Lesson_LessonId", table: "LessonScore");
+            migrationBuilder.AlterColumn<int>(
+                name: "LessonId",
+                table: "Lab",
+                nullable: false);
             migrationBuilder.AddForeignKey(
                 name: "FK_IdentityRoleClaim<string>_IdentityRole_RoleId",
                 table: "AspNetRoleClaims",
@@ -101,6 +53,27 @@ namespace WaxOnWaxOff.Migrations
                 table: "AspNetUserRoles",
                 column: "UserId",
                 principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.AddForeignKey(
+                name: "FK_Lab_Lesson_LessonId",
+                table: "Lab",
+                column: "LessonId",
+                principalTable: "Lesson",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.AddForeignKey(
+                name: "FK_LabScore_Lab_LabId",
+                table: "LabScore",
+                column: "LabId",
+                principalTable: "Lab",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.AddForeignKey(
+                name: "FK_LessonScore_Lesson_LessonId",
+                table: "LessonScore",
+                column: "LessonId",
+                principalTable: "Lesson",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -112,8 +85,13 @@ namespace WaxOnWaxOff.Migrations
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserLogin<string>_ApplicationUser_UserId", table: "AspNetUserLogins");
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_IdentityRole_RoleId", table: "AspNetUserRoles");
             migrationBuilder.DropForeignKey(name: "FK_IdentityUserRole<string>_ApplicationUser_UserId", table: "AspNetUserRoles");
-            migrationBuilder.DropTable("LabScore");
-            migrationBuilder.DropTable("LessonScore");
+            migrationBuilder.DropForeignKey(name: "FK_Lab_Lesson_LessonId", table: "Lab");
+            migrationBuilder.DropForeignKey(name: "FK_LabScore_Lab_LabId", table: "LabScore");
+            migrationBuilder.DropForeignKey(name: "FK_LessonScore_Lesson_LessonId", table: "LessonScore");
+            migrationBuilder.AlterColumn<int>(
+                name: "LessonId",
+                table: "Lab",
+                nullable: true);
             migrationBuilder.AddForeignKey(
                 name: "FK_IdentityRoleClaim<string>_IdentityRole_RoleId",
                 table: "AspNetRoleClaims",
@@ -147,6 +125,27 @@ namespace WaxOnWaxOff.Migrations
                 table: "AspNetUserRoles",
                 column: "UserId",
                 principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.AddForeignKey(
+                name: "FK_Lab_Lesson_LessonId",
+                table: "Lab",
+                column: "LessonId",
+                principalTable: "Lesson",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.AddForeignKey(
+                name: "FK_LabScore_Lab_LabId",
+                table: "LabScore",
+                column: "LabId",
+                principalTable: "Lab",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.AddForeignKey(
+                name: "FK_LessonScore_Lesson_LessonId",
+                table: "LessonScore",
+                column: "LessonId",
+                principalTable: "Lesson",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }

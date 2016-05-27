@@ -1,20 +1,17 @@
 using System;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Migrations;
-using WaxOnWaxOff.Models;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
 
-namespace WaxOnWaxOff.Migrations
+namespace WaxOnWaxOff.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160324011248_start")]
-    partial class start
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("ProductVersion", "1.0.0-rc2")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>
@@ -158,17 +155,36 @@ namespace WaxOnWaxOff.Migrations
 
                     b.Property<string>("HTMLSolution");
 
-                    b.Property<string>("Instructions");
+                    b.Property<string>("Instructions")
+                        .IsRequired();
 
                     b.Property<string>("JavaScriptSolution");
 
                     b.Property<int>("LabType");
 
-                    b.Property<int?>("LessonId");
+                    b.Property<int>("LessonId");
 
-                    b.Property<string>("Test");
+                    b.Property<string>("PlainSolution");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("PreCSSSolution");
+
+                    b.Property<string>("PreCSharpSolution");
+
+                    b.Property<string>("PreHTMLSolution");
+
+                    b.Property<string>("PreJavaScriptSolution");
+
+                    b.Property<string>("PrePlainSolution");
+
+                    b.Property<string>("PreTypeScriptSolution");
+
+                    b.Property<string>("SetupScript");
+
+                    b.Property<string>("Test")
+                        .IsRequired();
+
+                    b.Property<string>("Title")
+                        .IsRequired();
 
                     b.Property<string>("TypeScriptSolution");
 
@@ -180,7 +196,36 @@ namespace WaxOnWaxOff.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.Property<int?>("UnitId");
+
+                    b.HasKey("Id");
+                });
+
+            modelBuilder.Entity("WaxOnWaxOff.Models.LessonScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DatePassed");
+
+                    b.Property<int>("LessonId");
+
+                    b.Property<bool>("Passed");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+                });
+
+            modelBuilder.Entity("WaxOnWaxOff.Models.Unit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
                 });
@@ -222,6 +267,24 @@ namespace WaxOnWaxOff.Migrations
                     b.HasOne("WaxOnWaxOff.Models.Lesson")
                         .WithMany()
                         .HasForeignKey("LessonId");
+                });
+
+            modelBuilder.Entity("WaxOnWaxOff.Models.Lesson", b =>
+                {
+                    b.HasOne("WaxOnWaxOff.Models.Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId");
+                });
+
+            modelBuilder.Entity("WaxOnWaxOff.Models.LessonScore", b =>
+                {
+                    b.HasOne("WaxOnWaxOff.Models.Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId");
+
+                    b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
         }
     }

@@ -6,8 +6,10 @@ using WaxOnWaxOff.Models;
 using WaxOnWaxOff.ViewModels;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
-using Microsoft.Data.Entity;
 using System.Security.Claims;
+using WaxOnWaxOff.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace WaxOnWaxOff.Services
 {
@@ -15,15 +17,19 @@ namespace WaxOnWaxOff.Services
     {
         private ApplicationDbContext _db;
         private IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LessonService(ApplicationDbContext db, IMapper mapper)
+
+        public LessonService(ApplicationDbContext db, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _db = db;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public List<LessonDTO> ListLessons(ClaimsPrincipal user, int unitId)
         {
+            var userId = _userManager.GetUserId(user);
             return _db.Lessons
                .Where(l => l.UnitId == unitId)
                .OrderBy(l => l.Title)
@@ -31,7 +37,7 @@ namespace WaxOnWaxOff.Services
                     Id = l.Id,
                     UnitId = l.UnitId,
                     Title = l.Title,
-                    Passed = l.LessonScore.Any( ls => ls.Passed && ls.UserId == user.GetUserId())
+                    Passed = l.LessonScore.Any( ls => ls.Passed && ls.UserId == userId )
                })
                .ToList(); 
         }
@@ -73,12 +79,14 @@ namespace WaxOnWaxOff.Services
 
         public void SaveScore(ClaimsPrincipal user, int lessonId)
         {
-            var score = _db.LessonScores.FirstOrDefault(s => s.UserId == user.GetUserId() && s.LessonId == lessonId);
+            var userId = _userManager.GetUserId(user);
+
+            var score = _db.LessonScores.FirstOrDefault(s => s.UserId == userId && s.LessonId == lessonId);
             if (score == null)
             {
                 _db.LessonScores.Add(new LessonScore
                 {
-                    UserId = user.GetUserId(),
+                    UserId = userId,
                     LessonId = lessonId,
                     Passed =true,
                     DatePassed = DateTime.UtcNow

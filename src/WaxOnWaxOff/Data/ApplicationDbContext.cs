@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Data.Entity;
+using WaxOnWaxOff.Models;
 
-namespace WaxOnWaxOff.Models
+namespace WaxOnWaxOff.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -14,6 +15,11 @@ namespace WaxOnWaxOff.Models
         public DbSet<Lab> Labs { get; set; }
         public DbSet<LessonScore> LessonScores { get; set; }
         public DbSet<Unit> Units { get; set; }
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+           : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
