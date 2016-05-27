@@ -18,7 +18,7 @@ namespace WaxOnWaxOff.Models
         public int Id { get; set; }
 
        
-        public int? UnitId { get; set; }
+        public int UnitId { get; set; }
         public Unit Unit { get; set; }
 
         [Required(ErrorMessage = "Lesson title is required.")]

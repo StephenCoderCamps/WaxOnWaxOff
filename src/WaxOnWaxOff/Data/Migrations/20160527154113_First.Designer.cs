@@ -1,24 +1,23 @@
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 using WaxOnWaxOff.Data;
-using WaxOnWaxOff.Models;
 
 namespace WaxOnWaxOff.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20160509171408_units")]
-    partial class units
+    [Migration("20160527154113_First")]
+    partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rc2")
+                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
                     b.Property<string>("Id");
 
@@ -34,12 +33,12 @@ namespace WaxOnWaxOff.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
-                        .HasAnnotation("Relational:Name", "RoleNameIndex");
+                        .HasName("RoleNameIndex");
 
-                    b.HasAnnotation("Relational:TableName", "AspNetRoles");
+                    b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -53,10 +52,12 @@ namespace WaxOnWaxOff.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "AspNetRoleClaims");
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -70,10 +71,12 @@ namespace WaxOnWaxOff.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAnnotation("Relational:TableName", "AspNetUserClaims");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider");
 
@@ -86,10 +89,12 @@ namespace WaxOnWaxOff.Data.Migrations
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasAnnotation("Relational:TableName", "AspNetUserLogins");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId");
 
@@ -97,7 +102,26 @@ namespace WaxOnWaxOff.Data.Migrations
 
                     b.HasKey("UserId", "RoleId");
 
-                    b.HasAnnotation("Relational:TableName", "AspNetUserRoles");
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens");
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.ApplicationUser", b =>
@@ -140,12 +164,12 @@ namespace WaxOnWaxOff.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasAnnotation("Relational:Name", "EmailIndex");
+                        .HasName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
-                        .HasAnnotation("Relational:Name", "UserNameIndex");
+                        .HasName("UserNameIndex");
 
-                    b.HasAnnotation("Relational:TableName", "AspNetUsers");
+                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.Lab", b =>
@@ -193,6 +217,10 @@ namespace WaxOnWaxOff.Data.Migrations
                     b.Property<string>("TypeScriptSolution");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("Labs");
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.Lesson", b =>
@@ -203,9 +231,13 @@ namespace WaxOnWaxOff.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired();
 
-                    b.Property<int?>("UnitId");
+                    b.Property<int>("UnitId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.LessonScore", b =>
@@ -222,6 +254,12 @@ namespace WaxOnWaxOff.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LessonScores");
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.Unit", b =>
@@ -232,59 +270,69 @@ namespace WaxOnWaxOff.Data.Migrations
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
+
+                    b.ToTable("Units");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNet.Identity.EntityFramework.IdentityRole")
+                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNet.Identity.EntityFramework.IdentityRole")
+                    b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.Lab", b =>
                 {
                     b.HasOne("WaxOnWaxOff.Models.Lesson")
                         .WithMany()
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.Lesson", b =>
                 {
                     b.HasOne("WaxOnWaxOff.Models.Unit")
                         .WithMany()
-                        .HasForeignKey("UnitId");
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WaxOnWaxOff.Models.LessonScore", b =>
                 {
                     b.HasOne("WaxOnWaxOff.Models.Lesson")
                         .WithMany()
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WaxOnWaxOff.Models.ApplicationUser")
                         .WithMany()

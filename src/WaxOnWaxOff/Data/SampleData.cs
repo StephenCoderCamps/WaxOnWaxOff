@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using WaxOnWaxOff.Data;
+using WaxOnWaxOff.Models;
 
-namespace WaxOnWaxOff.Models
+namespace WaxOnWaxOff.Data
 {
     public class SampleData
     {
@@ -44,13 +45,36 @@ namespace WaxOnWaxOff.Models
             // add admins
             await AddAdmins(config, userManager);
 
+            // add units
+            if (!context.Units.Any())
+            {
+                context.Units.AddRange(
+                        new Unit
+                        {
+                            Name = "JavaScript"
+                        },
+                        new Unit
+                        {
+                            Name = "ECMAScript"
+                        }
+                    );
+                context.SaveChanges();
+            }
+
 
             // add sample lessons
             if (!context.Lessons.Any())
             {
+
+                // get units
+                var javaScriptUnit = context.Units.First(u => u.Name == "JavaScript");
+                var ecmaScriptUnit = context.Units.First(u => u.Name == "ECMAScript");
+
+
                 context.Lessons.AddRange(
                     new Lesson
                     {
+                        UnitId = javaScriptUnit.Id,
                         Title = "Lesson 01 - JavaScript Functions",
                         Labs = new List<Lab>
                         {
@@ -161,6 +185,7 @@ namespace WaxOnWaxOff.Models
                     },
                     new Lesson
                     {
+                        UnitId = ecmaScriptUnit.Id,
                         Title = "Lesson 02 - TypeScript Classes",
                         Labs = new List<Lab>
                         {
