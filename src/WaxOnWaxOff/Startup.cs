@@ -74,6 +74,7 @@ namespace WaxOnWaxOff
             services.AddScoped<LessonService>();
             services.AddScoped<LabService>();
             services.AddScoped<StudentService>();
+            services.AddScoped<CSharpService>();
 
 
 

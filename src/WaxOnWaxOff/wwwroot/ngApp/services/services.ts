@@ -106,11 +106,24 @@
                             resolve(testResult);
                         });
                         break;
+                    case '2':
+                        this.runCSharpTest(lab, answer).then((testResult) => {
+                            resolve(testResult);
+                        });
+                        break;
                 }
             });
         }
 
 
+
+        public runCSharpTest(lab: App.Models.Lab, answer: App.Models.Answer) {
+            return this.$q((resolve, reject) => {
+                this.$http.post('/api/CSharp', { lab: lab, answer: answer }).then((results) => {
+                    resolve(results.data);
+                });
+            });
+        }
 
         public runTypeScriptTest(lab: App.Models.Lab, answer: App.Models.Answer) {
             return this.$q((resolve, reject) => {
@@ -242,7 +255,7 @@
         }
 
 
-        constructor(private $q: ng.IQService) { }
+        constructor(private $q: ng.IQService, private $http: ng.IHttpService) { }
     }
 
     angular.module('App').service('testService', TestService);

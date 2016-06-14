@@ -67,8 +67,9 @@ var App;
         Services.LessonService = LessonService;
         angular.module('App').service('lessonService', LessonService);
         var TestService = (function () {
-            function TestService($q) {
+            function TestService($q, $http) {
                 this.$q = $q;
+                this.$http = $http;
             }
             TestService.prototype.submitAnswer = function (lab, answer) {
                 var _this = this;
@@ -84,7 +85,20 @@ var App;
                                 resolve(testResult);
                             });
                             break;
+                        case '2':
+                            _this.runCSharpTest(lab, answer).then(function (testResult) {
+                                resolve(testResult);
+                            });
+                            break;
                     }
+                });
+            };
+            TestService.prototype.runCSharpTest = function (lab, answer) {
+                var _this = this;
+                return this.$q(function (resolve, reject) {
+                    _this.$http.post('/api/CSharp', { lab: lab, answer: answer }).then(function (results) {
+                        resolve(results.data);
+                    });
                 });
             };
             TestService.prototype.runTypeScriptTest = function (lab, answer) {
