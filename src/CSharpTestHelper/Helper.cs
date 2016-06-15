@@ -11,20 +11,20 @@ namespace CSharpTestHelper
     // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
     public class Helper
     {
-        private Compilation _compilation;
 
-        public Helper(Compilation compilation)
+        public static string GetFullClassName(string name)
         {
-            _compilation = compilation;
+            return Assembly.CreateQualifiedName("userCode", name);
         }
 
-        public object InvokeMethod<T>(string methodName, params object[] parameters)
+        public static object InvokeMethod(string className, string methodName, params object[] parameters)
         {
-            // create instance of class
-            var instance = Activator.CreateInstance(typeof(T));
+            // Create instance of class
+            var type = Type.GetType(className);
+            var instance = Activator.CreateInstance(type);
 
             // get method
-            var method = typeof(T).GetTypeInfo().GetMethod(methodName);
+            var method = type.GetTypeInfo().GetMethod(methodName);
             if (method == null)
             {
                 throw new TestResult(methodName + " method does not exist!");
@@ -34,51 +34,51 @@ namespace CSharpTestHelper
             return method.Invoke(instance, parameters);
         }
 
-        public object GetPropertyValue<T>(string propertyName)
-        {
-            // create instance of class
-            var instance = Activator.CreateInstance(typeof(T));
+        //public object GetPropertyValue<T>(string propertyName)
+        //{
+        //    // create instance of class
+        //    var instance = Activator.CreateInstance(typeof(T));
 
-            // get property
-            var property = typeof(T).GetTypeInfo().GetProperty(propertyName);
-            if (property == null)
-            {
-                throw new TestResult(propertyName + " property does not exist!");
-            }
+        //    // get property
+        //    var property = typeof(T).GetTypeInfo().GetProperty(propertyName);
+        //    if (property == null)
+        //    {
+        //        throw new TestResult(propertyName + " property does not exist!");
+        //    }
 
-            // invoke it
-            return property.GetValue(instance);
-        }
+        //    // invoke it
+        //    return property.GetValue(instance);
+        //}
 
-        public void SetPropertyValue<T>(string propertyName, object value)
-        {
-            // create instance of class
-            var instance = Activator.CreateInstance(typeof(T));
+        //public void SetPropertyValue<T>(string propertyName, object value)
+        //{
+        //    // create instance of class
+        //    var instance = Activator.CreateInstance(typeof(T));
 
-            // get property
-            var property = typeof(T).GetTypeInfo().GetProperty(propertyName);
-            if (property == null)
-            {
-                throw new TestResult(propertyName + " property does not exist!");
-            }
+        //    // get property
+        //    var property = typeof(T).GetTypeInfo().GetProperty(propertyName);
+        //    if (property == null)
+        //    {
+        //        throw new TestResult(propertyName + " property does not exist!");
+        //    }
 
-            // set it
-            property.SetValue(instance, value);
-        }
-
-
-        public IEnumerable<PropertyInfo> GetProperties<T>()
-        {
-            var type = typeof(T);
-            return type.GetRuntimeProperties();
-        }
+        //    // set it
+        //    property.SetValue(instance, value);
+        //}
 
 
-        public ISymbol GetSymbol(string symbolName)
-        {
-            var result =  _compilation.GetSymbolsWithName(s => s == symbolName).FirstOrDefault();
-            return result;
-        }
+        //public IEnumerable<PropertyInfo> GetProperties<T>()
+        //{
+        //    var type = typeof(T);
+        //    return type.GetRuntimeProperties();
+        //}
+
+
+        //public ISymbol GetSymbol(string symbolName)
+        //{
+        //    var result =  _compilation.GetSymbolsWithName(s => s == symbolName).FirstOrDefault();
+        //    return result;
+        //}
 
 
     }
