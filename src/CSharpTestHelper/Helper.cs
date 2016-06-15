@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using System.Diagnostics;
+using CSharpTestHelper.Stubs;
 
 namespace CSharpTestHelper
 {
@@ -11,20 +13,29 @@ namespace CSharpTestHelper
     // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
     public class Helper
     {
-
-        public static string GetFullClassName(string name)
+        [DebuggerHidden]
+        public void Assert<T>(T expected, T actual, string message)
         {
-            return Assembly.CreateQualifiedName("userCode", name);
+            if (!expected.Equals(actual))
+            {
+                throw new Exception(message);
+            }
         }
 
-        public static object InvokeMethod(string className, string methodName, params object[] parameters)
+
+        public MockProductsApplicationDbContext GetProductsApplicationDbContext(params Product[] products)
+        {
+            return new MockProductsApplicationDbContext(products);
+        }
+
+
+        public object InvokeMethod(Type classType, string methodName, params object[] parameters)
         {
             // Create instance of class
-            var type = Type.GetType(className);
-            var instance = Activator.CreateInstance(type);
-
+            var instance = Activator.CreateInstance(classType);
+            
             // get method
-            var method = type.GetTypeInfo().GetMethod(methodName);
+            var method = classType.GetTypeInfo().GetMethod(methodName);
             if (method == null)
             {
                 throw new TestResult(methodName + " method does not exist!");

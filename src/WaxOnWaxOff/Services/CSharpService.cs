@@ -16,6 +16,8 @@ using CSharpTestHelper;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using System.Runtime.Loader;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
 
 // https://github.com/xunit/xunit/issues/542
 // https://github.com/xunit/samples.xunit/blob/3f55e554e7de7eb2cd9802fa9e73a706520646cd/TestRunner/Program.cs
@@ -25,18 +27,41 @@ namespace WaxOnWaxOff.Services
 {
     public class CSharpService
     {
-
-        public TestResultViewModel RunTest(string setupScript, string csharp, string test)
+        public async Task<TestResultViewModel> RunTest(string setupScript, string csharp, string test)
         {
-            AssemblyInfo csharpAssembly = null;
-            AssemblyInfo testAssembly = null;
+            // create script options
+            var references = new MetadataReference[]
+            {
+                CreateGlobalAssemblyReference("System.Runtime.dll"),
+                CreateGlobalAssemblyReference("System.Reflection.dll"),
+                CreateGlobalAssemblyReference("System.Xml.XDocument.dll"),
+                CreateGlobalAssemblyReference("System.Linq.dll"),
+                CreateGlobalAssemblyReference("System.Linq.Expressions.dll"),
+                CreateLocalAssemblyReference(typeof(Xunit.Assert)),
+                //CreateLocalAssemblyReference(typeof(Microsoft.VisualStudio.TestTools.UnitTesting.Assert)),
+                CreateLocalAssemblyReference(typeof(FluentAssertions.AssertionExtensions)),
+                CreateLocalAssemblyReference(typeof(Helper))
+
+            };
+
+          
+            var scriptOptions = ScriptOptions.Default;
+            scriptOptions = scriptOptions.AddReferences(references.ToArray());
+            scriptOptions = scriptOptions.AddImports("System", "System.Linq", "Xunit", "FluentAssertions", "CSharpTestHelper");
+
+            // run scripts
             try
             {
-                // compile user code into assembly
-                csharpAssembly = CreateDynamicAssembly("userCode", csharp);
 
-                // compile test code into assembly
-                testAssembly = CreateDynamicAssembly("testCode", test, csharpAssembly.MetadataReference);
+                var scriptState = await CSharpScript.RunAsync(
+                    setupScript,
+                    options: scriptOptions,
+                    globals: new Helper(),
+                    globalsType: typeof(Helper)
+                );
+               
+                scriptState = await scriptState.ContinueWithAsync(csharp);
+                scriptState = await scriptState.ContinueWithAsync(test);
             } catch (Exception ex)
             {
                 return new TestResultViewModel
@@ -45,26 +70,9 @@ namespace WaxOnWaxOff.Services
                     Message = ex.Message
                 };
             }
+           
 
-            // execute unit tests
-            var testsType = testAssembly.Assembly.GetType("Tests");
-            var testsInstance = Activator.CreateInstance(testsType);
-            var method = testsType.GetTypeInfo().GetMethod("Run");
-
-
-            try
-            {
-                method.Invoke(testsInstance, null);
-            } catch (Exception ex)
-            {
-                return new TestResultViewModel
-                {
-                    IsCorrect = false,
-                    Message = ex.InnerException.Message
-                };
-            }
-
-
+            // success
             return new TestResultViewModel
             {
                 IsCorrect = true,
@@ -74,69 +82,7 @@ namespace WaxOnWaxOff.Services
         }
 
 
-        private AssemblyInfo CreateDynamicAssembly(string assemblyName, string script, params MetadataReference[] additionalReferences)
-        {
-            // add standard references
-            var references = new List<MetadataReference>
-            {
-                CreateLocalAssemblyReference(typeof(Helper)),
-                CreateLocalAssemblyReference(typeof(Queryable)),
-                CreateLocalAssemblyReference(typeof(object)),
-                CreateLocalAssemblyReference(typeof(Xunit.Assert)),
-                CreateLocalAssemblyReference(typeof(FluentAssertions.AssertionExtensions))
-            };
-
-            foreach (var reference in additionalReferences)
-            {
-                references.Add(reference);
-            }
-
-
-            var syntaxTree = CSharpSyntaxTree.ParseText(script);
-
-            var compilationOptions = new CSharpCompilationOptions(
-                OutputKind.DynamicallyLinkedLibrary
-            );
-            CSharpCompilation compilation = CSharpCompilation.Create(
-                assemblyName,
-                syntaxTrees: new[] { syntaxTree },
-                references: references.ToArray(),
-                options: compilationOptions
-            );
-            
-
-            using (var ms = new MemoryStream())
-            {
-                EmitResult result = compilation.Emit(ms);
-
-                if (!result.Success)
-                {
-                    var firstError = result.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).FirstOrDefault();
-                    var message = firstError == null ? "Could not compile your code!" : firstError.ToString();
-                    throw new Exception(message);
-                }
-                else
-                {
-                    ms.Seek(0, SeekOrigin.Begin);
-                    Assembly assembly = AssemblyLoadContext.Default.LoadFromStream(ms);
-                    
-                    
-
-                    return new AssemblyInfo
-                    {
-                        Assembly = assembly,
-                        MetadataReference = compilation.ToMetadataReference()
-                    };
-                }
-            }
-        }
-
-
-        public class AssemblyInfo
-        {
-            public Assembly Assembly { get; set; }
-            public MetadataReference MetadataReference { get; set; }
-        }
+       
 
 
         private MetadataReference CreateGlobalAssemblyReference(string assemblyName)
