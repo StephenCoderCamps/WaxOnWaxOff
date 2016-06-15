@@ -126,7 +126,15 @@
         public validationErrors;
 
         public labTypeChange() {
-            this.aceOptions.mode = this.lab.labType == 0 ? 'javascript' : 'typescript';
+            switch (+this.lab.labType) {
+                case 0: this.aceOptions.mode = 'javascript';
+                    break;
+                case 1: this.aceOptions.mode = 'typescript';
+                    break;
+                case 2: this.aceOptions.mode = 'csharp';
+                    break;
+
+            }
         }
 
 

@@ -38,8 +38,32 @@
             <label for="Test">Test</label>
             <div id="editLab-test" ui-ace="controller.aceOptions" ng-model="controller.lab.test"></div>
         </div>
-        <div>
+        <div ng-show="controller.lab.labType == '0' || controller.lab.labType =='1'">
             <em>Use _javaScriptSource, _typeScriptSource, _htmlSource, _cssSource, _plainSource. </em>
+            <p>
+                Use <a href="http://jasmine.github.io/2.4/introduction.html" target="help">Jasmine</a> library. For example:
+            </p>
+<pre>
+    describe('doSomething', function () {
+        it('doSomething() function should exist.', function() {
+            expect(doSomething).not.toBeNull();
+        });
+        it('doSomething() function should return "Do Something!"', function() {
+            var result = doSomething();
+            expect(result).toBe("Do Something!");
+        });
+    });                
+</pre>
+        </div>
+        <div ng-show="controller.lab.labType == '2'">
+            <p>
+                Use <a href="https://github.com/dennisdoomen/fluentassertions/wiki" target="help">fluent assertions</a> library. For example:
+            </p>
+<pre>
+    var product = new Product();
+    var result = product.GetPrice();
+    result.Should().Be(3);
+</pre>
         </div>
 
         <fieldset>

@@ -27,8 +27,8 @@ namespace WaxOnWaxOff.API
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]TestLabViewModel testLab)
         {
-            var fullScript = testLab.Lab.PreCSharpSolution + testLab.Answer.CSharp + testLab.Lab.Test;
-            var result  = await _csharpService.RunTest(fullScript);
+            //var fullScript = testLab.Lab.SetupScript + testLab.Answer.CSharp + testLab.Lab.Test;
+            var result  = await _csharpService.RunTest(testLab.Lab.SetupScript, testLab.Answer.CSharp, testLab.Lab.Test);
             return Ok(result);
         }
 

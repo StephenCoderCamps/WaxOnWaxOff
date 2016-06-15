@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "WaxOnWaxOff", "src\WaxOnWaxOff\WaxOnWaxOff.xproj", "{CD2193F4-006D-49D5-831B-D68992303D15}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CSharpTestHelper", "src\CSharpTestHelper\CSharpTestHelper.xproj", "{F886ED8D-DD03-4046-867E-CE71D566DC11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,11 +24,16 @@ Global
 		{CD2193F4-006D-49D5-831B-D68992303D15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD2193F4-006D-49D5-831B-D68992303D15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD2193F4-006D-49D5-831B-D68992303D15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F886ED8D-DD03-4046-867E-CE71D566DC11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F886ED8D-DD03-4046-867E-CE71D566DC11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F886ED8D-DD03-4046-867E-CE71D566DC11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F886ED8D-DD03-4046-867E-CE71D566DC11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CD2193F4-006D-49D5-831B-D68992303D15} = {D96960BC-6E42-4DE8-81D7-E09AB2E27000}
+		{F886ED8D-DD03-4046-867E-CE71D566DC11} = {D96960BC-6E42-4DE8-81D7-E09AB2E27000}
 	EndGlobalSection
 EndGlobal

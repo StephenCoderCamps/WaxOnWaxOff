@@ -42,7 +42,8 @@
     "Microsoft.CodeAnalysis.CSharp.Scripting": "1.3.0-beta1-20160429-01",
     "xunit": "2.1.0",
     "dotnet-test-xunit": "1.0.0-rc2-build10025",
-    "FluentAssertions": "4.9.0"
+    "FluentAssertions": "4.9.0",
+    "CSharpTestHelper": "1.0.0-*"
   },
 
   "tools": {
