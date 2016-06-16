@@ -14,6 +14,7 @@ using WaxOnWaxOff.Services;
 using WaxOnWaxOff.Data;
 using AutoMapper;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace WaxOnWaxOff
 {
@@ -44,7 +45,24 @@ namespace WaxOnWaxOff
             // add security policies
             services.AddAuthorization(options => {
                 options.AddPolicy("AdminOnly", policy => policy.RequireClaim("IsAdmin"));
+                options.AddPolicy("Student", policy => policy.RequireAssertion((authorizationContext) =>
+                {
+                    var authContext = authorizationContext.Resource as AuthorizationFilterContext;
+                    var studentId = authContext.HttpContext.Request.Headers.Where(h => h.Key == "X-StudentId").Select(h => h.Value.FirstOrDefault()).FirstOrDefault();
+                    var secret = authContext.HttpContext.Request.Headers.Where(h => h.Key == "X-Secret").Select(h => h.Value.FirstOrDefault()).FirstOrDefault();
+                    if (String.IsNullOrWhiteSpace(studentId) || String.IsNullOrWhiteSpace(secret))
+                    {
+                        return false;
+                    }
+                    if (secret != Configuration["StudentSecret"])
+                    {
+                        return false;
+                    }
+                    return true;
+                }));
             });
+
+            
 
 
             // Add framework services.
@@ -102,6 +120,12 @@ namespace WaxOnWaxOff
             }
 
             app.UseStaticFiles();
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AutomaticChallenge = false
+            });
+
 
             app.UseIdentity();
 
