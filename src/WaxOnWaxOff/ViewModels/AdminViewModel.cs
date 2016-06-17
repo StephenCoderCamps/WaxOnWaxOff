@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WaxOnWaxOff.ViewModels
 {
-    public class StudentDTO
+    public class AdminDTO
     {
         public string Id { get; set; }
 
@@ -14,6 +14,5 @@ namespace WaxOnWaxOff.ViewModels
 
         public string Password { get; set; }
 
-        public bool IsAdmin { get; set; }
     }
 }

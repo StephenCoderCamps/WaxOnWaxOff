@@ -13,8 +13,8 @@ using WaxOnWaxOff.Services;
 
 namespace WaxOnWaxOff.API
 {
-    [Authorize]
     [Route("api/[controller]")]
+    [Authorize(Policy = "Student")]
     public class CSharpController : Controller
     {
         private CSharpService _csharpService;

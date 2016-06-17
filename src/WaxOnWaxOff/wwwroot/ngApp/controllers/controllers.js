@@ -2,18 +2,6 @@ var App;
 (function (App) {
     var Controllers;
     (function (Controllers) {
-        var HomeController = (function () {
-            function HomeController(unitService, lessonService) {
-                this.unitService = unitService;
-                this.lessonService = lessonService;
-                this.units = unitService.listUnits();
-            }
-            HomeController.prototype.listLessons = function () {
-                this.lessons = this.lessonService.listLessons(this.selectedUnitId);
-            };
-            return HomeController;
-        }());
-        Controllers.HomeController = HomeController;
         var LessonController = (function () {
             function LessonController(successService, $window, lessonService, $state, $stateParams, $uibModal) {
                 var _this = this;

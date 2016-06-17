@@ -4,76 +4,137 @@ var App;
     (function (Admin) {
         var Controllers;
         (function (Controllers) {
-            var LessonsController = (function () {
-                function LessonsController($uibModal, unitService, lessonService) {
+            var UnitsController = (function () {
+                function UnitsController($uibModal, adminUnitService, adminLessonService) {
                     this.$uibModal = $uibModal;
-                    this.unitService = unitService;
-                    this.lessonService = lessonService;
-                    this.units = unitService.listUnits();
+                    this.adminUnitService = adminUnitService;
+                    this.adminLessonService = adminLessonService;
+                    this.units = adminUnitService.listUnits();
                 }
-                LessonsController.prototype.edit = function (lessonId) {
+                UnitsController.prototype.edit = function (unit) {
+                    var _this = this;
+                    this.$uibModal.open({
+                        templateUrl: '/ngApp/dialogs/admin/editUnit.html',
+                        controller: EditUnitController,
+                        controllerAs: 'modal',
+                        resolve: {
+                            unit: unit
+                        }
+                    }).result.then(function () {
+                        _this.units = _this.adminUnitService.listUnits();
+                    });
+                };
+                UnitsController.prototype.remove = function (unit) {
+                    var _this = this;
+                    this.$uibModal.open({
+                        templateUrl: '/ngApp/dialogs/admin/deleteUnit.html',
+                        controller: DeleteUnitController,
+                        controllerAs: 'modal',
+                        resolve: {
+                            unit: unit
+                        }
+                    }).result.then(function () {
+                        _this.units = _this.adminUnitService.listUnits();
+                    });
+                };
+                return UnitsController;
+            }());
+            Controllers.UnitsController = UnitsController;
+            var EditUnitController = (function () {
+                function EditUnitController(unit, adminUnitService, $uibModalInstance, adminLessonService) {
+                    this.unit = unit;
+                    this.adminUnitService = adminUnitService;
+                    this.$uibModalInstance = $uibModalInstance;
+                    this.adminLessonService = adminLessonService;
+                }
+                EditUnitController.prototype.save = function () {
+                    var _this = this;
+                    this.adminUnitService.editUnit(this.unit).then(function () {
+                        _this.$uibModalInstance.close();
+                    });
+                };
+                return EditUnitController;
+            }());
+            var DeleteUnitController = (function () {
+                function DeleteUnitController(unit, $uibModalInstance, adminUnitService) {
+                    this.unit = unit;
+                    this.$uibModalInstance = $uibModalInstance;
+                    this.adminUnitService = adminUnitService;
+                }
+                DeleteUnitController.prototype.save = function () {
+                    var _this = this;
+                    this.adminUnitService.deleteUnit(this.unit.id).then(function () {
+                        _this.$uibModalInstance.close();
+                    });
+                    ;
+                };
+                return DeleteUnitController;
+            }());
+            var LessonsController = (function () {
+                function LessonsController($uibModal, $stateParams, adminLessonService) {
+                    this.$uibModal = $uibModal;
+                    this.adminLessonService = adminLessonService;
+                    this.selectedUnitId = $stateParams['unitId'];
+                    this.listLessons();
+                }
+                LessonsController.prototype.edit = function (lesson) {
                     var _this = this;
                     this.$uibModal.open({
                         templateUrl: '/ngApp/dialogs/admin/editLesson.html',
                         controller: EditLessonController,
                         controllerAs: 'modal',
                         resolve: {
-                            lessonId: lessonId
+                            lesson: lesson,
+                            unitId: function () { return _this.selectedUnitId; }
                         }
                     }).result.then(function () {
-                        _this.lessons = _this.lessonService.listLessons(_this.selectedUnitId);
+                        _this.listLessons();
                     });
                 };
-                LessonsController.prototype.remove = function (lessonId) {
+                LessonsController.prototype.remove = function (lesson) {
                     var _this = this;
                     this.$uibModal.open({
                         templateUrl: '/ngApp/dialogs/admin/deleteLesson.html',
                         controller: DeleteLessonController,
                         controllerAs: 'modal',
                         resolve: {
-                            lessonId: lessonId
+                            lesson: lesson
                         }
                     }).result.then(function () {
-                        _this.lessons = _this.lessonService.listLessons(_this.selectedUnitId);
+                        _this.listLessons();
                     });
                 };
                 LessonsController.prototype.listLessons = function () {
-                    this.lessons = this.lessonService.listLessons(this.selectedUnitId);
+                    this.lessons = this.adminLessonService.listLessons(this.selectedUnitId);
                 };
                 return LessonsController;
             }());
             Controllers.LessonsController = LessonsController;
             var EditLessonController = (function () {
-                function EditLessonController(lessonId, unitService, $uibModalInstance, lessonService) {
-                    this.lessonId = lessonId;
-                    this.unitService = unitService;
+                function EditLessonController(lesson, unitId, $uibModalInstance, adminLessonService) {
+                    this.lesson = lesson;
+                    this.unitId = unitId;
                     this.$uibModalInstance = $uibModalInstance;
-                    this.lessonService = lessonService;
-                    this.units = unitService.listUnits();
-                    if (lessonId) {
-                        this.lesson = lessonService.getLesson(lessonId);
-                    }
+                    this.adminLessonService = adminLessonService;
                 }
                 EditLessonController.prototype.save = function () {
                     var _this = this;
-                    this.lessonService.editLesson(this.lesson).then(function () {
+                    this.lesson.unitId = this.unitId;
+                    this.adminLessonService.editLesson(this.lesson).then(function () {
                         _this.$uibModalInstance.close();
                     });
                 };
                 return EditLessonController;
             }());
             var DeleteLessonController = (function () {
-                function DeleteLessonController(lessonId, $uibModalInstance, lessonService) {
-                    this.lessonId = lessonId;
+                function DeleteLessonController(lesson, $uibModalInstance, adminLessonService) {
+                    this.lesson = lesson;
                     this.$uibModalInstance = $uibModalInstance;
-                    this.lessonService = lessonService;
-                    if (lessonId) {
-                        this.lesson = lessonService.getLesson(lessonId);
-                    }
+                    this.adminLessonService = adminLessonService;
                 }
                 DeleteLessonController.prototype.save = function () {
                     var _this = this;
-                    this.lessonService.deleteLesson(this.lesson.id).then(function () {
+                    this.adminLessonService.deleteLesson(this.lesson.id).then(function () {
                         _this.$uibModalInstance.close();
                     });
                     ;
@@ -202,126 +263,69 @@ var App;
                 };
                 return SubmitTestDialogController;
             }());
-            var StudentsController = (function () {
-                function StudentsController($stateParams, studentService, $uibModal) {
+            var AdminsController = (function () {
+                function AdminsController($stateParams, adminService, $uibModal) {
                     this.$stateParams = $stateParams;
-                    this.studentService = studentService;
+                    this.adminService = adminService;
                     this.$uibModal = $uibModal;
-                    this.students = studentService.list();
+                    this.admins = adminService.list();
                 }
-                StudentsController.prototype.getScores = function (student) {
+                AdminsController.prototype.add = function () {
                     var _this = this;
                     this.$uibModal.open({
-                        templateUrl: '/ngApp/dialogs/admin/scores.html',
-                        controller: StudentScoresController,
-                        controllerAs: 'modal',
-                        resolve: {
-                            student: student
-                        }
-                    }).result.then(function () {
-                        _this.students = _this.studentService.list();
-                    });
-                };
-                StudentsController.prototype.add = function () {
-                    var _this = this;
-                    this.$uibModal.open({
-                        templateUrl: '/ngApp/dialogs/admin/addStudent.html',
-                        controller: StudentAddController,
+                        templateUrl: '/ngApp/dialogs/admin/addAdmin.html',
+                        controller: AdminAddController,
                         controllerAs: 'modal'
                     }).result.then(function () {
-                        _this.students = _this.studentService.list();
+                        _this.admins = _this.adminService.list();
                     });
                 };
-                StudentsController.prototype.edit = function (student) {
+                AdminsController.prototype.remove = function (admin) {
                     var _this = this;
                     this.$uibModal.open({
-                        templateUrl: '/ngApp/dialogs/admin/editStudent.html',
-                        controller: StudentEditController,
+                        templateUrl: '/ngApp/dialogs/admin/deleteAdmin.html',
+                        controller: AdminDeleteController,
                         controllerAs: 'modal',
                         resolve: {
-                            student: student
+                            admin: admin
                         }
                     }).result.then(function () {
-                        _this.students = _this.studentService.list();
+                        _this.admins = _this.adminService.list();
                     });
                 };
-                StudentsController.prototype.remove = function (student) {
-                    var _this = this;
-                    this.$uibModal.open({
-                        templateUrl: '/ngApp/dialogs/admin/deleteStudent.html',
-                        controller: StudentDeleteController,
-                        controllerAs: 'modal',
-                        resolve: {
-                            student: student
-                        }
-                    }).result.then(function () {
-                        _this.students = _this.studentService.list();
-                    });
-                };
-                StudentsController.prototype.filter = function () {
-                    this.students = this.studentService.list(this.match);
-                };
-                return StudentsController;
+                return AdminsController;
             }());
-            Controllers.StudentsController = StudentsController;
-            var StudentDeleteController = (function () {
-                function StudentDeleteController(student, $uibModalInstance, studentService) {
-                    this.student = student;
+            Controllers.AdminsController = AdminsController;
+            var AdminDeleteController = (function () {
+                function AdminDeleteController(admin, $uibModalInstance, adminService) {
+                    this.admin = admin;
                     this.$uibModalInstance = $uibModalInstance;
-                    this.studentService = studentService;
+                    this.adminService = adminService;
                 }
-                StudentDeleteController.prototype.save = function () {
+                AdminDeleteController.prototype.save = function () {
                     var _this = this;
-                    this.studentService.remove(this.student.id).then(function () {
+                    this.adminService.remove(this.admin.id).then(function () {
                         _this.$uibModalInstance.close();
                     });
                     ;
                 };
-                return StudentDeleteController;
+                return AdminDeleteController;
             }());
-            var StudentAddController = (function () {
-                function StudentAddController(validationService, $uibModalInstance, studentService) {
+            var AdminAddController = (function () {
+                function AdminAddController(validationService, $uibModalInstance, adminService) {
                     this.validationService = validationService;
                     this.$uibModalInstance = $uibModalInstance;
-                    this.studentService = studentService;
+                    this.adminService = adminService;
                 }
-                StudentAddController.prototype.save = function () {
+                AdminAddController.prototype.save = function () {
                     var _this = this;
-                    this.studentService.save(this.student).then(function () {
+                    this.adminService.save(this.admin).then(function () {
                         _this.$uibModalInstance.close();
                     }).catch(function (result) {
                         _this.validationMessages = _this.validationService.flattenValidation(result.data);
                     });
                 };
-                return StudentAddController;
-            }());
-            var StudentEditController = (function () {
-                function StudentEditController(student, $uibModalInstance, studentService) {
-                    this.student = student;
-                    this.$uibModalInstance = $uibModalInstance;
-                    this.studentService = studentService;
-                    this.isAdmin = student.isAdmin;
-                }
-                StudentEditController.prototype.save = function () {
-                    var _this = this;
-                    this.studentService.toggleAdmin(this.student.id).then(function () {
-                        _this.$uibModalInstance.close();
-                    });
-                    ;
-                };
-                return StudentEditController;
-            }());
-            var StudentScoresController = (function () {
-                function StudentScoresController(student, $uibModalInstance, studentService) {
-                    this.student = student;
-                    this.$uibModalInstance = $uibModalInstance;
-                    this.studentService = studentService;
-                    this.scores = studentService.listScores(student.id);
-                }
-                StudentScoresController.prototype.ok = function () {
-                    this.$uibModalInstance.close();
-                };
-                return StudentScoresController;
+                return AdminAddController;
             }());
         })(Controllers = Admin.Controllers || (Admin.Controllers = {}));
     })(Admin = App.Admin || (App.Admin = {}));

@@ -13,13 +13,10 @@ namespace WaxOnWaxOff.Models
 
             public int LessonId { get; set; }
 
-
-            public ApplicationUser User { get; set; }
-
-            public string UserId { get; set; }
-
             public bool Passed { get; set; }
 
             public DateTime DatePassed { get; set; }
+
+            public string StudentId { get; set; }
     }
 }

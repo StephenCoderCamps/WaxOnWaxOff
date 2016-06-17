@@ -40,12 +40,7 @@
 
         public login() {
             this.accountService.login(this.loginUser).then(() => {
-                let originalUrl = this.$window.sessionStorage.getItem('originalUrl');
-                if (originalUrl) {
-                    this.$location.path(originalUrl);
-                } else {
-                    this.$location.path('/');
-                }
+                this.$location.path('/admin/');
             }).catch((results) => {
                 this.validationMessages = results;
             });

@@ -13,8 +13,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WaxOnWaxOff.API
 {
-    [Authorize(Policy = "Student")]
     [Route("api/[controller]")]
+    [Authorize(Policy = "Student")]
     public class LessonsController : Controller
     {
 
@@ -25,57 +25,12 @@ namespace WaxOnWaxOff.API
             _lessonService = lessonService;
         }
 
-        // GET: api/values
-        [HttpGet]
-        [HttpGet("listLessons/{unitId}")]
-        public IEnumerable<LessonDTO> ListLessons(int unitId)
-        {
-            return _lessonService.ListLessons(this.User, unitId);    
-        }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public LessonDTO Get(int id)
         {
             return _lessonService.GetLesson(id);
-        }
-
-
-      
-
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            _lessonService.DeleteLesson(id);
-            return Ok();
-        }
-
-
-        [HttpPost]
-        public IActionResult Post([FromBody]Lesson lesson)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(this.ModelState);
-            }
-
-            if (lesson.Id == 0)
-            {
-                _lessonService.AddLesson(lesson);
-
-            } else {
-                _lessonService.EditLesson(lesson);
-            }
-            return Ok(lesson);
-        }
-
-
-        [HttpPost("postScore/{lessonId}")]
-        public IActionResult PostScore(int lessonId)
-        {
-            _lessonService.SaveScore(this.User, lessonId);
-            return Ok();
         }
 
 

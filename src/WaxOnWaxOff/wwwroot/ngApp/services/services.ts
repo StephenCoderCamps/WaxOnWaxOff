@@ -4,20 +4,7 @@
 
 
 
-    export class UnitService {
-        private UnitResource;
-
-        public listUnits() {
-            return this.UnitResource.query();
-        }
-
-        constructor($resource: ng.resource.IResourceService) {
-            this.UnitResource = $resource('api/units/:id');
-        }
-    }
-
-    angular.module('App').service('unitService', UnitService);
-
+  
 
     export class SuccessService {
         private happyPictures;
@@ -46,36 +33,17 @@
     export class LessonService {
         private lessonResource;
 
-
-
-        public listLessons(unitId) {
-            return this.lessonResource.listLessons({ unitId: unitId });
-        }
-
-
         public getLesson(id: number) {
             return this.lessonResource.get({ id: id });
         }
 
 
-        public editLesson(lesson) {
-            return this.lessonResource.save(lesson).$promise;
-        }
-
-        public deleteLesson(id: number) {
-            return this.lessonResource.delete({ id: id }).$promise;
-        }
-
         public postScore(id: number) {
             return this.lessonResource.postScore({ id: id }).$promise;
         }
 
-
         constructor($resource: ng.resource.IResourceService, private $q: ng.IQService, private testService: App.Services.TestService) {
             this.lessonResource = $resource('/api/lessons/:id', null, {
-                listLessons: {
-                    url: '/api/lessons/listLessons/:unitId', method: 'GET', isArray:true, params: {unitId:'@unitId'}
-                },
                 postScore: {
                     url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id' }
                 }

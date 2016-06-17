@@ -1,6 +1,76 @@
 ﻿namespace App.Admin.Services {
 
 
+    export class AdminUnitService {
+        private UnitResource;
+
+        public listUnits() {
+            return this.UnitResource.query();
+        }
+
+
+        public getUnit(id: number) {
+            return this.UnitResource.get({ id: id });
+        }
+
+
+        public editUnit(unit) {
+            return this.UnitResource.save(unit).$promise;
+        }
+
+        public deleteUnit(id: number) {
+            return this.UnitResource.delete({ id: id }).$promise;
+        }
+
+
+
+        constructor($resource: ng.resource.IResourceService) {
+            this.UnitResource = $resource('/api/admin/units/:id');
+        }
+    }
+
+    angular.module('App').service('adminUnitService', AdminUnitService);
+
+
+    export class AdminLessonService {
+        private lessonResource;
+
+
+        public listLessons(unitId) {
+            return this.lessonResource.listLessons({ unitId: unitId });
+        }
+
+
+        public getLesson(id: number) {
+            return this.lessonResource.get({ id: id });
+        }
+
+
+        public editLesson(lesson) {
+            return this.lessonResource.save(lesson).$promise;
+        }
+
+        public deleteLesson(id: number) {
+            return this.lessonResource.delete({ id: id }).$promise;
+        }
+
+      
+
+        constructor($resource: ng.resource.IResourceService, private $q: ng.IQService, private testService: App.Services.TestService) {
+            this.lessonResource = $resource('/api/admin/lessons/:id', null, {
+                listLessons: {
+                    url: '/api/admin/lessons/listLessons/:unitId', method: 'GET', isArray: true, params: { unitId: '@unitId' }
+                }
+            });
+        }
+
+    }
+
+
+    angular.module('App').service('adminLessonService', AdminLessonService);
+
+
+
     export class LabService {
         private LabResource;
 
@@ -25,8 +95,8 @@
        
 
         constructor($resource: ng.resource.IResourceService) {
-            this.LabResource = $resource("/api/labs/:id", null, {
-                list: {url:'/api/labs/list/:lessonId', method: 'GET', isArray:true}
+            this.LabResource = $resource("/api/admin/labs/:id", null, {
+                list: {url:'/api/admin/labs/list/:lessonId', method: 'GET', isArray:true}
             });
         }
     }
@@ -35,45 +105,33 @@
 
 
 
-    export class StudentService {
-        private StudentResource;
+    export class AdminService {
+        private AdminResource;
 
-        public getStudent(studentId: string) {
-            return this.StudentResource.get({ id: studentId });
-        }
 
-        public list(match:string = '') {
-            return this.StudentResource.query({ match: match });
+        public list() {
+            return this.AdminResource.query();
         }
 
 
-        public listScores(studentId) {
-            return this.StudentResource.listScores({id:studentId});
-        }
 
         public save(student) {
-            return this.StudentResource.save(student).$promise;
+            return this.AdminResource.save(student).$promise;
         }
 
-        public toggleAdmin(studentId: string) {
-            return this.StudentResource.toggleAdmin({ id: studentId }, {}).$promise;
-        }
 
 
         public remove(studentId) {
-            return this.StudentResource.delete({ id: studentId }).$promise;
+            return this.AdminResource.delete({ id: studentId }).$promise;
         }
 
 
         constructor($resource: ng.resource.IResourceService) {
-            this.StudentResource = $resource("/api/students/:id", null, {
-                listScores: { url: '/api/students/scores/:id', method: 'GET', isArray: true },
-                toggleAdmin: { url: '/api/students/toggleAdmin/:id', method: 'POST'}
-            });
+            this.AdminResource = $resource("/api/admin/admins/:id");
         }
     }
 
-    angular.module('App').service('studentService', StudentService);
+    angular.module('App').service('adminService', AdminService);
 
 
 

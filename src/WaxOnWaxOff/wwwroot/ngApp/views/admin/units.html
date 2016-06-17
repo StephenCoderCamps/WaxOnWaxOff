@@ -1,0 +1,16 @@
+﻿<h2>Edit Units</h2>
+
+
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="unit in controller.units">
+        {{unit.name}}
+        <div class="pull-right">
+            <a ui-sref="admin.lessons({unitId:unit.id})" class="btn btn-primary btn-xs">lessons</a>
+            <button ng-click="controller.edit(unit)" class="btn btn-default btn-xs">edit</button>
+            <button ng-click="controller.remove(unit)" class="btn btn-danger btn-xs">delete</button>
+        </div>
+    </li>
+
+</ul>
+
+<button class="btn btn-primary" ng-click="controller.edit()">Add Unit</button>

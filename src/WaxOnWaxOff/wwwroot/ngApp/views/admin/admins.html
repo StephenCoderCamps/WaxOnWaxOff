@@ -1,0 +1,14 @@
+﻿<h2>Edit Admins</h2>
+
+
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="admin in controller.admins">
+        {{admin.userName}}
+        <div class="pull-right">
+            <button ng-click="controller.remove(admin)" class="btn btn-default btn-xs">delete</button>
+        </div>
+    </li>
+
+</ul>
+
+<button class="btn btn-primary" ng-click="controller.add()">Add Admin</button>

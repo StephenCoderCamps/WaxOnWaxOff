@@ -11,6 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "http://localhost:58408/lesson/3?studentid=19&secret=secret",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

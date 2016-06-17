@@ -10,12 +10,6 @@
         $urlRouterProvider.otherwise('/');
 
         $stateProvider
-            .state('home', {
-                url: '/',
-                templateUrl: 'ngApp/views/home.html',
-                controller: App.Controllers.HomeController,
-                controllerAs: 'controller'
-            })
             .state('lesson', {
                 url: '/lesson/:id',
                 templateUrl: 'ngApp/views/lesson.html',
@@ -47,12 +41,19 @@
                 url: '/admin',
                 templateUrl: 'ngApp/views/admin/admin.html'
             })
+            .state('admin.units', {
+                url: '/',
+                templateUrl: '/ngApp/views/admin/units.html',
+                controller: App.Admin.Controllers.UnitsController,
+                controllerAs: 'controller'
+            })
             .state('admin.lessons', {
-                url: '/lessons',
+                url: '/units/:unitId/lessons',
                 templateUrl: '/ngApp/views/admin/lessons.html',
                 controller: App.Admin.Controllers.LessonsController,
                 controllerAs: 'controller'
-            }).state('admin.labs', {
+            })
+            .state('admin.labs', {
                 url: '/labs/:lessonId',
                 templateUrl: '/ngApp/views/admin/labs.html',
                 controller: App.Admin.Controllers.LabsController,
@@ -62,15 +63,15 @@
                 templateUrl: '/ngApp/views/admin/editLab.html',
                 controller: App.Admin.Controllers.LabEditController,
                 controllerAs: 'controller'
-            }).state('admin.students', {
-                url: '/students',
-                templateUrl: '/ngApp/views/admin/students.html',
-                controller: App.Admin.Controllers.StudentsController,
+            }).state('admin.admins', {
+                url: '/admins',
+                templateUrl: '/ngApp/views/admin/admins.html',
+                controller: App.Admin.Controllers.AdminsController,
                 controllerAs: 'controller'
             });
 
 
-
+        $urlRouterProvider.otherwise('/coderCampsOnly');
         $locationProvider.html5Mode(true);
     });
 
@@ -97,7 +98,7 @@
 
             // if going to admin view then better be an admin, otherwise, better have a student id
             if (to.name.substring(0, 'admin.'.length) == 'admin.') {
-                if (!accountService.getClaim('isAdmin')) {
+                if (!accountService.isLoggedIn()) {
                     e.preventDefault();
                     $state.go('login');
                 }

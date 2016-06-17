@@ -1,20 +1,6 @@
 ﻿namespace App.Controllers {
 
 
-    export class HomeController {
-        public units;
-        public lessons;
-        public selectedUnitId;
-
-
-        public listLessons() {
-            this.lessons = this.lessonService.listLessons(this.selectedUnitId);
-        }
-
-        constructor(private unitService: App.Services.UnitService, private lessonService: App.Services.LessonService) {
-            this.units = unitService.listUnits();
-        }
-    }
 
 
     export class LessonController {

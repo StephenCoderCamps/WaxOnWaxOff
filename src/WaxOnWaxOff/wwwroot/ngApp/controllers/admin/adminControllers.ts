@@ -1,80 +1,139 @@
 ﻿namespace App.Admin.Controllers {
 
 
-    export class LessonsController {
+
+    export class UnitsController {
         public units;
+
+        public edit(unit) {
+            this.$uibModal.open({
+                templateUrl: '/ngApp/dialogs/admin/editUnit.html',
+                controller: EditUnitController,
+                controllerAs: 'modal',
+                resolve: {
+                    unit: unit
+                }
+            }).result.then(() => {
+                this.units = this.adminUnitService.listUnits();
+            });
+        }
+
+        public remove(unit: number) {
+            this.$uibModal.open({
+                templateUrl: '/ngApp/dialogs/admin/deleteUnit.html',
+                controller: DeleteUnitController,
+                controllerAs: 'modal',
+                resolve: {
+                    unit: unit
+                }
+            }).result.then(() => {
+                this.units = this.adminUnitService.listUnits();
+            });
+        }
+
+
+        constructor(private $uibModal: ng.ui.bootstrap.IModalService, private adminUnitService: App.Admin.Services.AdminUnitService, private adminLessonService: App.Admin.Services.AdminLessonService) {
+            this.units = adminUnitService.listUnits();
+        }
+    }
+
+
+    class EditUnitController {
+
+        public save() {
+            this.adminUnitService.editUnit(this.unit).then(() => {
+                this.$uibModalInstance.close();
+            });
+        }
+
+        constructor(private unit, private adminUnitService: App.Admin.Services.AdminUnitService, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private adminLessonService: App.Admin.Services.AdminLessonService) {
+        }
+    }
+
+
+    class DeleteUnitController {
+
+        public save() {
+            this.adminUnitService.deleteUnit(this.unit.id).then(() => {
+                this.$uibModalInstance.close();
+            });;
+        }
+
+        constructor(private unit, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private adminUnitService: App.Admin.Services.AdminUnitService) {
+        }
+    }
+
+
+
+
+
+
+    export class LessonsController {
         public lessons;
         public selectedUnitId;
 
-        public edit(lessonId: number) {
+        public edit(lesson) {
             this.$uibModal.open({
                 templateUrl: '/ngApp/dialogs/admin/editLesson.html',
                 controller: EditLessonController,
                 controllerAs: 'modal',
                 resolve: {
-                    lessonId: lessonId
+                    lesson: lesson,
+                    unitId: () => this.selectedUnitId
                 }
             }).result.then(() => {
-                this.lessons = this.lessonService.listLessons(this.selectedUnitId);
+                this.listLessons();
             });
         }
 
-        public remove(lessonId: number) {
+        public remove(lesson) {
             this.$uibModal.open({
                 templateUrl: '/ngApp/dialogs/admin/deleteLesson.html',
                 controller: DeleteLessonController,
                 controllerAs: 'modal',
                 resolve: {
-                    lessonId: lessonId
+                    lesson: lesson
                 }
             }).result.then(() => {
-                this.lessons = this.lessonService.listLessons(this.selectedUnitId);
+                this.listLessons();
             });
         }
 
         public listLessons() {
-            this.lessons = this.lessonService.listLessons(this.selectedUnitId);
+            this.lessons = this.adminLessonService.listLessons(this.selectedUnitId);
         }
 
-        constructor(private $uibModal: ng.ui.bootstrap.IModalService, private unitService: App.Services.UnitService, private lessonService: App.Services.LessonService) {
-            this.units = unitService.listUnits();
+        constructor(private $uibModal: ng.ui.bootstrap.IModalService, $stateParams: ng.ui.IStateParamsService, private adminLessonService: App.Admin.Services.AdminLessonService) {
+            this.selectedUnitId = $stateParams['unitId'];
+            this.listLessons();
         }
     }
 
 
     class EditLessonController {
-        public lesson;
-        public units;
 
         public save() {
-            this.lessonService.editLesson(this.lesson).then(() => {
+            this.lesson.unitId = this.unitId;
+            this.adminLessonService.editLesson(this.lesson).then(() => {
                 this.$uibModalInstance.close();
             });                
         }
 
-        constructor(private lessonId, private unitService:App.Services.UnitService, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private lessonService: App.Services.LessonService)
+        constructor(private lesson, private unitId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private adminLessonService: App.Admin.Services.AdminLessonService)
         {
-            this.units = unitService.listUnits();
-            if (lessonId) {
-                this.lesson = lessonService.getLesson(lessonId);
-            }
         }
     }
 
 
     class DeleteLessonController {
-        public lesson;
 
         public save() {
-            this.lessonService.deleteLesson(this.lesson.id).then(() => {
+            this.adminLessonService.deleteLesson(this.lesson.id).then(() => {
                 this.$uibModalInstance.close();
             });;
         }
 
-        constructor(private lessonId, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private lessonService: App.Services.LessonService) {
-            if (lessonId) {
-                this.lesson = lessonService.getLesson(lessonId);
-            }
+        constructor(private lesson, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private adminLessonService: App.Admin.Services.AdminLessonService) {
         }
     }
 
@@ -206,92 +265,60 @@
 
 
 
-    export class StudentsController {
-        public students;
-        public match: string;
-
-        public getScores(student) {
-            this.$uibModal.open({
-                templateUrl: '/ngApp/dialogs/admin/scores.html',
-                controller: StudentScoresController,
-                controllerAs: 'modal',
-                resolve: {
-                    student: student
-                }
-            }).result.then(() => {
-                this.students = this.studentService.list();
-            });
-        }
+    export class AdminsController {
+        public admins;
 
 
         public add() {
             this.$uibModal.open({
-                templateUrl: '/ngApp/dialogs/admin/addStudent.html',
-                controller: StudentAddController,
+                templateUrl: '/ngApp/dialogs/admin/addAdmin.html',
+                controller: AdminAddController,
                 controllerAs: 'modal'
             }).result.then(() => {
-                this.students = this.studentService.list();
+                this.admins = this.adminService.list();
             });
         }
 
 
-        public edit(student) {
+        public remove(admin) {
             this.$uibModal.open({
-                templateUrl: '/ngApp/dialogs/admin/editStudent.html',
-                controller: StudentEditController,
+                templateUrl: '/ngApp/dialogs/admin/deleteAdmin.html',
+                controller: AdminDeleteController,
                 controllerAs: 'modal',
                 resolve: {
-                    student: student
+                    admin: admin
                 }
             }).result.then(() => {
-                this.students = this.studentService.list();
+                this.admins = this.adminService.list();
             });
         }
 
-
-        public remove(student) {
-            this.$uibModal.open({
-                templateUrl: '/ngApp/dialogs/admin/deleteStudent.html',
-                controller: StudentDeleteController,
-                controllerAs: 'modal',
-                resolve: {
-                    student: student
-                }
-            }).result.then(() => {
-                this.students = this.studentService.list();
-            });
-        }
-
-        public filter() {
-            this.students = this.studentService.list(this.match);
-        }
-
-        constructor(private $stateParams: ng.ui.IStateParamsService, private studentService: App.Admin.Services.StudentService, private $uibModal: ng.ui.bootstrap.IModalService) {
-            this.students = studentService.list();
+        constructor(private $stateParams: ng.ui.IStateParamsService, private adminService: App.Admin.Services.AdminService, private $uibModal: ng.ui.bootstrap.IModalService) {
+            this.admins = adminService.list();
         }
     }
 
-    class StudentDeleteController {
+    class AdminDeleteController {
 
         public save() {
-            this.studentService.remove(this.student.id).then(() => {
+            this.adminService.remove(this.admin.id).then(() => {
                 this.$uibModalInstance.close();
             });;
         }
 
         constructor(
-            public student,
+            public admin,
             private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
-            private studentService: App.Admin.Services.StudentService
+            private adminService: App.Admin.Services.AdminService
         ) {}
     }
 
-    class StudentAddController {
-        public student;
+    class AdminAddController {
+        public admin;
         public validationMessages;
 
         public save() {
-            this.studentService.save(this.student).then(() => {
+            this.adminService.save(this.admin).then(() => {
                 this.$uibModalInstance.close();
             }).catch((result) => {
                 this.validationMessages = this.validationService.flattenValidation(result.data);
@@ -301,41 +328,12 @@
         constructor(
             private validationService: App.Services.ValidationService,
             private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
-            private studentService: App.Admin.Services.StudentService
+            private adminService: App.Admin.Services.AdminService
         ) {}
     }
 
 
-    class StudentEditController {
-        public isAdmin: boolean;
-
-        public save() {
-            this.studentService.toggleAdmin(this.student.id).then(() => {
-                this.$uibModalInstance.close();
-            });;
-        }
-
-        constructor(
-            public student,
-            private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance,
-            private studentService: App.Admin.Services.StudentService
-        ) {
-            this.isAdmin = student.isAdmin;
-        }
-    }
-
-
-    class StudentScoresController {
-        public scores;
-
-        public ok() {
-            this.$uibModalInstance.close();
-        }
-
-        constructor(public student, private $uibModalInstance: ng.ui.bootstrap.IModalServiceInstance, private studentService: App.Admin.Services.StudentService) {
-            this.scores = studentService.listScores(student.id);
-        }
-    }
+  
 
 
 

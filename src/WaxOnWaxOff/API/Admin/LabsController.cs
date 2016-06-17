@@ -11,7 +11,7 @@ using WaxOnWaxOff.Services;
 
 namespace WaxOnWaxOff.API
 {
-    [Route("api/[controller]")]
+    [Route("api/admin/[controller]")]
     [Authorize]
     public class LabsController : Controller
     {

@@ -44,7 +44,6 @@ namespace WaxOnWaxOff
         {
             // add security policies
             services.AddAuthorization(options => {
-                options.AddPolicy("AdminOnly", policy => policy.RequireClaim("IsAdmin"));
                 options.AddPolicy("Student", policy => policy.RequireAssertion((authorizationContext) =>
                 {
                     var authContext = authorizationContext.Resource as AuthorizationFilterContext;
@@ -89,9 +88,11 @@ namespace WaxOnWaxOff
                 cfg.AddProfile(new AutoMapperProfile());
             });
             services.AddSingleton<IMapper>(sp => config.CreateMapper());
+            services.AddScoped<UnitService>();
+
             services.AddScoped<LessonService>();
             services.AddScoped<LabService>();
-            services.AddScoped<StudentService>();
+            services.AddScoped<AdminService>();
             services.AddScoped<CSharpService>();
 
 

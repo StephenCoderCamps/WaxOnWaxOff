@@ -16,12 +16,12 @@
     <nav id="mainNav" class="navbar">
         <div class="container">
             <div class="navbar-header">
-                <a id="waxOnTitle" class="navbar-brand" href="home.html">Wax On</a>
+                <span id="waxOnTitle" class="navbar-brand">Wax On</span>
             </div>
             <div id="navLinks" class="collapse navbar-collapse"  uib-collapse="isCollapsed">
                
                 <ul id="navList" class="nav navbar-nav navbar-right">
-                    <li><a ui-sref="admin.lessons" ng-show="account.getClaim('isAdmin')">Admin</a></li>
+                    <li><a ui-sref="admin.units" ng-show="account.isLoggedIn()">Admin</a></li>
                     <li><a ng-click="account.logout()" ng-show="account.isLoggedIn()">logout {{account.getUserName()}}</a></li>
                 </ul>
             </div>

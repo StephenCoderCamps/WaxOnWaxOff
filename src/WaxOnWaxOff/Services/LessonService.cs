@@ -37,7 +37,7 @@ namespace WaxOnWaxOff.Services
                     Id = l.Id,
                     UnitId = l.UnitId,
                     Title = l.Title,
-                    Passed = l.LessonScore.Any( ls => ls.Passed && ls.UserId == userId )
+                    Passed = l.LessonScore.Any( ls => ls.Passed && ls.StudentId == userId )
                })
                .ToList(); 
         }
@@ -61,6 +61,13 @@ namespace WaxOnWaxOff.Services
             _db.SaveChanges();
         }
 
+
+        public bool LessonHasLabs(int id)
+        {
+            // check if lesson has labs
+            return _db.Labs.Any(l => l.LessonId == id);
+        }
+
         public void DeleteLesson(int id)
         {
             var original = _db.Lessons.FirstOrDefault(l => l.Id == id);
@@ -81,12 +88,12 @@ namespace WaxOnWaxOff.Services
         {
             var userId = _userManager.GetUserId(user);
 
-            var score = _db.LessonScores.FirstOrDefault(s => s.UserId == userId && s.LessonId == lessonId);
+            var score = _db.LessonScores.FirstOrDefault(s => s.StudentId == userId && s.LessonId == lessonId);
             if (score == null)
             {
                 _db.LessonScores.Add(new LessonScore
                 {
-                    UserId = userId,
+                    StudentId = userId,
                     LessonId = lessonId,
                     Passed =true,
                     DatePassed = DateTime.UtcNow

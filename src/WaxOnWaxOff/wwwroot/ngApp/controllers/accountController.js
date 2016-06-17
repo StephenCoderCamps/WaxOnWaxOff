@@ -40,13 +40,7 @@ var App;
             LoginController.prototype.login = function () {
                 var _this = this;
                 this.accountService.login(this.loginUser).then(function () {
-                    var originalUrl = _this.$window.sessionStorage.getItem('originalUrl');
-                    if (originalUrl) {
-                        _this.$location.path(originalUrl);
-                    }
-                    else {
-                        _this.$location.path('/');
-                    }
+                    _this.$location.path('/admin/');
                 }).catch(function (results) {
                     _this.validationMessages = results;
                 });

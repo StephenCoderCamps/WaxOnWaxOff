@@ -1,10 +1,11 @@
 ﻿
 <form ng-submit="modal.save()">
     <div class="modal-header">
-        <h2 class="modal-title">Delete Student</h2>
+        <h2 class="modal-title">Delete Unit</h2>
     </div>
     <div class="modal-body">
-        Are you sure that you want to delete the <strong>{{modal.student.userName}}</strong>?
+        Are you sure that you want to delete the <strong>{{modal.unit.name}}</strong> unit?
+        Note: You cannot delete this unit if the unit has lessons.
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-danger">OK</button>

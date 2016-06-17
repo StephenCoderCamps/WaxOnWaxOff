@@ -2,17 +2,6 @@ var App;
 (function (App) {
     var Services;
     (function (Services) {
-        var UnitService = (function () {
-            function UnitService($resource) {
-                this.UnitResource = $resource('api/units/:id');
-            }
-            UnitService.prototype.listUnits = function () {
-                return this.UnitResource.query();
-            };
-            return UnitService;
-        }());
-        Services.UnitService = UnitService;
-        angular.module('App').service('unitService', UnitService);
         var SuccessService = (function () {
             function SuccessService() {
                 this.happyPictures = [
@@ -39,25 +28,13 @@ var App;
                 this.$q = $q;
                 this.testService = testService;
                 this.lessonResource = $resource('/api/lessons/:id', null, {
-                    listLessons: {
-                        url: '/api/lessons/listLessons/:unitId', method: 'GET', isArray: true, params: { unitId: '@unitId' }
-                    },
                     postScore: {
                         url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id' }
                     }
                 });
             }
-            LessonService.prototype.listLessons = function (unitId) {
-                return this.lessonResource.listLessons({ unitId: unitId });
-            };
             LessonService.prototype.getLesson = function (id) {
                 return this.lessonResource.get({ id: id });
-            };
-            LessonService.prototype.editLesson = function (lesson) {
-                return this.lessonResource.save(lesson).$promise;
-            };
-            LessonService.prototype.deleteLesson = function (id) {
-                return this.lessonResource.delete({ id: id }).$promise;
             };
             LessonService.prototype.postScore = function (id) {
                 return this.lessonResource.postScore({ id: id }).$promise;
