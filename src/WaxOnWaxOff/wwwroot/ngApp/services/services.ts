@@ -38,22 +38,23 @@
         }
 
 
-        public postScore(id: number) {
-            return this.lessonResource.postScore({ id: id }).$promise;
+        public postScore(lessonId: number) {
+            let studentId = this.$window.sessionStorage.getItem('studentId');
+            return this.lessonResource.postScore({studentId:studentId, lessonId: lessonId }).$promise;
         }
 
-        constructor($resource: ng.resource.IResourceService, private $q: ng.IQService, private testService: App.Services.TestService) {
+        constructor($resource: ng.resource.IResourceService, private $window: ng.IWindowService, private $q: ng.IQService, private testService: App.Services.TestService) {
             this.lessonResource = $resource('/api/lessons/:id', null, {
                 postScore: {
-                    url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id' }
+                    url: '/api/lessons/postScore/:id', method: 'POST'
                 }
             });
         }
-
     }
 
 
     angular.module('App').service('lessonService', LessonService);
+
 
 
 

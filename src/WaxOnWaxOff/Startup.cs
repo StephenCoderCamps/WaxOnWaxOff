@@ -15,6 +15,7 @@ using WaxOnWaxOff.Data;
 using AutoMapper;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using WaxOnWaxOff.Infrastructure;
 
 namespace WaxOnWaxOff
 {
@@ -47,22 +48,19 @@ namespace WaxOnWaxOff
                 options.AddPolicy("Student", policy => policy.RequireAssertion((authorizationContext) =>
                 {
                     var authContext = authorizationContext.Resource as AuthorizationFilterContext;
-                    var studentId = authContext.HttpContext.Request.Headers.Where(h => h.Key == "X-StudentId").Select(h => h.Value.FirstOrDefault()).FirstOrDefault();
                     var secret = authContext.HttpContext.Request.Headers.Where(h => h.Key == "X-Secret").Select(h => h.Value.FirstOrDefault()).FirstOrDefault();
-                    if (String.IsNullOrWhiteSpace(studentId) || String.IsNullOrWhiteSpace(secret))
-                    {
-                        return false;
-                    }
-                    if (secret != Configuration["StudentSecret"])
-                    {
-                        return false;
-                    }
-                    return true;
+                    return (secret == Configuration["StudentSecret"]);
+                }));
+                options.AddPolicy("PublicAPI", policy => policy.RequireAssertion((authorizationContext) =>
+                {
+                    var authContext = authorizationContext.Resource as AuthorizationFilterContext;
+                    var secret = authContext.HttpContext.Request.Query["secret"];
+                    return (secret == Configuration["PublicAPISecret"]);
                 }));
             });
 
-            
 
+            services.AddCors();
 
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -94,6 +92,8 @@ namespace WaxOnWaxOff
             services.AddScoped<LabService>();
             services.AddScoped<AdminService>();
             services.AddScoped<CSharpService>();
+            services.AddScoped<LessonScoreService>();
+
 
 
 
@@ -121,6 +121,10 @@ namespace WaxOnWaxOff
             }
 
             app.UseStaticFiles();
+
+
+            app.UseSharedSecretAuthentication(new SharedSecretOptions { Secret = Configuration["StudentSecret"], AuthenticationScheme="StudentSecret" });
+            app.UseSharedSecretAuthentication(new SharedSecretOptions { Secret = Configuration["PublicAPISecret"], AuthenticationScheme = "PublicAPISecret" });
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {

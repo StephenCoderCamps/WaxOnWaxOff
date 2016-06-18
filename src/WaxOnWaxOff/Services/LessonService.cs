@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WaxOnWaxOff.Services
 {
-    public class LessonService 
+    public class LessonService
     {
         private ApplicationDbContext _db;
         private IMapper _mapper;
@@ -33,13 +33,14 @@ namespace WaxOnWaxOff.Services
             return _db.Lessons
                .Where(l => l.UnitId == unitId)
                .OrderBy(l => l.Title)
-               .Select(l => new LessonDTO {
-                    Id = l.Id,
-                    UnitId = l.UnitId,
-                    Title = l.Title,
-                    Passed = l.LessonScore.Any( ls => ls.Passed && ls.StudentId == userId )
+               .Select(l => new LessonDTO
+               {
+                   Id = l.Id,
+                   UnitId = l.UnitId,
+                   Title = l.Title,
+                   Passed = l.LessonScore.Any(ls => ls.Passed && ls.StudentId == userId)
                })
-               .ToList(); 
+               .ToList();
         }
 
         public LessonDTO GetLesson(int id)
@@ -53,7 +54,7 @@ namespace WaxOnWaxOff.Services
 
         }
 
-      
+
 
         public void AddLesson(Lesson lesson)
         {
@@ -80,28 +81,6 @@ namespace WaxOnWaxOff.Services
             var original = _db.Lessons.FirstOrDefault(l => l.Id == lesson.Id);
             original.Title = lesson.Title;
             original.UnitId = lesson.UnitId;
-            _db.SaveChanges();
-        }
-
-
-        public void SaveScore(ClaimsPrincipal user, int lessonId)
-        {
-            var userId = _userManager.GetUserId(user);
-
-            var score = _db.LessonScores.FirstOrDefault(s => s.StudentId == userId && s.LessonId == lessonId);
-            if (score == null)
-            {
-                _db.LessonScores.Add(new LessonScore
-                {
-                    StudentId = userId,
-                    LessonId = lessonId,
-                    Passed =true,
-                    DatePassed = DateTime.UtcNow
-                });
-            } else {
-                score.Passed = true;
-                score.DatePassed = DateTime.UtcNow;
-            }
             _db.SaveChanges();
         }
 

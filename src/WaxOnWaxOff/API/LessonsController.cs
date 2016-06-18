@@ -14,15 +14,17 @@ using Microsoft.AspNetCore.Authorization;
 namespace WaxOnWaxOff.API
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "Student")]
+    [Authorize(ActiveAuthenticationSchemes = "StudentSecret")]
     public class LessonsController : Controller
     {
 
         private LessonService _lessonService;
+        private LessonScoreService _lessonScoreService;
 
-        public LessonsController(LessonService lessonService)
+        public LessonsController(LessonService lessonService, LessonScoreService lessonScoreService)
         {
             _lessonService = lessonService;
+            _lessonScoreService = lessonScoreService;
         }
 
 
@@ -31,6 +33,20 @@ namespace WaxOnWaxOff.API
         public LessonDTO Get(int id)
         {
             return _lessonService.GetLesson(id);
+        }
+
+
+        [HttpPost("PostScore")]
+        public IActionResult PostScore([FromBody]LessonScoreViewModel score)
+        {
+            _lessonScoreService.PostScore(new LessonScore
+            {
+                DatePassed = DateTime.UtcNow,
+                StudentId = score.StudentId,
+                LessonId = score.LessonId,
+                Passed = true
+            });
+            return Ok();
         }
 
 

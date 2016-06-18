@@ -24,20 +24,22 @@ var App;
         Services.SuccessService = SuccessService;
         angular.module('App').service('successService', SuccessService);
         var LessonService = (function () {
-            function LessonService($resource, $q, testService) {
+            function LessonService($resource, $window, $q, testService) {
+                this.$window = $window;
                 this.$q = $q;
                 this.testService = testService;
                 this.lessonResource = $resource('/api/lessons/:id', null, {
                     postScore: {
-                        url: '/api/lessons/postScore/:id', method: 'POST', params: { id: '@id' }
+                        url: '/api/lessons/postScore/:id', method: 'POST'
                     }
                 });
             }
             LessonService.prototype.getLesson = function (id) {
                 return this.lessonResource.get({ id: id });
             };
-            LessonService.prototype.postScore = function (id) {
-                return this.lessonResource.postScore({ id: id }).$promise;
+            LessonService.prototype.postScore = function (lessonId) {
+                var studentId = this.$window.sessionStorage.getItem('studentId');
+                return this.lessonResource.postScore({ studentId: studentId, lessonId: lessonId }).$promise;
             };
             return LessonService;
         }());

@@ -85,16 +85,7 @@
                             this.$window.sessionStorage.setItem('happyPicture', this.successService.getHappyPicture());
                             this.$state.go('success');
                         });
-                        //this.$uibModal.open({
-                        //    templateUrl: '/ngApp/dialogs/success.html',
-                        //    controller: LessonSuccessDialogController,
-                        //    controllerAs: 'modal',
-                        //    resolve: {
-                        //        lesson: this.lesson
-                        //    }
-                        //}).result.then(() => {
-                        //    this.$state.go('home');
-                        //});
+                       
                     } else {
                         this.showLab();
                     }
