@@ -181,16 +181,49 @@
     export class LabEditController {
         public lessonId: number;
         public lab: App.Models.Lab;
-        public aceOptions: any = {};
+        public aceOptions: any = {
+            onLoad: function (_editor) {
+                // This is to remove following warning message on console:
+                // Automatically scrolling cursor into view after selection change this will be disabled in the next version
+                // set editor.$blockScrolling = Infinity to disable this message
+                _editor.$blockScrolling = Infinity;
+            }};
         public validationErrors;
 
         public labTypeChange() {
             switch (+this.lab.labType) {
                 case 0: this.aceOptions.mode = 'javascript';
+                    this.lab.test = `describe('doSomething', function () {
+    it('doSomething() function should exist.', function() {
+        expect(doSomething).not.toBeNull();
+    });
+    it('doSomething() function should return "Do Something!"', function() {
+        var result = doSomething();
+        expect(result).toBe("Do Something!");
+    });
+});`;
                     break;
                 case 1: this.aceOptions.mode = 'typescript';
+                    this.lab.test = `describe('doSomething', function () {
+    it('doSomething() function should exist.', function() {
+        expect(doSomething).not.toBeNull();
+    });
+    it('doSomething() function should return "Do Something!"', function() {
+        var result = doSomething();
+        expect(result).toBe("Do Something!");
+    });
+});`;
                     break;
                 case 2: this.aceOptions.mode = 'csharp';
+                    this.lab.test = `// test that Calculator class exists
+var calculatorType = Type.GetType(typeof(Calculator).AssemblyQualifiedName);
+calculatorType.Should().NotBeNull("you need to create a Calculator class.");
+
+// invoke AddNumbers method
+var result = InvokeMethod(calculatorType, "AddNumbers", 2, 3);
+
+// verify
+Assert(5, result, "Not getting expected result!");`;
                     break;
 
             }

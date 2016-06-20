@@ -75,9 +75,22 @@ var App;
             TestService.prototype.runCSharpTest = function (lab, answer) {
                 var _this = this;
                 return this.$q(function (resolve, reject) {
-                    _this.$http.post('/api/CSharp', { lab: lab, answer: answer }).then(function (results) {
+                    _this.$http({
+                        method: 'POST',
+                        url: '/api/CSharp',
+                        timeout: 5000,
+                        data: { lab: lab, answer: answer }
+                    }).then(function (results) {
                         resolve(results.data);
+                    }).catch(function (results) {
+                        resolve({
+                            isCorrect: false,
+                            message: 'Your code ran too long. Infinite loop?'
+                        });
                     });
+                    //this.$http.post('/api/CSharp', { lab: lab, answer: answer }).then((results) => {
+                    //    resolve(results.data);
+                    //});
                 });
             };
             TestService.prototype.runTypeScriptTest = function (lab, answer) {

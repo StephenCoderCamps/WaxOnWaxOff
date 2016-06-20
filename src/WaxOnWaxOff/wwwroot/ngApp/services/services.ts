@@ -88,9 +88,23 @@
 
         public runCSharpTest(lab: App.Models.Lab, answer: App.Models.Answer) {
             return this.$q((resolve, reject) => {
-                this.$http.post('/api/CSharp', { lab: lab, answer: answer }).then((results) => {
+                this.$http({
+                    method: 'POST',
+                    url: '/api/CSharp',
+                    timeout: 5000,
+                    data: { lab: lab, answer: answer }
+                }).then((results) => {
                     resolve(results.data);
+                }).catch((results) => {
+                    resolve({
+                        isCorrect: false,
+                        message: 'Your code ran too long. Infinite loop?'
+                    });
                 });
+
+                //this.$http.post('/api/CSharp', { lab: lab, answer: answer }).then((results) => {
+                //    resolve(results.data);
+                //});
             });
         }
 

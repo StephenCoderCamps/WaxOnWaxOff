@@ -91,7 +91,7 @@ var App;
             // check for student id/secret
             var studentId = $window.sessionStorage.getItem('studentId');
             if (!studentId) {
-                var studentId_1 = $location.search().studentid;
+                var studentId_1 = $location.search().studentId;
                 var secret = $location.search().secret;
                 if (!studentId_1 || !secret) {
                     e.preventDefault();

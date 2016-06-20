@@ -18,6 +18,8 @@ using Microsoft.CodeAnalysis.Emit;
 using System.Runtime.Loader;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
+using WaxOnWaxOff.Infrastructure;
+using System.Threading;
 
 // https://github.com/xunit/xunit/issues/542
 // https://github.com/xunit/samples.xunit/blob/3f55e554e7de7eb2cd9802fa9e73a706520646cd/TestRunner/Program.cs
@@ -27,8 +29,14 @@ namespace WaxOnWaxOff.Services
 {
     public class CSharpService
     {
+
+  
+
         public async Task<TestResultViewModel> RunTest(string setupScript, string csharp, string test)
         {
+            var cancelToken = new CancellationTokenSource();
+            cancelToken.CancelAfter(TimeSpan.FromSeconds(5));
+
             // create script options
             var references = new MetadataReference[]
             {
@@ -48,7 +56,7 @@ namespace WaxOnWaxOff.Services
             var scriptOptions = ScriptOptions.Default;
             scriptOptions = scriptOptions.AddReferences(references.ToArray());
             scriptOptions = scriptOptions.AddImports("System", "System.Linq", "Xunit", "FluentAssertions", "CSharpTestHelper");
-
+           
             // run scripts
             try
             {
@@ -57,11 +65,12 @@ namespace WaxOnWaxOff.Services
                     setupScript,
                     options: scriptOptions,
                     globals: new Helper(),
-                    globalsType: typeof(Helper)
+                    globalsType: typeof(Helper), 
+                    cancellationToken: cancelToken.Token
                 );
-               
-                scriptState = await scriptState.ContinueWithAsync(csharp);
-                scriptState = await scriptState.ContinueWithAsync(test);
+
+                scriptState = await scriptState.ContinueWithAsync(csharp, cancellationToken: cancelToken.Token);
+                scriptState = await scriptState.ContinueWithAsync(test, cancellationToken: cancelToken.Token);
             } catch (Exception ex)
             {
                 return new TestResultViewModel

@@ -189,7 +189,13 @@ var App;
                     this.$uibModal = $uibModal;
                     this.$state = $state;
                     this.$stateParams = $stateParams;
-                    this.aceOptions = {};
+                    this.aceOptions = {
+                        onLoad: function (_editor) {
+                            // This is to remove following warning message on console:
+                            // Automatically scrolling cursor into view after selection change this will be disabled in the next version
+                            // set editor.$blockScrolling = Infinity to disable this message
+                            _editor.$blockScrolling = Infinity;
+                        } };
                     this.lessonId = this.$stateParams['lessonId'];
                     var labId = this.$stateParams['labId'];
                     if (labId) {
@@ -203,12 +209,15 @@ var App;
                     switch (+this.lab.labType) {
                         case 0:
                             this.aceOptions.mode = 'javascript';
+                            this.lab.test = "describe('doSomething', function () {\n    it('doSomething() function should exist.', function() {\n        expect(doSomething).not.toBeNull();\n    });\n    it('doSomething() function should return \"Do Something!\"', function() {\n        var result = doSomething();\n        expect(result).toBe(\"Do Something!\");\n    });\n});";
                             break;
                         case 1:
                             this.aceOptions.mode = 'typescript';
+                            this.lab.test = "describe('doSomething', function () {\n    it('doSomething() function should exist.', function() {\n        expect(doSomething).not.toBeNull();\n    });\n    it('doSomething() function should return \"Do Something!\"', function() {\n        var result = doSomething();\n        expect(result).toBe(\"Do Something!\");\n    });\n});";
                             break;
                         case 2:
                             this.aceOptions.mode = 'csharp';
+                            this.lab.test = "// test that Calculator class exists\nvar calculatorType = Type.GetType(typeof(Calculator).AssemblyQualifiedName);\ncalculatorType.Should().NotBeNull(\"you need to create a Calculator class.\");\n\n// invoke AddNumbers method\nvar result = InvokeMethod(calculatorType, \"AddNumbers\", 2, 3);\n\n// verify\nAssert(5, result, \"Not getting expected result!\");";
                             break;
                     }
                 };

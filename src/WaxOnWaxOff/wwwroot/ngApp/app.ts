@@ -109,7 +109,7 @@
             // check for student id/secret
             let studentId = $window.sessionStorage.getItem('studentId');
             if (!studentId) {
-                let studentId = $location.search().studentid;
+                let studentId = $location.search().studentId;
                 let secret = $location.search().secret;
 
                 if (!studentId || !secret) {
