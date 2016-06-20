@@ -13,7 +13,7 @@ using WaxOnWaxOff.Models;
 namespace WaxOnWaxOff.API.Admin
 {
 
-    [Authorize]
+    [Authorize(Policy ="Admin")]
     [Route("api/admin/[controller]")]
     public class LessonsController : Controller
     {
@@ -26,7 +26,6 @@ namespace WaxOnWaxOff.API.Admin
         }
 
         // GET: api/values
-        [HttpGet]
         [HttpGet("listLessons/{unitId}")]
         public IEnumerable<LessonDTO> ListLessons(int unitId)
         {

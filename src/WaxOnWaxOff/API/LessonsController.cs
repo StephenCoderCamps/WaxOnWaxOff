@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace WaxOnWaxOff.API
 {
     [Route("api/[controller]")]
-    [Authorize(ActiveAuthenticationSchemes = "StudentSecret")]
+    [Authorize(Policy = "StudentSecret")]
     public class LessonsController : Controller
     {
 

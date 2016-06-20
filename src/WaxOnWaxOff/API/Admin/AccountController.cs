@@ -12,10 +12,11 @@ using WaxOnWaxOff.Models;
 using WaxOnWaxOff.Services;
 using WaxOnWaxOff.ViewModels.Account;
 using WaxOnWaxOff.Controllers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WaxOnWaxOff.API
 {
-    [Authorize]
+    [Authorize(Policy ="Admin")]
     [Route("api/[controller]")]
     public class AccountController : Controller
     {

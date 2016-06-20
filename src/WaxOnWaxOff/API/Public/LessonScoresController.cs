@@ -14,7 +14,7 @@ namespace WaxOnWaxOff.API.Public
 {
     [Route("api/public/[controller]")]
     [EnableCors("AllowAllOrigins")]
-    [Authorize(ActiveAuthenticationSchemes ="PublicAPISecret")]
+    [Authorize(Policy = "PublicAPISecret")]
     public class LessonScoresController : Controller
     {
         private LessonScoreService _lessonScoreService;

@@ -7,13 +7,14 @@ using WaxOnWaxOff.Models;
 using WaxOnWaxOff.Data;
 using Microsoft.AspNetCore.Authorization;
 using WaxOnWaxOff.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WaxOnWaxOff.API.Admin 
 {
     [Route("api/admin/[controller]")]
-    [Authorize]
+    [Authorize(Policy = "Admin")]
     public class UnitsController : Controller
     {
         private UnitService _unitService;

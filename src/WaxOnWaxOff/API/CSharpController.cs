@@ -15,7 +15,8 @@ using System.Threading;
 namespace WaxOnWaxOff.API
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "Student")]
+    [Authorize(Policy = "AdminOrStudentSecret")]
+
     public class CSharpController : Controller
     {
         private CSharpService _csharpService;

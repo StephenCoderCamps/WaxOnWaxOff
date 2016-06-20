@@ -13,7 +13,7 @@ using WaxOnWaxOff.ViewModels;
 namespace WaxOnWaxOff.API
 {
     [Route("api/admin/[controller]")]
-    [Authorize]
+    [Authorize(Policy ="Admin")]
     public class AdminsController : Controller
     {
         private AdminService _adminService;

@@ -16,6 +16,10 @@ using AutoMapper;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WaxOnWaxOff.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
+using WaxOnWaxOff.Infrastructure.Policies;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace WaxOnWaxOff
 {
@@ -43,21 +47,30 @@ namespace WaxOnWaxOff
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // add security policies
-            services.AddAuthorization(options => {
-                options.AddPolicy("Student", policy => policy.RequireAssertion((authorizationContext) =>
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("StudentSecret", policy =>
                 {
-                    var authContext = authorizationContext.Resource as AuthorizationFilterContext;
-                    var secret = authContext.HttpContext.Request.Headers.Where(h => h.Key == "X-Secret").Select(h => h.Value.FirstOrDefault()).FirstOrDefault();
-                    return (secret == Configuration["StudentSecret"]);
-                }));
-                options.AddPolicy("PublicAPI", policy => policy.RequireAssertion((authorizationContext) =>
+                    policy.AddRequirements(new SharedSecretRequirement(Configuration["StudentSecret"]));
+                });
+                options.AddPolicy("PublicAPISecret", policy =>
                 {
-                    var authContext = authorizationContext.Resource as AuthorizationFilterContext;
-                    var secret = authContext.HttpContext.Request.Query["secret"];
-                    return (secret == Configuration["PublicAPISecret"]);
-                }));
+                    policy.AddRequirements(new SharedSecretRequirement(Configuration["PublicAPISecret"]));
+                });
+                options.AddPolicy("Admin", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                });
+
+                options.AddPolicy("AdminOrStudentSecret", policy =>
+                {
+                    policy.AddRequirements(new SharedSecretRequirement(Configuration["StudentSecret"], true));
+                });
             });
+            services.AddSingleton<IAuthorizationHandler, SharedSecretHandler>();
+
+
 
 
             services.AddCors();
@@ -123,14 +136,24 @@ namespace WaxOnWaxOff
             app.UseStaticFiles();
 
 
-            app.UseSharedSecretAuthentication(new SharedSecretOptions { Secret = Configuration["StudentSecret"], AuthenticationScheme="StudentSecret" });
-            app.UseSharedSecretAuthentication(new SharedSecretOptions { Secret = Configuration["PublicAPISecret"], AuthenticationScheme = "PublicAPISecret" });
-
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AutomaticChallenge = false
+                AutomaticAuthenticate = false,
+                AutomaticChallenge=false
             });
 
+            // this code guarantees that there is always a generic student named Student
+            // otherwise, policies won't kick in.
+            app.Use(async (context, next) =>
+            {
+                if (!context.User.Identities.Any(i => i.IsAuthenticated))
+                {
+                    context.User = new ClaimsPrincipal(new GenericIdentity("Student"));
+                }
+                await next.Invoke();
+            });
+
+         
 
             app.UseIdentity();
 
