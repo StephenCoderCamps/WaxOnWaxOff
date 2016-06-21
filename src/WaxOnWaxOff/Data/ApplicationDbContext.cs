@@ -8,6 +8,8 @@ using WaxOnWaxOff.Models;
 
 namespace WaxOnWaxOff.Data
 {
+    
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
 

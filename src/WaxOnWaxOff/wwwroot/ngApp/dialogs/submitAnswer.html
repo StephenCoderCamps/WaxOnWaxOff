@@ -9,9 +9,7 @@
         </div>
         <div ng-show="!modal.answerResult.isCorrect">
             <h1><img src="/images/frown.png" /> Wrong!</h1>
-            <p class="alert">
-                {{modal.answerResult.message}}
-            </p>
+            <p class="alert testResult">{{modal.answerResult.message}}</p>
         </div>
 
         <button class="btn" ng-click="modal.ok()">Continue</button>

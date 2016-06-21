@@ -20,6 +20,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using WaxOnWaxOff.Infrastructure;
 using System.Threading;
+using Microsoft.EntityFrameworkCore;
 
 // https://github.com/xunit/xunit/issues/542
 // https://github.com/xunit/samples.xunit/blob/3f55e554e7de7eb2cd9802fa9e73a706520646cd/TestRunner/Program.cs
@@ -45,6 +46,10 @@ namespace WaxOnWaxOff.Services
                 CreateGlobalAssemblyReference("System.Xml.XDocument.dll"),
                 CreateGlobalAssemblyReference("System.Linq.dll"),
                 CreateGlobalAssemblyReference("System.Linq.Expressions.dll"),
+                CreateGlobalAssemblyReference("System.Collections.dll"),
+
+                CreateLocalAssemblyReference(typeof(DbContext)),
+                CreateLocalAssemblyReference(typeof(InMemoryDbContextOptionsExtensions)),
                 CreateLocalAssemblyReference(typeof(Xunit.Assert)),
                 //CreateLocalAssemblyReference(typeof(Microsoft.VisualStudio.TestTools.UnitTesting.Assert)),
                 CreateLocalAssemblyReference(typeof(FluentAssertions.AssertionExtensions)),

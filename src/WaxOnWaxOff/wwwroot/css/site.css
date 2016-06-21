@@ -88,3 +88,7 @@ button {
 .alert {
     background-color:#FFE1E1;
 }
+
+.testResult {
+    white-space:pre-wrap;
+}
