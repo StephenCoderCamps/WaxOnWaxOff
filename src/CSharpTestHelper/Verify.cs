@@ -19,6 +19,6 @@ namespace CSharpTestHelper
             return (thing is T);
         }
 
-
+       
     }
 }

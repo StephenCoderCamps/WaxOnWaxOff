@@ -48,12 +48,27 @@ namespace CSharpTestHelper
         {
             var options = CreateNewContextOptions();
             var db = new MoviesDbContext(options);
-            //db.Database.EnsureDeleted();
+
+            // add actors
+            var actors = new Dictionary<string, Actor>
+            {
+                {"Harrison Ford", new Actor { FirstName="Harrison", LastName="Ford" } },
+                {"Al Pacino", new Actor { FirstName="Al", LastName="Pacino" } },
+                {"Alicia Vikander", new Actor { FirstName="Alicia", LastName="Vikander" } },
+                {"Mark Hamill", new Actor { FirstName="Mark", LastName="Hamill" } }
+            };
+            db.Actors.AddRange(actors["Harrison Ford"], actors["Al Pacino"]);
+            db.SaveChanges();
+
+            // add genres/movies
             var movies = new Dictionary<string, Movie>
             {
-                { "Star Wars", new Movie {Title="Star Wars: A New Hope", Rating=5}},
+                { "Star Wars", new Movie {Title="Star Wars", Rating=5 } },
                 { "Ex Machina", new Movie {Title="Ex Machina", Rating=4 } },
-                { "Blade Runner", new Movie {Title="Blade Runner", Rating=3 } }
+                { "Blade Runner", new Movie {Title="Blade Runner", Rating=3 } },
+                { "Regarding Henry", new Movie {Title="Regarding Henry", Rating=2 } },
+                { "The Godfather", new Movie {Title="The Godfather", Rating=5 } }
+
             };
             db.Genres.AddRange(
                 new Genre
@@ -64,10 +79,30 @@ namespace CSharpTestHelper
                         movies["Ex Machina"],
                         movies["Blade Runner"]
                     }
-                }
+                },
+                 new Genre
+                 {
+                     Name = "Drama",
+                     Movies = new Movie[] {
+                        movies["Regarding Henry"],
+                        movies["The Godfather"],
+                    }
+                 }
 
             );
             db.SaveChanges();
+
+            // add many-to-many for movies => actors
+            db.MovieActors.AddRange(
+                new MovieActor {Movie = movies["Blade Runner"], Actor=actors["Harrison Ford"] },
+                new MovieActor {Movie = movies["Regarding Henry"], Actor = actors["Harrison Ford"] },
+                new MovieActor { Movie = movies["Star Wars"], Actor = actors["Harrison Ford"] },
+                new MovieActor { Movie = movies["Star Wars"], Actor = actors["Mark Hamill"] },
+                new MovieActor { Movie = movies["The Godfather"], Actor = actors["Al Pacino"] },
+                new MovieActor { Movie = movies["Ex Machina"], Actor = actors["Alicia Vikander"] }
+            );
+            db.SaveChanges();
+
             return db;
         }
 
