@@ -22,6 +22,10 @@ namespace CSharpTestHelper
 
         public string Object<T>(T thing)
         {
+            if (IsSimple(thing.GetType()))
+            {
+                return thing.ToString();
+            }
             var results = new List<string>();
             var properties = typeof(T).GetTypeInfo().GetProperties();
             foreach (var prop in properties)

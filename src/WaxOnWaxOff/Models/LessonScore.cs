@@ -13,6 +13,8 @@ namespace WaxOnWaxOff.Models
 
             public int LessonId { get; set; }
 
+            public int? PortalLessonId { get; set; }
+
             public bool Passed { get; set; }
 
             public DateTime DatePassed { get; set; }

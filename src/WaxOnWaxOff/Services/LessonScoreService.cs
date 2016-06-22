@@ -21,6 +21,10 @@ namespace WaxOnWaxOff.Services
 
         public void PostScore(LessonScore score)
         {
+            // add portal lesson id
+            var lesson = _db.Lessons.Where(l => l.Id == score.LessonId).FirstOrDefault();
+            score.PortalLessonId = lesson.PortalLessonId;
+
             _db.LessonScores.Add(score);
             _db.SaveChanges();
         }

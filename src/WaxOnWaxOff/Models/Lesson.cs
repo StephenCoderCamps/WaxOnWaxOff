@@ -23,6 +23,11 @@ namespace WaxOnWaxOff.Models
 
         [Required(ErrorMessage = "Lesson title is required.")]
         public string Title { get; set; }
+
+
+        public int? PortalLessonId { get; set; }
+
+
         public ICollection<Lab> Labs { get; set; }
 
         public ICollection<LessonScore> LessonScore { get; set; }

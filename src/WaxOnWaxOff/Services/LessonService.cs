@@ -38,6 +38,7 @@ namespace WaxOnWaxOff.Services
                    Id = l.Id,
                    UnitId = l.UnitId,
                    Title = l.Title,
+                   PortalLessonId = l.PortalLessonId,
                    Passed = l.LessonScore.Any(ls => ls.Passed && ls.StudentId == userId)
                })
                .ToList();
@@ -79,6 +80,7 @@ namespace WaxOnWaxOff.Services
         public void EditLesson(Lesson lesson)
         {
             var original = _db.Lessons.FirstOrDefault(l => l.Id == lesson.Id);
+            original.PortalLessonId = lesson.PortalLessonId;
             original.Title = lesson.Title;
             original.UnitId = lesson.UnitId;
             _db.SaveChanges();
